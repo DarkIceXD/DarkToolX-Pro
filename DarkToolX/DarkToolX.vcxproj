@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="core\features\aimbot.cpp" />
+    <ClCompile Include="core\features\animation_fix.cpp" />
     <ClCompile Include="core\features\anti_aim.cpp" />
     <ClCompile Include="core\features\auto_accept.cpp" />
     <ClCompile Include="core\features\auto_switch.cpp" />

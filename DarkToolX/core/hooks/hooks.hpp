@@ -111,6 +111,16 @@ namespace hooks {
 		void __fastcall hook(anim_state* this_pointer, void* edx, vec3_t& input_eye_position);
 	};
 
+	namespace update_animation_state {
+		using fn = void(__vectorcall*)(anim_state*, void*, float, float, float, void*);
+		void __vectorcall hook(anim_state* this_pointer, void* unknown, float z, float y, float x, void* unknown1);
+	};
+
+	namespace update_client_side_animation {
+		using fn = void(__fastcall*)(player_t*, void*);
+		void __fastcall hook(player_t* this_pointer, void* edx);
+	};
+
 	namespace sequence_proxy {
 		void __cdecl hook(const c_recv_proxy_data* proxy_data_const, void* entity, void* output);
 	};

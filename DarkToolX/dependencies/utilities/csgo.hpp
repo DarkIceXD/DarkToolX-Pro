@@ -30,6 +30,8 @@ namespace csgo {
 	inline kit_parser* kits = nullptr;
 	inline bool want_to_shoot = false;
 	inline License::User user;
+	inline bool should_animate = false;
+	inline vec3_t real = {};
 	namespace menu {
 		inline bool enabled = false;
 		inline int best_dmg = 0;

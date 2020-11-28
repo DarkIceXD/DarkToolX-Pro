@@ -417,6 +417,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 				{
 					for (size_t i = 0; i < conf._aimbot.size(); i++)
 					{
+						ImGui::PushID(i);
 						const auto& current = conf._aimbot.at(i);
 						const bool is_selected = (conf.s_aimbot == i);
 						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
@@ -424,6 +425,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 
 						if (is_selected)
 							ImGui::SetItemDefaultFocus();
+						ImGui::PopID();
 					}
 					ImGui::EndCombo();
 				}
@@ -442,6 +444,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 				{
 					for (size_t i = 0; i < conf._trigger.size(); i++)
 					{
+						ImGui::PushID(i);
 						const auto& current = conf._trigger.at(i);
 						const bool is_selected = (conf.s_trigger == i);
 						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
@@ -449,6 +452,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 
 						if (is_selected)
 							ImGui::SetItemDefaultFocus();
+						ImGui::PopID();
 					}
 					ImGui::EndCombo();
 				}
@@ -467,6 +471,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 				{
 					for (size_t i = 0; i < conf._visuals.size(); i++)
 					{
+						ImGui::PushID(i);
 						const auto& current = conf._visuals.at(i);
 						const bool is_selected = (conf.s_visuals == i);
 						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
@@ -474,6 +479,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 
 						if (is_selected)
 							ImGui::SetItemDefaultFocus();
+						ImGui::PopID();
 					}
 					ImGui::EndCombo();
 				}
@@ -492,6 +498,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 				{
 					for (size_t i = 0; i < conf._view.size(); i++)
 					{
+						ImGui::PushID(i);
 						const auto& current = conf._view.at(i);
 						const bool is_selected = (conf.s_view == i);
 						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
@@ -499,6 +506,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 
 						if (is_selected)
 							ImGui::SetItemDefaultFocus();
+						ImGui::PopID();
 					}
 					ImGui::EndCombo();
 				}
@@ -517,6 +525,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 				{
 					for (size_t i = 0; i < conf._skin_changer.size(); i++)
 					{
+						ImGui::PushID(i);
 						const auto& current = conf._skin_changer.at(i);
 						const bool is_selected = (conf.s_skin_changer == i);
 						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
@@ -524,6 +533,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 
 						if (is_selected)
 							ImGui::SetItemDefaultFocus();
+						ImGui::PopID();
 					}
 					ImGui::EndCombo();
 				}
@@ -542,6 +552,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 				{
 					for (size_t i = 0; i < conf._clan_tag_changer.size(); i++)
 					{
+						ImGui::PushID(i);
 						const auto& current = conf._clan_tag_changer.at(i);
 						const bool is_selected = (conf.s_clan_tag_changer == i);
 						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
@@ -549,6 +560,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 
 						if (is_selected)
 							ImGui::SetItemDefaultFocus();
+						ImGui::PopID();
 					}
 					ImGui::EndCombo();
 				}
@@ -567,6 +579,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 				{
 					for (size_t i = 0; i < conf._misc.size(); i++)
 					{
+						ImGui::PushID(i);
 						const auto& current = conf._misc.at(i);
 						const bool is_selected = (conf.s_misc == i);
 						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
@@ -574,6 +587,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 
 						if (is_selected)
 							ImGui::SetItemDefaultFocus();
+						ImGui::PopID();
 					}
 					ImGui::EndCombo();
 				}

@@ -42,4 +42,5 @@ namespace features {
 		void chat_bot(i_game_event* event);
 		void chat_listener(i_game_event* event);
 	}
+	void animation_fix();
 }

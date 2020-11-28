@@ -444,7 +444,7 @@ public:
 	NETVAR("DT_BasePlayer", "m_iObserverMode", observer_mode, int)
 	NETVAR_OFFSET("DT_CSPlayer", "m_hLightingOrigin", -0x18, is_jiggle_bones_enabled, bool)
 	NETVAR("DT_BaseEntity", "m_fEffects", get_effects, int)
-	
+
 	weapon_t* active_weapon() {
 		auto active_weapon = read<uintptr_t>(netvar_manager::get_net_var(fnv::hash("DT_CSPlayer"), fnv::hash("m_hActiveWeapon"))) & 0xFFF;
 		return reinterpret_cast<weapon_t*>(interfaces::entity_list->get_client_entity(active_weapon));
@@ -463,7 +463,8 @@ public:
 	}
 
 	anim_state* get_anim_state() {
-		return *reinterpret_cast<anim_state * *>(this + 0x3914);
+		static auto offset = *reinterpret_cast<uintptr_t*>(utilities::pattern_scan("client.dll", "8B 8E ? ? ? ? 85 C9 74 3E") + 2);
+		return *reinterpret_cast<anim_state * *>(this + offset);
 	}
 
 	vec3_t get_bone_position(int bone) {
@@ -525,5 +526,30 @@ public:
 	bool& use_new_animation_state() {
 		static auto offset = *reinterpret_cast<uintptr_t*>(utilities::pattern_scan("client.dll", "88 87 ? ? ? ? 75") + 0x2);
 		return *reinterpret_cast<bool*>(uintptr_t(this) + offset);
+	}
+
+	void* get_animation_overlay() {
+		static auto offset = *reinterpret_cast<uintptr_t*>(utilities::pattern_scan("client.dll", "8B 80 ? ? ? ? 8D 34 C8") + 0x2);
+		return *reinterpret_cast<void**>(this + offset);
+	}
+
+	float* get_pose_parameter() {
+		return (float*)((uintptr_t)this + (netvar_manager::get_net_var(fnv::hash("DT_CSPlayer"), fnv::hash("m_flPoseParameter"))));
+	}
+
+	void get_anim_layers(anim_layer* layers) {
+		std::memcpy(layers, get_animation_overlay(), sizeof(anim_layer) * 13);
+	}
+
+	void set_anim_layers(anim_layer* layers) {
+		std::memcpy(get_animation_overlay(), layers, sizeof(anim_layer) * 13);
+	}
+
+	void get_pose_parameters(float* poses) {
+		std::memcpy(poses, get_pose_parameter(), sizeof(float) * 24);
+	}
+
+	void set_pose_parameters(float* poses) {
+		std::memcpy(get_pose_parameter(), poses, sizeof(float) * 24);
 	}
 };

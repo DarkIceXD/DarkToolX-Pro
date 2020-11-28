@@ -28,6 +28,8 @@ hooks::is_hltv::fn is_hltv_original = nullptr;
 hooks::standard_blending_rules::fn standard_blending_rules_original = nullptr;
 hooks::calculate_view::fn calculate_view_original = nullptr;
 hooks::modify_eye_position::fn modify_eye_position_original = nullptr;
+hooks::update_animation_state::fn update_animation_state_original = nullptr;
+hooks::update_client_side_animation::fn update_client_side_animation_original = nullptr;
 static event_listener* listener = nullptr;
 static recv_prop_hook* sequence_hook = nullptr;
 static HWND window = nullptr;
@@ -57,6 +59,8 @@ bool hooks::initialize() {
 	const auto standard_blending_rules_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F0 B8 ? ? ? ? E8 ? ? ? ? 56 8B 75 08 57 8B F9 85 F6"));
 	const auto calculate_view_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 EC 14 53 56 57 FF 75 18"));
 	const auto modify_eye_position_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 5C 53 8B D9 56 57 83"));
+	const auto update_animation_state_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 18 56 57 8B F9 F3"));
+	const auto update_client_side_animation_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 51 56 8B F1 80 BE ? ? ? ? ? 74"));
 	sequence_hook = new recv_prop_hook(base_view_model_t::sequence_prop(), &hooks::sequence_proxy::hook);
 	if (MH_Initialize() != MH_OK)
 		throw std::runtime_error("failed to initialize MH_Initialize");
@@ -124,6 +128,12 @@ bool hooks::initialize() {
 	if (MH_CreateHook(modify_eye_position_target, &modify_eye_position::hook, reinterpret_cast<void**>(&modify_eye_position_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize modify_eye_position");
 
+	if (MH_CreateHook(update_animation_state_target, &update_animation_state::hook, reinterpret_cast<void**>(&update_animation_state_original)) != MH_OK)
+		throw std::runtime_error("failed to initialize modify_eye_position");
+
+	if (MH_CreateHook(update_client_side_animation_target, &update_client_side_animation::hook, reinterpret_cast<void**>(&update_client_side_animation_original)) != MH_OK)
+		throw std::runtime_error("failed to initialize modify_eye_position");
+
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
 		throw std::runtime_error("failed to enable hooks");
 
@@ -161,7 +171,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	auto old_forwardmove = cmd->forwardmove;
 	auto old_sidemove = cmd->sidemove;
 	csgo::want_to_shoot = cmd->buttons & in_attack;
-	
+
 	features::bunny_hop(cmd);
 	features::no_duck_delay(cmd);
 	features::clan_tag_changer(cmd);
@@ -186,11 +196,14 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	cmd->viewangles.y = std::clamp(cmd->viewangles.y, -180.0f, 180.0f);
 	cmd->viewangles.z = 0.0f;
 
+	csgo::real = cmd->viewangles;
+	csgo::should_animate = true;
+
 	return false;
 }
 
 void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repaint, bool allow_force) {
-	static auto water_mark = std::string("DarkToolX - beta v4.6 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX - beta v4.8 - UID: ") + std::to_string(csgo::user.uid);
 	switch (fnv::hash(interfaces::panel->get_panel_name(panel))) {
 	case fnv::hash("MatSystemTopPanel"):
 		render::text(10, 10, render::fonts::watermark_font, water_mark, false, color::white(255));
@@ -243,6 +256,7 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 			break;
 		case FRAME_RENDER_START:
 			features::sky_box_changer();
+			features::animation_fix();
 			break;
 		case FRAME_RENDER_END:
 			break;
@@ -389,6 +403,25 @@ void __fastcall hooks::modify_eye_position::hook(anim_state* this_pointer, void*
 {
 	this_pointer->smooth_height_valid = false;
 	return modify_eye_position_original(this_pointer, edx, input_eye_position);
+}
+
+void __vectorcall hooks::update_animation_state::hook(anim_state* this_pointer, void* unknown, float z, float y, float x, void* unknown1)
+{
+	if (this_pointer->last_clientside_anim_update_framecount == interfaces::globals->frame_count)
+		this_pointer->last_clientside_anim_update_framecount -= 1;
+	if (this_pointer->entity != csgo::local_player)
+		return update_animation_state_original(this_pointer, unknown, z, y, x, unknown1);
+
+	return update_animation_state_original(this_pointer, unknown, z, csgo::real.y, csgo::real.x, unknown1);
+}
+
+void __fastcall hooks::update_client_side_animation::hook(player_t* this_pointer, void* edx)
+{
+	if (this_pointer != csgo::local_player)
+		return update_client_side_animation_original(this_pointer, edx);
+
+	if(csgo::should_animate)
+		update_client_side_animation_original(this_pointer, edx);
 }
 
 void __cdecl hooks::sequence_proxy::hook(const c_recv_proxy_data* proxy_data_const, void* entity, void* output)
