@@ -69,12 +69,13 @@ public:
 	char		u4[ 3 ];
 	uint32_t	view_entity;
 	uint32_t	player_slot;
+	int			bruh;
 	char		level_name[ 260 ];
 	char		level_name_short[ 80 ];
 	char		group_name[ 80 ];
 	char		u5[ 92 ];
 	uint32_t	max_clients;
-	char		u6[ 18824 ];
+	char		u6[18828];
 	float		last_server_tick_time;
 	bool		in_simulation;
 	char		u7[ 3 ];
@@ -84,10 +85,11 @@ public:
 	int		last_outgoing_command;
 	int		choked_commands;
 	int		last_command_ack;
+	int		packet_end_tick_update;
 	int		command_ack;
 	int		sound_sequence;
-	char		u8[ 80 ];
-	vec3_t		view_angles;
+	char	pad_4CCD[76];
+	vec3_t	viewangles;
 
 	void full_update() {
 		delta_tick = -1;
