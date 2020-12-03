@@ -34,6 +34,6 @@ namespace config {
 			selected = std::clamp(selected, 0U, tags.size() - 1);
 			return tags.at(selected);
 		}
-		JSON_SERIALIZE(clan_tag_changer, conf_name, selected, tags)
+		JSON_SERIALIZE(clan_tag_changer, enabled, conf_name, selected, tags)
 	};
 };
