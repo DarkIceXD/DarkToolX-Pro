@@ -181,7 +181,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	features::fake_lag(send_packet);
 	features::legit_aimbot(cmd);
 	features::trigger(cmd);
-	features::anti_aim(cmd);
+	features::anti_aim(cmd, send_packet);
 	prediction::end();
 	features::auto_switch(cmd);
 

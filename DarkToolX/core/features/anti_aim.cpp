@@ -1,8 +1,8 @@
 #include "features.hpp"
 
-void features::anti_aim(c_usercmd* cmd)
+void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 {
-	if (csgo::conf->misc().anti_aim != 1)
+	if (!csgo::conf->misc().anti_aim)
 		return;
 
 	if (!csgo::local_player)
@@ -33,6 +33,25 @@ void features::anti_aim(c_usercmd* cmd)
 	if (cmd->buttons & in_attack2 && type == WEAPONTYPE_KNIFE)
 		return;
 
-	cmd->viewangles.x = 89;
-	cmd->viewangles.y += 180;
+	switch (csgo::conf->misc().anti_aim)
+	{
+	case 1:
+		cmd->viewangles.x = 89;
+		cmd->viewangles.y += 180;
+		break;
+	case 2:
+		constexpr auto desync_left = true;
+		constexpr auto maxDesync = 58;
+		send_packet = cmd->tick_count % 2;
+		float realAngle = cmd->viewangles.y;
+		float angleToSend;
+		if (send_packet) {
+			angleToSend = desync_left ? realAngle + maxDesync : realAngle - maxDesync;
+		}
+		else {
+			angleToSend = desync_left ? realAngle - 120 : realAngle + 120;
+		}
+		cmd->viewangles.y = angleToSend;
+		break;
+	}
 }

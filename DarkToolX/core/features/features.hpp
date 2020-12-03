@@ -8,7 +8,7 @@ struct auto_wall_data {
 
 namespace features {
 	void aimbot(c_usercmd* cmd);
-	void anti_aim(c_usercmd* cmd);
+	void anti_aim(c_usercmd* cmd, bool& send_packet);
 	void auto_accept();
 	void auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data);
 	void auto_switch(c_usercmd* cmd);
