@@ -369,7 +369,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 				if (ImGui::Button("+"))
 					conf.clan_tag_changer().tags.push_back({});
 				ImGui::SameLine();
-				if (ImGui::Button("-") && conf._aimbot.size() > 1)
+				if (ImGui::Button("-") && conf.clan_tag_changer().tags.size() > 1)
 					conf.clan_tag_changer().tags.erase(conf.clan_tag_changer().tags.begin() + conf.clan_tag_changer().selected);
 				ImGui::InputText("Name", &conf.clan_tag_changer().get_selected().name);
 				ImGui::SliderInt("Delay", &conf.clan_tag_changer().get_selected().delay, 1, 5000, "%d", ImGuiSliderFlags_AlwaysClamp);

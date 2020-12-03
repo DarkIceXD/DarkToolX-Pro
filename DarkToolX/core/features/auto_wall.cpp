@@ -137,9 +137,9 @@ auto_wall_data features::auto_wall(vec3_t direction, const weapon_info_t* weapon
 	direction.normalize_in_place();
 	auto max_range = weapon_data->weapon_range;
 	trace_filter filter(csgo::local_player);
-	auto hitsLeft = 4;
+	auto hits_left = 5;
 	auto current_distance = 0.f;
-	while (data.damage >= 1.0f && hitsLeft > 0) {
+	while (data.damage >= 1.0f && hits_left > 0) {
 		max_range -= current_distance;
 		trace_t trace;
 		ray_t ray(start, start + direction * max_range);
@@ -157,41 +157,7 @@ auto_wall_data features::auto_wall(vec3_t direction, const weapon_info_t* weapon
 			break;
 
 		data.damage = handle_bulletpenetration(trace, direction, weapon_data->weapon_penetration, data.damage, start);
-		hitsLeft--;
+		hits_left--;
 	}
 	return { nullptr, 0 };
 }
-
-/*auto_wall_data features::auto_wall(vec3_t direction, const weapon_info_t* weapon_data, const bool bangable)
-{
-	auto_wall_data data{ nullptr, static_cast<float>(weapon_data->weapon_damage) };
-	auto start(csgo::local_player->get_eye_pos());
-	direction.normalize_in_place();
-	auto max_range = weapon_data->weapon_range;
-	trace_filter filter(csgo::local_player);
-	auto hitsLeft = 4;
-	auto current_distance = 0.f;
-	while (data.damage >= 1.0f && hitsLeft) {
-		max_range -= current_distance;
-		trace_t trace;
-		ray_t ray(start, start + direction * max_range);
-		interfaces::trace_ray->trace_ray(ray, MASK_SHOT_HULL | CONTENTS_HITBOX, &filter, &trace);
-		if (!trace.did_hit())
-			break;
-		current_distance += trace.flFraction * max_range;
-		data.damage *= pow(weapon_data->weapon_range_mod, (current_distance / 500.f));
-		if (trace.entity && csgo::local_player->is_enemy(trace.entity) && trace.hitGroup > hitgroup_generic && trace.hitGroup <= hitgroup_rightleg) {
-			scale_damage(trace.entity, trace.hitGroup, weapon_data, data.damage);
-			data.entity = trace.entity;
-			break;
-		}
-		if (!bangable)
-			break;
-		const auto surfaceData = interfaces::physics_surface_props->get_surface_data(trace.surface.surfaceProps);
-		if (surfaceData->penetrationModifier < 0.1f)
-			break;
-		data.damage = handle_bulletpenetration(surfaceData, trace, direction, start, weapon_data->weapon_penetration, data.damage);
-		hitsLeft--;
-	}
-	return data;
-}*/
