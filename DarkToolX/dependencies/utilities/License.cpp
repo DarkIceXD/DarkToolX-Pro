@@ -4,7 +4,6 @@
 #include <ctime>
 
 constexpr auto name = "darktoolx";
-constexpr auto url = "https://darkicexd.github.io/darktool/keys.ini";
 
 uint32_t License::generate_hwid()
 {
@@ -17,11 +16,16 @@ uint32_t License::generate_hwid()
 
 License::User License::check()
 {
+	const auto server = "darkicexd.github.io";
+	const auto object = "/darktool/keys.ini";
 	User user = {};
 	user.hwid = License::generate_hwid();
 	CSimpleIniA ini;
-	if (Util::hash(url) == 5640525871738706366U)
-		ini.LoadData(Util::download_file(url));
+	if (Util::hash(server) == 729258906494008491U && Util::hash(object) == 3076906676292336621U)
+	{
+		const auto data = Util::download(server, object);
+		ini.LoadData(data.data(), data.size());
+	}
 	const auto section = std::to_string(user.hwid);
 	const auto permission = ini.GetBoolValue(section.c_str(), name);
 	if (!permission)
