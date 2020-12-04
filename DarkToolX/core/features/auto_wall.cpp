@@ -23,22 +23,6 @@ static bool traceToExit(const trace_t& enterTrace, const vec3_t& start, const ve
 	return result;
 }
 
-static void clipTraceToPlayers(const vec3_t& vecAbsStart, const vec3_t& vecAbsEnd, unsigned int mask, trace_filter* filter, trace_t* tr)
-{
-	static uintptr_t ClipTraceToPlayerss = (uintptr_t)utilities::pattern_scan("client.dll", "53 8B DC 83 EC 08 83 E4 F0 83 C4 04 55 8B 6B 04 89 6C 24 04 8B EC 81 EC ? ? ? ? 8B 43 10");
-	__asm {
-		mov eax, filter
-		lea ecx, tr
-		push ecx
-		push eax
-		push mask
-		lea edx, vecAbsEnd
-		lea ecx, vecAbsStart
-		call ClipTraceToPlayerss
-		add esp, 0xC
-	}
-}
-
 constexpr bool is_armored(const int hitGroup, const bool helmet)
 {
 	switch (hitGroup) {

@@ -119,6 +119,7 @@ enum class_ids {
 	cknife,
 	cknifegg,
 	clightglow,
+	cmapvetopickcontroller,
 	cmaterialmodifycontrol,
 	cmelee,
 	cmolotovgrenade,

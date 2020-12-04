@@ -203,7 +203,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 }
 
 void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repaint, bool allow_force) {
-	static auto water_mark = std::string("DarkToolX - beta v4.8 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX - beta v4.9 - UID: ") + std::to_string(csgo::user.uid);
 	switch (fnv::hash(interfaces::panel->get_panel_name(panel))) {
 	case fnv::hash("MatSystemTopPanel"):
 		render::text(10, 10, render::fonts::watermark_font, water_mark, false, color::white(255));

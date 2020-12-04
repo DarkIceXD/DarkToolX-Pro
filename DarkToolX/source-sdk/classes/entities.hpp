@@ -538,18 +538,26 @@ public:
 	}
 
 	void get_anim_layers(anim_layer* layers) {
-		std::memcpy(layers, get_animation_overlay(), sizeof(anim_layer) * 13);
+		const auto ov = get_animation_overlay();
+		if(ov)
+			std::memcpy(layers, ov, sizeof(anim_layer) * 13);
 	}
 
 	void set_anim_layers(anim_layer* layers) {
-		std::memcpy(get_animation_overlay(), layers, sizeof(anim_layer) * 13);
+		const auto ov = get_animation_overlay();
+		if (ov)
+			std::memcpy(ov, layers, sizeof(anim_layer) * 13);
 	}
 
 	void get_pose_parameters(float* poses) {
-		std::memcpy(poses, get_pose_parameter(), sizeof(float) * 24);
+		const auto ov = get_animation_overlay();
+		if (ov)
+			std::memcpy(poses, ov, sizeof(float) * 24);
 	}
 
 	void set_pose_parameters(float* poses) {
-		std::memcpy(get_pose_parameter(), poses, sizeof(float) * 24);
+		const auto ov = get_animation_overlay();
+		if (ov)
+			std::memcpy(ov, poses, sizeof(float) * 24);
 	}
 };
