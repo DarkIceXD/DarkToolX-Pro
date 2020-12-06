@@ -482,5 +482,8 @@
     <ClInclude Include="dependencies\utilities\config\clan_tag_changer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="dependencies\utilities\str_obfuscator.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

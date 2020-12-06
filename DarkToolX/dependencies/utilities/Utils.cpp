@@ -3,14 +3,6 @@
 #include <winhttp.h>
 #pragma comment(lib, "Winhttp.lib")
 
-uint64_t Util::hash(const char* str)
-{
-	uint64_t hash = 5381;
-	for (; *str != '\0'; ++str)
-		hash = ((hash << 5) + hash) + (*str);
-	return hash;
-}
-
 static wchar_t* str_to_wstr(const char* str)
 {
 	wchar_t* wstr;
