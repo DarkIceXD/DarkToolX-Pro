@@ -183,6 +183,13 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 				ImGui::SliderFloat("Step Max Radius", &conf.visuals().step_max_radius, 100, 1000);
 				ImGui::SliderFloat("Step Lifetime", &conf.visuals().step_lifetime, .5f, 8);
 				ImGui::SliderFloat("Step Width", &conf.visuals().step_width, 1, 20);
+				ImGui::Separator();
+				ImGui::Checkbox("Enemy Bullet Tracers", &conf.visuals().bullet_trace_enemy.enabled);
+				ImGui::ColorEdit4("Enemy Bullet Tracers Color", &conf.visuals().bullet_trace_enemy.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
+				ImGui::Checkbox("Team Bullet Tracers", &conf.visuals().bullet_trace_team.enabled);
+				ImGui::Checkbox("Local Player Bullet Tracers", &conf.visuals().bullet_trace_local_player);
+				ImGui::ColorEdit4("Team Bullet Tracers Color", &conf.visuals().bullet_trace_team.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
+				ImGui::SliderFloat("Bullet Tracers Lifetime", &conf.visuals().bullet_trace_lifetime, .5f, 8);
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("View"))

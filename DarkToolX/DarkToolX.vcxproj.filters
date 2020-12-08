@@ -189,6 +189,12 @@
     <ClCompile Include="core\features\animation_fix.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="core\features\bone_cache.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="core\features\bullet_tracers.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\features\features.hpp">

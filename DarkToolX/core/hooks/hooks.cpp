@@ -171,7 +171,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	auto old_forwardmove = cmd->forwardmove;
 	auto old_sidemove = cmd->sidemove;
 	csgo::want_to_shoot = cmd->buttons & in_attack;
-
+	// features::bone_cache::clear();
 	features::bunny_hop(cmd);
 	features::no_duck_delay(cmd);
 	features::clan_tag_changer(cmd);
@@ -203,7 +203,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 }
 
 void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repaint, bool allow_force) {
-	static auto water_mark = std::string("DarkToolX - beta v4.9 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX - beta v5.0 - UID: ") + std::to_string(csgo::user.uid);
 	switch (fnv::hash(interfaces::panel->get_panel_name(panel))) {
 	case fnv::hash("MatSystemTopPanel"):
 		render::text(10, 10, render::fonts::watermark_font, water_mark, false, color::white(255));
@@ -245,7 +245,6 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 		case FRAME_START:
 			break;
 		case FRAME_NET_UPDATE_START:
-			features::step_esp();
 			break;
 		case FRAME_NET_UPDATE_POSTDATAUPDATE_START:
 			features::skin_changer();
@@ -256,6 +255,8 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 			break;
 		case FRAME_RENDER_START:
 			features::sky_box_changer();
+			features::step_esp();
+			features::bullet_tracers();
 			features::animation_fix();
 			break;
 		case FRAME_RENDER_END:
@@ -420,7 +421,7 @@ void __fastcall hooks::update_client_side_animation::hook(player_t* this_pointer
 	if (this_pointer != csgo::local_player)
 		return update_client_side_animation_original(this_pointer, edx);
 
-	if(csgo::should_animate)
+	if (csgo::should_animate)
 		update_client_side_animation_original(this_pointer, edx);
 }
 

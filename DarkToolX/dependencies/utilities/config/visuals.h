@@ -58,6 +58,10 @@ namespace config {
 		float step_max_radius{ 500 };
 		float step_lifetime{ 1 };
 		float step_width{ 3 };
+		bool bullet_trace_local_player{ false };
+		rgb bullet_trace_team{ 0, 0.5f, 1, 1, false };
+		rgb bullet_trace_enemy{ 1, 0.5f, 0, 1, false };
+		float bullet_trace_lifetime{ 1 };
 		constexpr int rgb_index(const int class_id, const bool enemy = false) const noexcept
 		{
 			switch (class_id)
@@ -128,6 +132,6 @@ namespace config {
 				return nullptr;
 			return &glow.at(i);
 		}
-		JSON_SERIALIZE(visuals, conf_name, glow, health_based, enemy_overhead_info, step_color, step_max_radius, step_lifetime, step_width)
+		JSON_SERIALIZE(visuals, conf_name, glow, health_based, enemy_overhead_info, step_color, step_max_radius, step_lifetime, step_width, bullet_trace_local_player, bullet_trace_team, bullet_trace_enemy, bullet_trace_lifetime)
 	};
 };

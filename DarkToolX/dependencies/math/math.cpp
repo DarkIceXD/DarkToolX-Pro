@@ -46,10 +46,12 @@ vec3_t math::angle_vector(const vec3_t& angle) {
 	return vec3_t(cp * cy, cp * sy, -sp);
 }
 
-void math::transform_vector(const vec3_t& a, const matrix_t& b, vec3_t& out) {
-	out.x = a.dot(b.mat_val[0]) + b.mat_val[0][3];
-	out.y = a.dot(b.mat_val[1]) + b.mat_val[1][3];
-	out.z = a.dot(b.mat_val[2]) + b.mat_val[2][3];
+vec3_t math::transform_vector(const vec3_t& a, const matrix_t& b) {
+	return {
+		a.dot(b[0]) + b[0][3],
+		a.dot(b[1]) + b[1][3],
+		a.dot(b[2]) + b[2][3]
+	};
 }
 
 void math::vector_angles(const vec3_t& forward, vec3_t& angles) {
@@ -75,9 +77,9 @@ void math::vector_angles(const vec3_t& forward, vec3_t& angles) {
 void math::angle_vectors(const vec3_t& angles, vec3_t* forward, vec3_t* right, vec3_t* up) {
 	const auto sp = sin(DEG2RAD(angles.x));
 	const auto sy = sin(DEG2RAD(angles.y));
-	const auto cp = cos(DEG2RAD(angles.x)); 
+	const auto cp = cos(DEG2RAD(angles.x));
 	const auto cy = cos(DEG2RAD(angles.y));
-	
+
 	if (forward) {
 		forward->x = cp * cy;
 		forward->y = cp * sy;
@@ -192,13 +194,13 @@ bool math::IntersectLineWithBB(const vec3_t& vStart, const vec3_t& vEndDelta, co
 
 bool math::IntersectLineWithOBB(const vec3_t& vStart, const vec3_t& vEndDelta, const vec3_t& vMin, const vec3_t& vMax, const matrix_t& matrix)
 {
-	vec3_t vStart2, vEndDelta2;
-	transform_vector(vStart, matrix, vStart2);
+	vec3_t vEndDelta2;
+	const auto vStart2 = transform_vector(vStart, matrix);
 	vector_rotate(vEndDelta, matrix, vEndDelta2);
 	return IntersectLineWithBB(vStart2, vEndDelta2, vMin, vMax);
 }
 
 float math::fov(const vec3_t& a, const vec3_t& b) {
-	auto angles_delta = (b - a).normalized();
+	const auto angles_delta = (b - a).normalized();
 	return sin(DEG2RAD(angles_delta.length()) / 2.0f) * 180.0f;
 }

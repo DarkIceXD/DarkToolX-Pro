@@ -8,7 +8,6 @@ static void draw_circle(const vec3_t& position, const config::rgb& rgb, const fl
 	beam_info.m_nType = TE_BEAMRINGPOINT;
 	beam_info.m_pszModelName = "sprites/physbeam.vmt";
 	beam_info.m_nModelIndex = interfaces::model_info->get_model_index("sprites/physbeam.vmt");
-	beam_info.m_nHaloIndex = -1;
 	beam_info.m_flHaloScale = 5;
 	beam_info.m_flLife = lifetime;
 	beam_info.m_flWidth = width;
@@ -22,7 +21,6 @@ static void draw_circle(const vec3_t& position, const config::rgb& rgb, const fl
 	beam_info.m_nStartFrame = 0;
 	beam_info.m_flFrameRate = 60.f;
 	beam_info.m_nSegments = -1;
-	beam_info.m_nFlags = 0;// FBEAM_SHADEIN;
 	beam_info.m_vecCenter = position + vec3_t(0, 0, 5);
 	beam_info.m_flStartRadius = 10;
 	beam_info.m_flEndRadius = max_radius;

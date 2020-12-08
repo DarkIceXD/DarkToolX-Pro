@@ -39,5 +39,6 @@ static constexpr std::array sky_list = {
 			"vertigo",
 			"vertigoblue_hdr",
 			"sky_dust",
-			"sky_day02_05_hdr"
+			"sky_day02_05_hdr",
+			"sky_hr_aztec"
 };

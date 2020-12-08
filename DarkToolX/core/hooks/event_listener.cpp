@@ -8,6 +8,7 @@ event_listener::event_listener()
 	interfaces::event_manager->add_listener(this, "player_hurt", false);
 	interfaces::event_manager->add_listener(this, "player_death", false);
 	interfaces::event_manager->add_listener(this, "player_footstep", false);
+	interfaces::event_manager->add_listener(this, "bullet_impact", false);
 }
 
 event_listener::~event_listener()
@@ -27,6 +28,9 @@ void event_listener::fire_game_event(i_game_event* event)
 		break;
 	case fnv::hash("player_footstep"):
 		features::events::step_esp(event);
+		break;
+	case fnv::hash("bullet_impact"):
+		features::events::bullet_tracers(event);
 		break;
 	}
 }

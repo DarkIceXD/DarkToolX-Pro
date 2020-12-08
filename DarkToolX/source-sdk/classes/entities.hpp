@@ -485,11 +485,8 @@ public:
 				auto hitbox = studio_model->hitbox_set(0)->hitbox(hitbox_id);
 
 				if (hitbox) {
-					auto min = vec3_t{}, max = vec3_t{};
-
-					math::transform_vector(hitbox->mins, bone_matrix[hitbox->bone], min);
-					math::transform_vector(hitbox->maxs, bone_matrix[hitbox->bone], max);
-
+					const auto min = math::transform_vector(hitbox->mins, bone_matrix[hitbox->bone]);
+					const auto max = math::transform_vector(hitbox->maxs, bone_matrix[hitbox->bone]);
 					return vec3_t((min.x + max.x) * 0.5f, (min.y + max.y) * 0.5f, (min.z + max.z) * 0.5f);
 				}
 			}
