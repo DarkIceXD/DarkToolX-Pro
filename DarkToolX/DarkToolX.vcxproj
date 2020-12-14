@@ -152,7 +152,7 @@
     <ClCompile Include="core\features\auto_accept.cpp" />
     <ClCompile Include="core\features\auto_switch.cpp" />
     <ClCompile Include="core\features\auto_wall.cpp" />
-    <ClCompile Include="core\features\bone_cache.cpp" />
+    <ClCompile Include="core\features\backtrack.cpp" />
     <ClCompile Include="core\features\bullet_tracers.cpp" />
     <ClCompile Include="core\features\chat_bot.cpp" />
     <ClCompile Include="core\features\clan_tag_changer.cpp" />

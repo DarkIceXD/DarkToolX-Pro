@@ -43,11 +43,8 @@ namespace features {
 		void chat_listener(i_game_event* event);
 		void bullet_tracers(i_game_event* event);
 	}
-	namespace bone_cache {
-		void clear();
-		vec3_t get_bone(player_t* entity, int bone);
-		vec3_t get_hitbox(player_t* entity, int hitbox_id);
-	}
 	void animation_fix();
 	void bullet_tracers();
+	void backtrack_update();
+	void backtrack(c_usercmd* cmd);
 }
