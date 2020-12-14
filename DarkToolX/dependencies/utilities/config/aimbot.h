@@ -28,6 +28,8 @@ namespace config {
 		bool head{ true };
 		bool auto_shoot{ false };
 		bool dmg_indicator{ false };
+		bool auto_cock_revolver{ true };
+		bool auto_scope{ true };
 		int weapon_selection{ 0 };
 		std::vector<weapon_settings> weapons{ 0 };
 		weapon_settings& get_selected() noexcept
@@ -35,14 +37,14 @@ namespace config {
 			weapons.resize(34);
 			return weapons.at(weapon_selection);
 		}
-		weapon_settings* get_weapon_settings(const int weapon) noexcept
+		weapon_settings get_weapon_settings(const int weapon) noexcept
 		{
 			weapons.resize(34);
 			const auto i = get_weapon_index(weapon) - 2;
 			if (i < 0)
-				return nullptr;
-			return &weapons.at(i);
+				return {};
+			return weapons.at(i);
 		}
-		JSON_SERIALIZE(aimbot, conf_name, mode, enabled, key_bind_type, key_bind, min_dmg_override_active, min_dmg_override_key_bind_type, min_dmg_override_key_bind, smoothness, fov, head, auto_shoot, dmg_indicator, weapons)
+		JSON_SERIALIZE(aimbot, conf_name, mode, enabled, key_bind_type, key_bind, min_dmg_override_active, min_dmg_override_key_bind_type, min_dmg_override_key_bind, smoothness, fov, head, auto_shoot, dmg_indicator, auto_cock_revolver, auto_scope, weapons)
 	};
 };

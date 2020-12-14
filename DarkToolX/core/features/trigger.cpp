@@ -12,20 +12,16 @@ void features::auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t*
 	if (!weapon_data->weapon_full_auto && weapon->next_primary_attack() > time)
 		return;
 
-	const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(weapon->item_definition_index());
-	if (!weapon_setting)
-		return;
-
 	const auto entity = features::auto_wall(math::angle_vector(cmd->viewangles + csgo::local_player->aim_punch_angle() * 2), weapon_data, false).entity;
 	if (!entity)
 		return;
-	
-	if (!features::hitchance(cmd->viewangles, entity, weapon_setting->hitchance, weapon, weapon_data))
+
+	const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(weapon->item_definition_index());
+	if (!features::hitchance(cmd->viewangles, entity, weapon_setting.hitchance, weapon, weapon_data))
 		return;
 	
 	cmd->buttons |= in_attack;
 	csgo::want_to_shoot = true;
-
 }
 
 void features::trigger(c_usercmd* cmd)

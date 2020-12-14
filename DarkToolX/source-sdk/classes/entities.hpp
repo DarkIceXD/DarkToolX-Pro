@@ -163,6 +163,7 @@ enum item_definition_index : short
 	WEAPON_KNIFE_STILETTO = 522,
 	WEAPON_KNIFE_WIDOWMAKER = 523,
 	WEAPON_KNIFE_SKELETON = 525,
+	GLOVE_BROKEN_FANG = 4725,
 	GLOVE_STUDDED_BLOODHOUND = 5027,
 	GLOVE_T_SIDE = 5028,
 	GLOVE_CT_SIDE = 5029,
@@ -531,7 +532,7 @@ public:
 	}
 
 	float* get_pose_parameter() {
-		return (float*)((uintptr_t)this + (netvar_manager::get_net_var(fnv::hash("DT_CSPlayer"), fnv::hash("m_flPoseParameter"))));
+		return (float*)((uintptr_t)this + netvar_manager::get_net_var(fnv::hash("DT_CSPlayer"), fnv::hash("m_flPoseParameter")));
 	}
 
 	void get_anim_layers(anim_layer* layers) {

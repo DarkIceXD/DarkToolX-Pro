@@ -120,6 +120,7 @@ namespace config {
 			case 5: return GLOVE_MOTORCYCLE;
 			case 6: return GLOVE_SPECIALIST;
 			case 7: return GLOVE_HYDRA;
+			case 8: return GLOVE_BROKEN_FANG;
 			default: return 0;
 			}
 		};

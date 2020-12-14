@@ -171,7 +171,6 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	auto old_forwardmove = cmd->forwardmove;
 	auto old_sidemove = cmd->sidemove;
 	csgo::want_to_shoot = cmd->buttons & in_attack;
-	// features::bone_cache::clear();
 	features::bunny_hop(cmd);
 	features::no_duck_delay(cmd);
 	features::clan_tag_changer(cmd);

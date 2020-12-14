@@ -41,6 +41,7 @@ constexpr const char* get_model_name(const short item_index)
 	case WEAPON_KNIFE_CANIS: return "models/weapons/v_knife_canis.mdl";
 	case WEAPON_KNIFE_OUTDOOR: return "models/weapons/v_knife_outdoor.mdl";
 	case WEAPON_KNIFE_SKELETON: return "models/weapons/v_knife_skeleton.mdl";
+	case GLOVE_BROKEN_FANG: return "models/weapons/w_models/arms/w_glove_bloodhound_brokenfang.mdl";
 	case GLOVE_STUDDED_BLOODHOUND: return "models/weapons/v_models/arms/glove_bloodhound/v_glove_bloodhound.mdl";
 	case GLOVE_SPORTY: return "models/weapons/v_models/arms/glove_sporty/v_glove_sporty.mdl";
 	case GLOVE_SLICK: return "models/weapons/v_models/arms/glove_slick/v_glove_slick.mdl";

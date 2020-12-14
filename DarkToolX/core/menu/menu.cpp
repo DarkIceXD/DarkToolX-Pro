@@ -135,7 +135,11 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 					ImGui::Checkbox("Head", &conf.aimbot().head);
 					ImGui::Checkbox("Auto Shoot", &conf.aimbot().auto_shoot);
 					if (conf.aimbot().mode == 1)
+					{
 						ImGui::Checkbox("Damage Indicator", &conf.aimbot().dmg_indicator);
+						ImGui::Checkbox("Auto Cock Revolver", &conf.aimbot().auto_cock_revolver);
+						ImGui::Checkbox("Auto Scope", &conf.aimbot().auto_scope);
+					}
 					ImGui::Combo("Weapon", &conf.aimbot().weapon_selection, config::weapon_list);
 					if (conf.aimbot().mode == 1)
 					{
@@ -221,7 +225,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 				auto need_to_update = false;
 				if (conf.skin_changer().selection == 0)
 				{
-					if (ImGui::Combo("Glove Type", &conf.skin_changer().glove_selection, "-\0Bloodhound\0Sport\0Driver\0Hand Wraps\0Moto\0Specialist\0Hydra\0"))
+					if (ImGui::Combo("Glove Type", &conf.skin_changer().glove_selection, "-\0Bloodhound\0Sport\0Driver\0Hand Wraps\0Moto\0Specialist\0Hydra\0Broken Fang\0"))
 						need_to_update = true;
 				}
 				else if (conf.skin_changer().selection == 1)

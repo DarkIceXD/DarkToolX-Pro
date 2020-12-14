@@ -140,11 +140,9 @@ bool math::world_to_screen(const vec3_t& origin, vec2_t& screen) {
 	return true;
 }
 
-void math::vector_rotate(const vec3_t& in1, const matrix_t& in2, vec3_t& out)
+vec3_t math::vector_rotate(const vec3_t& in1, const matrix_t& in2)
 {
-	out.x = in1.dot(in2[0]);
-	out.y = in1.dot(in2[1]);
-	out.z = in1.dot(in2[2]);
+	return { in1.dot(in2[0]), in1.dot(in2[1]), in1.dot(in2[2]) };
 }
 
 bool math::IntersectLineWithBB(const vec3_t& vStart, const vec3_t& vEndDelta, const vec3_t& vMin, const vec3_t& vMax)
@@ -194,9 +192,8 @@ bool math::IntersectLineWithBB(const vec3_t& vStart, const vec3_t& vEndDelta, co
 
 bool math::IntersectLineWithOBB(const vec3_t& vStart, const vec3_t& vEndDelta, const vec3_t& vMin, const vec3_t& vMax, const matrix_t& matrix)
 {
-	vec3_t vEndDelta2;
 	const auto vStart2 = transform_vector(vStart, matrix);
-	vector_rotate(vEndDelta, matrix, vEndDelta2);
+	const auto vEndDelta2 = vector_rotate(vEndDelta, matrix);
 	return IntersectLineWithBB(vStart2, vEndDelta2, vMin, vMax);
 }
 

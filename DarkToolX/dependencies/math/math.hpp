@@ -20,7 +20,7 @@ namespace math {
 	void angle_vectors(const vec3_t& angles, vec3_t* forward, vec3_t* right, vec3_t* up);
 	bool screen_transform(const vec3_t& point, vec3_t& screen);
 	bool world_to_screen(const vec3_t& origin, vec2_t& screen);
-	void vector_rotate(const vec3_t& in1, const matrix_t& in2, vec3_t& out);
+	vec3_t vector_rotate(const vec3_t& in1, const matrix_t& in2);
 	bool IntersectLineWithBB(const vec3_t& vStart, const vec3_t& vEndDelta, const vec3_t& vMin, const vec3_t& vMax);
 	bool IntersectLineWithOBB(const vec3_t& vStart, const vec3_t& vEndDelta, const vec3_t& vMin, const vec3_t& vMax, const matrix_t& matrix);
 	float fov(const vec3_t& a, const vec3_t& b);
