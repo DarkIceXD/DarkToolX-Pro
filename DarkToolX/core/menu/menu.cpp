@@ -122,16 +122,16 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 						ImGui::Checkbox("Auto Scope", &conf.aimbot().auto_scope);
 					}
 					ImGui::Combo("Weapon", &conf.aimbot().weapon_selection, config::weapon_list);
+					ImGui::SliderInt("Hitchance", &conf.aimbot().get_selected().hitchance, 1, 100);
 					if (conf.aimbot().mode == 1)
 					{
 						ImGui::SliderInt("Min Damage", &conf.aimbot().get_selected().min_dmg, 1, 100);
 						ImGui::SliderInt("Min Damage Override", &conf.aimbot().get_selected().min_dmg_override, 1, 100);
+						ImGui::Separator();
+						static auto min_dmg_override = true;
+						ImGui::KeyBind("Min Damage Override Key Bind", &conf.aimbot().min_dmg_override_key_bind_type, &conf.aimbot().min_dmg_override_key_bind, &min_dmg_override);
+						ImGui::Checkbox("Min Damage Override Active", &conf.aimbot().min_dmg_override_active);
 					}
-					ImGui::SliderInt("Hitchance", &conf.aimbot().get_selected().hitchance, 1, 100);
-					ImGui::Separator();
-					static auto min_dmg_override = true;
-					ImGui::KeyBind("Min Damage Override Key Bind", &conf.aimbot().min_dmg_override_key_bind_type, &conf.aimbot().min_dmg_override_key_bind, &min_dmg_override);
-					ImGui::Checkbox("Min Damage Override Active", &conf.aimbot().min_dmg_override_active);
 				}
 				ImGui::EndTabItem();
 			}

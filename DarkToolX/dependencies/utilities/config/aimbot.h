@@ -3,10 +3,10 @@
 
 namespace config {
 	struct weapon_settings {
+		int hitchance{ 1 };
 		int min_dmg{ 1 };
 		int min_dmg_override{ 1 };
-		int hitchance{ 1 };
-		JSON_SERIALIZE(weapon_settings, min_dmg, min_dmg_override, hitchance)
+		JSON_SERIALIZE(weapon_settings, hitchance, min_dmg, min_dmg_override)
 	};
 
 	struct aimbot
@@ -31,7 +31,7 @@ namespace config {
 		bool auto_cock_revolver{ true };
 		bool auto_scope{ true };
 		int weapon_selection{ 0 };
-		std::vector<weapon_settings> weapons{ 0 };
+		std::vector<weapon_settings> weapons{ {20, 1, 1}, {75, 20, 1}, {55, 1, 1}, {60, 10, 1}, {40, 1, 1}, {40, 1, 1}, {50, 1, 1}, {50, 15, 1}, {40, 1, 1}, {55, 1, 1}, {70, 1, 1}, {70, 1, 1}, {90, 100, 1}, {60, 1, 1}, {85, 1, 1}, {60, 1, 1}, {60, 1, 1}, {60, 1, 1}, {85, 1, 1}, {1, 1, 1}, {80, 70, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1} };
 		weapon_settings& get_selected() noexcept
 		{
 			weapons.resize(34);
