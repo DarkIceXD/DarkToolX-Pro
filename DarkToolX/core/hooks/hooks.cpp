@@ -153,9 +153,6 @@ void hooks::release() {
 	delete sequence_hook;
 	MH_Uninitialize();
 	MH_DisableHook(MH_ALL_HOOKS);
-	ImGui_ImplDX9_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
 }
 
 bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd* cmd) {
@@ -183,7 +180,6 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	features::anti_aim(cmd, send_packet);
 	prediction::end();
 	features::auto_switch(cmd);
-
 	math::correct_movement(old_viewangles, cmd, old_forwardmove, old_sidemove);
 
 	cmd->forwardmove = std::clamp(cmd->forwardmove, -450.0f, 450.0f);
@@ -202,7 +198,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 }
 
 void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repaint, bool allow_force) {
-	static auto water_mark = std::string("DarkToolX - beta v5.1 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX - beta v5.3 - UID: ") + std::to_string(csgo::user.uid);
 	switch (fnv::hash(interfaces::panel->get_panel_name(panel))) {
 	case fnv::hash("MatSystemTopPanel"):
 		render::text(10, 10, render::fonts::watermark_font, water_mark, false, color::white(255));

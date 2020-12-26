@@ -262,6 +262,7 @@
     <ClInclude Include="dependencies\minhook\trampoline.h" />
     <ClInclude Include="dependencies\utilities\Animation.h" />
     <ClInclude Include="dependencies\utilities\config\aimbot.h" />
+    <ClInclude Include="dependencies\utilities\config\chat_bot.h" />
     <ClInclude Include="dependencies\utilities\config\clan_tag_changer.h" />
     <ClInclude Include="dependencies\utilities\config\common.h" />
     <ClInclude Include="dependencies\utilities\config\config.h" />

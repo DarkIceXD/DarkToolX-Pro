@@ -5,6 +5,7 @@
 #include "view.h"
 #include "skinchanger.h"
 #include "clan_tag_changer.h"
+#include "chat_bot.h"
 #include "misc.h"
 #include <fstream>
 
@@ -49,6 +50,11 @@ struct conf
 				}
 				catch (nlohmann::json::exception) {}
 				try {
+					s_chat_bot = json.value("s_chat_bot", 0);
+					_chat_bot = json.value<std::vector<config::chat_bot>>("_chat_bot", { {} });
+				}
+				catch (nlohmann::json::exception) {}
+				try {
 					s_misc = json.value("s_misc", 0);
 					_misc = json.value<std::vector<config::misc>>("_misc", { {} });
 				}
@@ -63,13 +69,14 @@ struct conf
 		std::ofstream stream(conf_name);
 		stream << json;
 	}
-	size_t s_aimbot{ 0 }, s_trigger{ 0 }, s_visuals{ 0 }, s_view{ 0 }, s_skin_changer{ 0 }, s_clan_tag_changer{ 0 }, s_misc{ 0 };
+	size_t s_aimbot{ 0 }, s_trigger{ 0 }, s_visuals{ 0 }, s_view{ 0 }, s_skin_changer{ 0 }, s_clan_tag_changer{ 0 }, s_chat_bot{ 0 }, s_misc{ 0 };
 	std::vector<config::aimbot> _aimbot{ {} };
 	std::vector<config::trigger> _trigger{ {} };
 	std::vector<config::visuals> _visuals{ {} };
 	std::vector<config::view> _view{ {} };
 	std::vector<config::skin_changer> _skin_changer{ {} };
 	std::vector<config::clan_tag_changer> _clan_tag_changer{ {} };
+	std::vector<config::chat_bot> _chat_bot{ {} };
 	std::vector<config::misc> _misc{ {} };
 	config::aimbot& aimbot()
 	{
@@ -113,6 +120,13 @@ struct conf
 		s_clan_tag_changer = std::clamp(s_clan_tag_changer, 0U, _clan_tag_changer.size() - 1);
 		return _clan_tag_changer.at(s_clan_tag_changer);
 	}
+	config::chat_bot& chat_bot()
+	{
+		if (_chat_bot.size() == 0)
+			_chat_bot.push_back({});
+		s_chat_bot = std::clamp(s_chat_bot, 0U, _chat_bot.size() - 1);
+		return _chat_bot.at(s_chat_bot);
+	}
 	config::misc& misc()
 	{
 		if (_misc.size() == 0)
@@ -120,5 +134,5 @@ struct conf
 		s_misc = std::clamp(s_misc, 0U, _misc.size() - 1);
 		return _misc.at(s_misc);
 	}
-	JSON_SERIALIZE(conf, s_aimbot, _aimbot, s_trigger, _trigger, s_visuals, _visuals, s_view, _view, s_skin_changer, _skin_changer, s_clan_tag_changer, _clan_tag_changer, s_misc, _misc)
+	JSON_SERIALIZE(conf, s_aimbot, _aimbot, s_trigger, _trigger, s_visuals, _visuals, s_view, _view, s_skin_changer, _skin_changer, s_clan_tag_changer, _clan_tag_changer, s_chat_bot, _chat_bot, s_misc, _misc)
 };

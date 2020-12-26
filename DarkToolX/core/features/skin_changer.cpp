@@ -171,6 +171,8 @@ void features::skin_changer() {
 		change_model(*glove, csgo::conf->skin_changer().get_glove_index());
 	}
 	auto weapons = csgo::local_player->get_weapons();
+	player_info_t info;
+	interfaces::engine->get_player_info(csgo::local_player->index(), &info);
 	for (auto i = 0; i < 64; i++)
 	{
 		auto weapon = static_cast<weapon_t*>(interfaces::entity_list->get_client_entity_handle(weapons[i]));
@@ -178,6 +180,9 @@ void features::skin_changer() {
 			break;
 
 		if (weapon->item_id_high() == -1)
+			continue;
+
+		if (weapon->original_owner_xuid() != info.xuidlow)
 			continue;
 
 		auto& index = weapon->item_definition_index();

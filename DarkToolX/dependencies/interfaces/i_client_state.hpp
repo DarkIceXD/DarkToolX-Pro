@@ -52,6 +52,15 @@ public:
 	virtual float		get_timeout_seconds() const = 0;
 };
 
+class clock_drift_manager
+{
+public:
+	float clock_offsets[16];   //0x0000
+	uint32_t current_clock_offset; //0x0044
+	uint32_t server_tick;     //0x0048
+	uint32_t client_tick;     //0x004C
+}; //Size: 0x0050
+
 class i_client_state {
 public:
 	char		u0[156];
@@ -59,20 +68,18 @@ public:
 	uint32_t	challenge_nr;
 	char		u1[100];
 	uint32_t	signon_state_count;
-	char		u2[0x8];
+	char		u2[8];
 	float		next_cmd_time;
 	uint32_t	server_count;
 	uint32_t	current_sequence;
-	char		u3[4];
-	int			m_iClockDriftMgr;
-	char		u4[68];
-	int			server_tick;
-	int			client_tick;
+	int			musor_pads[2];
+	clock_drift_manager	clock_drift;
 	uint32_t	delta_tick;
 	bool		paused;
-	char		u5[7];
+	char		u5[3];
 	uint32_t	view_entity;
 	uint32_t	player_slot;
+	int			bruh;
 	char		level_name[260];
 	char		level_name_short[80];
 	char		group_name[80];

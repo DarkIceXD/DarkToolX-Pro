@@ -491,5 +491,8 @@
     <ClInclude Include="dependencies\utilities\str_obfuscator.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="dependencies\utilities\config\chat_bot.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

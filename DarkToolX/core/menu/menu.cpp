@@ -22,7 +22,6 @@ void ImGui::KeyBind(const char* label, int* selection, int* key_bind, bool* did_
 		PushStyleColor(ImGuiCol_Button, ImVec4(0, 0.6f, 0, 1));
 		PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.6f, 0.3f, 1));
 	}
-	SameLine();
 	const auto clicked = Button("Rebind");
 	if (!*did_find)
 		PopStyleColor(2);
@@ -62,52 +61,34 @@ void menu::init(HWND window, IDirect3DDevice9* device)
 	auto& style = ImGui::GetStyle();
 	style.Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 	style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.13f, 0.14f, 0.15f, 0.8f);
-	style.Colors[ImGuiCol_ChildBg] = ImVec4(0.13f, 0.14f, 0.15f, 1.00f);
-	style.Colors[ImGuiCol_PopupBg] = ImVec4(0.13f, 0.14f, 0.15f, 1.00f);
-	style.Colors[ImGuiCol_Border] = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
-	style.Colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-	style.Colors[ImGuiCol_FrameBg] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
-	style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.38f, 0.38f, 0.38f, 1.00f);
-	style.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.67f, 0.67f, 0.67f, 0.39f);
-	style.Colors[ImGuiCol_TitleBg] = ImVec4(0.08f, 0.08f, 0.09f, 1.00f);
-	style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.08f, 0.08f, 0.09f, 1.00f);
-	style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
-	style.Colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-	style.Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
-	style.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
-	style.Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
-	style.Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
-	style.Colors[ImGuiCol_CheckMark] = ImVec4(0.11f, 0.64f, 0.92f, 1.00f);
-	style.Colors[ImGuiCol_SliderGrab] = ImVec4(0.11f, 0.64f, 0.92f, 1.00f);
-	style.Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.08f, 0.50f, 0.72f, 1.00f);
-	style.Colors[ImGuiCol_Button] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
-	style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.38f, 0.38f, 0.38f, 1.00f);
-	style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.67f, 0.67f, 0.67f, 0.39f);
-	style.Colors[ImGuiCol_Header] = ImVec4(0.22f, 0.22f, 0.22f, 1.00f);
-	style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
-	style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.67f, 0.67f, 0.67f, 0.39f);
-	style.Colors[ImGuiCol_Separator] = style.Colors[ImGuiCol_Border];
-	style.Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.41f, 0.42f, 0.44f, 1.00f);
-	style.Colors[ImGuiCol_SeparatorActive] = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
-	style.Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-	style.Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.29f, 0.30f, 0.31f, 0.67f);
-	style.Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
-	style.Colors[ImGuiCol_Tab] = ImVec4(0.08f, 0.08f, 0.09f, 0.83f);
-	style.Colors[ImGuiCol_TabHovered] = ImVec4(0.33f, 0.34f, 0.36f, 0.83f);
-	style.Colors[ImGuiCol_TabActive] = ImVec4(0.23f, 0.23f, 0.24f, 1.00f);
-	style.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.08f, 0.08f, 0.09f, 1.00f);
-	style.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.13f, 0.14f, 0.15f, 1.00f);
-	style.Colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
-	style.Colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
-	style.Colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
-	style.Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
-	style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
-	style.Colors[ImGuiCol_DragDropTarget] = ImVec4(0.11f, 0.64f, 0.92f, 1.00f);
-	style.Colors[ImGuiCol_NavHighlight] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-	style.Colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
-	style.Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
-	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.63f);
+	style.Colors[ImGuiCol_ChildBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.67f);
+	style.Colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.67f);
+	style.Colors[ImGuiCol_Border] = ImVec4(0.18f, 0.18f, 0.18f, 0.39f);
+	style.Colors[ImGuiCol_FrameBg] = ImVec4(0.61f, 0.00f, 1.00f, 0.24f);
+	style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.61f, 0.00f, 1.00f, 0.39f);
+	style.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.61f, 0.00f, 1.00f, 0.39f);
+	style.Colors[ImGuiCol_TitleBg] = ImVec4(0.61f, 0.00f, 1.00f, 0.24f);
+	style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.61f, 0.00f, 1.00f, 0.73f);
+	style.Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+	style.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.61f, 0.00f, 1.00f, 0.47f);
+	style.Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_CheckMark] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_SliderGrab] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_Button] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.61f, 0.00f, 1.00f, 0.75f);
+	style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.61f, 0.00f, 1.00f, 0.78f);
+	style.Colors[ImGuiCol_Header] = ImVec4(0.61f, 0.00f, 1.00f, 0.47f);
+	style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_Separator] = ImVec4(0.61f, 0.00f, 1.00f, 0.47f);
+	style.Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_SeparatorActive] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_Tab] = ImVec4(0.61f, 0.00f, 1.00f, 0.24f);
+	style.Colors[ImGuiCol_TabHovered] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_TabActive] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
 	style.GrabRounding = style.FrameRounding = 6;
 	style.ItemSpacing = ImVec2(8, 6);
 }
@@ -409,6 +390,35 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 				ImGui::Columns(1);
 				ImGui::EndTabItem();
 			}
+			if (ImGui::BeginTabItem("Chat Bot"))
+			{
+				ImGui::Checkbox("Enabled", &conf.chat_bot().enabled);
+				ImGui::SameLine();
+				if (ImGui::Button("+"))
+					conf.chat_bot().msgs.push_back({});
+				ImGui::Columns(2, "messages");
+				ImGui::Separator();
+				ImGui::Text("Message");
+				ImGui::NextColumn();
+				ImGui::Text("Delete");
+				ImGui::NextColumn();
+				ImGui::Separator();
+				int del = -1;
+				for (size_t i = 0; i < conf.chat_bot().msgs.size(); i++)
+				{
+					ImGui::PushID(i);
+					ImGui::InputText("##msg", &conf.chat_bot().msgs.at(i).msg);
+					ImGui::NextColumn();
+					if (ImGui::Button("-"))
+						del = i;
+					ImGui::NextColumn();
+					ImGui::PopID();
+				}
+				if (del >= 0)
+					conf.chat_bot().msgs.erase(conf.chat_bot().msgs.begin() + del);
+				ImGui::Columns(1);
+				ImGui::EndTabItem();
+			}
 			if (ImGui::BeginTabItem("Misc"))
 			{
 				ImGui::Combo("Anti Aim", &conf.misc().anti_aim, "Disabled\0Rage\0"); // Desync\0
@@ -586,6 +596,33 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 					conf._clan_tag_changer.push_back(conf.clan_tag_changer());
 				ImGui::InputText("Clan Tag Changer Config Name", &conf.clan_tag_changer().conf_name);
 				ImGui::Separator();
+				if (ImGui::BeginCombo("Chat Bot##1", conf.chat_bot().conf_name.c_str()))
+				{
+					for (size_t i = 0; i < conf._chat_bot.size(); i++)
+					{
+						ImGui::PushID(i);
+						const auto& current = conf._chat_bot.at(i);
+						const bool is_selected = (conf.s_chat_bot == i);
+						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
+							conf.s_chat_bot = i;
+
+						if (is_selected)
+							ImGui::SetItemDefaultFocus();
+						ImGui::PopID();
+					}
+					ImGui::EndCombo();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("+##"))
+					conf._chat_bot.push_back({});
+				ImGui::SameLine();
+				if (ImGui::Button("-##6") && conf._chat_bot.size() > 1)
+					conf._chat_bot.erase(conf._chat_bot.begin() + conf.s_chat_bot);
+				ImGui::SameLine();
+				if (ImGui::Button("Dupe##6"))
+					conf._chat_bot.push_back(conf.chat_bot());
+				ImGui::InputText("Chat Bot Config Name", &conf.chat_bot().conf_name);
+				ImGui::Separator();
 				if (ImGui::BeginCombo("Misc##1", conf.misc().conf_name.c_str()))
 				{
 					for (size_t i = 0; i < conf._misc.size(); i++)
@@ -603,13 +640,13 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 					ImGui::EndCombo();
 				}
 				ImGui::SameLine();
-				if (ImGui::Button("+##6"))
+				if (ImGui::Button("+##7"))
 					conf._misc.push_back({});
 				ImGui::SameLine();
-				if (ImGui::Button("-##6") && conf._misc.size() > 1)
+				if (ImGui::Button("-##7") && conf._misc.size() > 1)
 					conf._misc.erase(conf._misc.begin() + conf.s_misc);
 				ImGui::SameLine();
-				if (ImGui::Button("Dupe##6"))
+				if (ImGui::Button("Dupe##7"))
 					conf._misc.push_back(conf.misc());
 				ImGui::InputText("Misc Config Name", &conf.misc().conf_name);
 				ImGui::Separator();
