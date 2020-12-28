@@ -290,16 +290,45 @@ void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel
 
 long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 {
-	static auto water_mark = std::string("DarkToolX - beta v5.3 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX - beta v5.5 - UID: ") + std::to_string(csgo::user.uid);
+	IDirect3DStateBlock9* pixel_state = NULL;
+	device->CreateStateBlock(D3DSBT_ALL, &pixel_state);
+	pixel_state->Capture();
+	device->SetVertexShader(nullptr);
+	device->SetPixelShader(nullptr);
+	device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
+	device->SetRenderState(D3DRS_LIGHTING, FALSE);
+	device->SetRenderState(D3DRS_FOGENABLE, FALSE);
+	device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
+	device->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
+	device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	device->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+	device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);
+	device->SetRenderState(D3DRS_ANTIALIASEDLINEENABLE, TRUE);
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	device->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_INVDESTALPHA);
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	device->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_ONE);
+	device->SetRenderState(D3DRS_SRGBWRITEENABLE, FALSE);
+	device->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE | D3DCOLORWRITEENABLE_ALPHA);
+
 	ImGui_ImplDX9_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	auto draw_list = ImGui::GetBackgroundDrawList();
-	draw_list->AddText({ 5, 5 }, IM_COL32(255, 255, 255, 255), water_mark.c_str());
+	draw_list->AddText({ 5, 5 }, IM_COL32_WHITE, water_mark.c_str());
 	features::esp(draw_list);
 	menu::render(csgo::menu::enabled, *csgo::conf, *csgo::kits);
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+	
+	pixel_state->Apply();
+	pixel_state->Release();
 	return end_scene_original(device);
 }
 

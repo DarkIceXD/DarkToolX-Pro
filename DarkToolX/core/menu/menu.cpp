@@ -163,6 +163,11 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 				ImGui::Separator();
 				ImGui::Checkbox("Enemy Overhead Info", &conf.visuals().enemy_overhead_info);
 				ImGui::Separator();
+				ImGui::Checkbox("Box ESP", &conf.visuals().box_esp);
+				ImGui::Checkbox("Dormant ESP", &conf.visuals().dormant_esp);
+				ImGui::ColorEdit4("Box Team Color", &conf.visuals().box_team.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
+				ImGui::ColorEdit4("Box Enemy Color", &conf.visuals().box_enemy.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
+				ImGui::Separator();
 				ImGui::Checkbox("Step ESP", &conf.visuals().step_color.enabled);
 				ImGui::ColorEdit4("Step Color", &conf.visuals().step_color.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
 				ImGui::SliderFloat("Step Max Radius", &conf.visuals().step_max_radius, 100, 1000);

@@ -43,10 +43,18 @@ bool bounding_box(entity_t* entity, ImVec2& p_min, ImVec2& p_max)
 
 void features::esp(ImDrawList* draw_list)
 {
+	if (!csgo::conf->visuals().box_esp)
+		return;
+
+	const auto team_color = csgo::conf->visuals().box_team.to_u32();
+	const auto enemy_color = csgo::conf->visuals().box_enemy.to_u32();
 	for (auto i = 1; i <= interfaces::globals->max_clients; i++)
 	{
 		auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
-		if (!entity || entity->dormant() || !entity->is_player() || entity == csgo::local_player)
+		if (!entity || !entity->is_player() || entity == csgo::local_player)
+			continue;
+
+		if (!csgo::conf->visuals().dormant_esp && entity->dormant())
 			continue;
 
 		const auto hp = entity->health();
@@ -57,7 +65,7 @@ void features::esp(ImDrawList* draw_list)
 		if (!bounding_box(entity, min, max))
 			continue;
 
-		draw_list->AddRect(min, max, IM_COL32(255, 255, 255, 255));
+		draw_list->AddRect(min, max, csgo::local_player->is_enemy(entity) ? enemy_color : team_color);
 		ImVec2 hp_min, hp_max;
 		hp_min.x = max.x + 3;
 		hp_min.y = min.y;
@@ -71,6 +79,7 @@ void features::esp(ImDrawList* draw_list)
 		draw_list->AddRect(hp_min, hp_max, IM_COL32_BLACK);
 		player_info_t info;
 		interfaces::engine->get_player_info(entity->index(), &info);
-		draw_list->AddText({ min.x,max.y - 5 }, IM_COL32_WHITE, info.name);
+		const auto name_size = ImGui::CalcTextSize(info.name);
+		draw_list->AddText({ min.x + (max.x - min.x - name_size.x) / 2, max.y - name_size.y - 2 }, IM_COL32_WHITE, info.name);
 	}
 }
