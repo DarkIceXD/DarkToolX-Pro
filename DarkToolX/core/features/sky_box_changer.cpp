@@ -2,7 +2,7 @@
 
 void load_skybox(const char* sky)
 {
-	const auto fn_load_skybox = reinterpret_cast<void(__fastcall*)(const char*)>(utilities::pattern_scan("engine.dll", "55 8B EC 81 EC ? ? ? ? 56 57 8B F9 C7 45"));
+	static auto fn_load_skybox = reinterpret_cast<void(__fastcall*)(const char*)>(utilities::pattern_scan("engine.dll", "55 8B EC 81 EC ? ? ? ? 56 57 8B F9 C7 45"));
 	if (fn_load_skybox)
 		fn_load_skybox(sky);
 }

@@ -290,10 +290,10 @@ public:
 	NETVAR("DT_CSPlayer", "m_nSurvivalTeam", survival_team, int)
 	NETVAR("DT_CSPlayer", "m_flHealthShotBoostExpirationTime", health_boost_time, float)
 	NETVAR_OFFSET("DT_BaseEntity", "m_bIsAutoaimTarget", 0x4, get_index, int)
-
+	NETVAR_OFFSET("DT_BaseEntity", "m_CollisionGroup", -0x30, rgfl_coordinate_frame, matrix_t)
 	bool is_enemy(entity_t* entity)
 	{
-		if (interfaces::game_types->GetCurrentGameType() == 6)
+		if (interfaces::game_types->get_current_game_type() == 6)
 		{
 			auto danger_zone_team = this->survival_team();
 			if (danger_zone_team > -1)

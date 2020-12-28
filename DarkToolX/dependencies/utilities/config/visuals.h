@@ -16,6 +16,10 @@ namespace config {
 				true
 			};
 		}
+		constexpr uint32_t to_u32() const noexcept
+		{
+			return ((uint32_t)(r * 255) << 0) | ((uint32_t)(g * 255) << 8) | ((uint32_t)(b * 255) << 16) | ((uint32_t)(a * 255) << 24);
+		}
 		constexpr void rainbow(const float step) noexcept
 		{
 			if (r > 0 && b == 0)

@@ -198,11 +198,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 }
 
 void __stdcall hooks::paint_traverse::hook(unsigned int panel, bool force_repaint, bool allow_force) {
-	static auto water_mark = std::string("DarkToolX - beta v5.3 - UID: ") + std::to_string(csgo::user.uid);
 	switch (fnv::hash(interfaces::panel->get_panel_name(panel))) {
-	case fnv::hash("MatSystemTopPanel"):
-		render::text(10, 10, render::fonts::watermark_font, water_mark, false, color::white(255));
-		break;
 	case fnv::hash("HudZoom"):
 		features::damage_indicator();
 		if (features::remove_scope())
@@ -294,9 +290,13 @@ void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel
 
 long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 {
+	static auto water_mark = std::string("DarkToolX - beta v5.3 - UID: ") + std::to_string(csgo::user.uid);
 	ImGui_ImplDX9_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+	auto draw_list = ImGui::GetBackgroundDrawList();
+	draw_list->AddText({ 5, 5 }, IM_COL32(255, 255, 255, 255), water_mark.c_str());
+	features::esp(draw_list);
 	menu::render(csgo::menu::enabled, *csgo::conf, *csgo::kits);
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());

@@ -1,5 +1,6 @@
 #pragma once
 #include "../../dependencies/utilities/csgo.hpp"
+#include "../../dependencies/imgui/imgui.h"
 
 struct auto_wall_data {
 	player_t* entity;
@@ -47,4 +48,5 @@ namespace features {
 	void bullet_tracers();
 	void backtrack_update();
 	void backtrack(c_usercmd* cmd);
+	void esp(ImDrawList* draw_list);
 }
