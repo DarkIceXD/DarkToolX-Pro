@@ -49,4 +49,5 @@ namespace features {
 	void backtrack_update();
 	void backtrack(c_usercmd* cmd);
 	void esp(ImDrawList* draw_list);
+	void dormant();
 }

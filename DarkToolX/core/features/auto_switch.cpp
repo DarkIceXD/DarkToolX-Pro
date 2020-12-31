@@ -87,6 +87,9 @@ void features::auto_switch(c_usercmd* cmd) {
 		if (!(cmd->buttons & in_attack))
 			return;
 
+		if (!csgo::local_player->is_scoped())
+			return;
+
 		const auto index = weapon->item_definition_index();
 		if (index == WEAPON_SSG08 || index == WEAPON_AWP)
 			switch_phase = 1;

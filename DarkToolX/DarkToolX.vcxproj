@@ -158,6 +158,7 @@
     <ClCompile Include="core\features\clan_tag_changer.cpp" />
     <ClCompile Include="core\features\crosshair.cpp" />
     <ClCompile Include="core\features\damage_indicator.cpp" />
+    <ClCompile Include="core\features\dormant.cpp" />
     <ClCompile Include="core\features\esp.cpp" />
     <ClCompile Include="core\features\fake_lag.cpp" />
     <ClCompile Include="core\features\force_item_update.cpp" />

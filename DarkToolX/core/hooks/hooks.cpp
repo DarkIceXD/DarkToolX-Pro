@@ -178,6 +178,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	features::legit_aimbot(cmd);
 	features::trigger(cmd);
 	features::anti_aim(cmd, send_packet);
+	features::dormant();
 	prediction::end();
 	features::auto_switch(cmd);
 	math::correct_movement(old_viewangles, cmd, old_forwardmove, old_sidemove);
