@@ -526,13 +526,12 @@ public:
 		return *reinterpret_cast<bool*>(uintptr_t(this) + offset);
 	}
 
-	void* get_animation_overlay() {
-		static auto offset = *reinterpret_cast<uintptr_t*>(utilities::pattern_scan("client.dll", "8B 80 ? ? ? ? 8D 34 C8") + 0x2);
-		return *reinterpret_cast<void**>(this + offset);
+	anim_layer* get_animation_overlay() {
+		return *reinterpret_cast<anim_layer**>(this + netvar_manager::get_net_var(fnv::hash("DT_BaseAnimating"), fnv::hash("m_hLightingOrigin")) + 0x3c);
 	}
 
 	float* get_pose_parameter() {
-		return (float*)((uintptr_t)this + netvar_manager::get_net_var(fnv::hash("DT_CSPlayer"), fnv::hash("m_flPoseParameter")));
+		return (float*)(this + netvar_manager::get_net_var(fnv::hash("DT_CSPlayer"), fnv::hash("m_flPoseParameter")));
 	}
 
 	void get_anim_layers(anim_layer* layers) {

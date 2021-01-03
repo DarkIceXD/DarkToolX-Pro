@@ -43,6 +43,9 @@ bool bounding_box(entity_t* entity, ImVec2& p_min, ImVec2& p_max)
 
 void features::esp(ImDrawList* draw_list)
 {
+	if (!csgo::local_player)
+		return;
+
 	if (!csgo::conf->visuals().box_esp)
 		return;
 

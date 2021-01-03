@@ -161,8 +161,9 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 
 	csgo::local_player = static_cast<player_t*>(interfaces::entity_list->get_client_entity(interfaces::engine->get_local_player()));
 
-	const volatile auto vlBaseAddress = *reinterpret_cast<std::uintptr_t*>(reinterpret_cast<std::uintptr_t>(_AddressOfReturnAddress()) - sizeof(std::uintptr_t));
-	bool& send_packet = *reinterpret_cast<bool*>(vlBaseAddress - 0x1C);
+	uintptr_t* frame_pointer;
+	__asm mov frame_pointer, ebp;
+	bool& send_packet = *reinterpret_cast<bool*>(*frame_pointer - 0x1C);
 
 	auto old_viewangles = cmd->viewangles;
 	auto old_forwardmove = cmd->forwardmove;
