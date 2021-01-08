@@ -531,7 +531,7 @@ public:
 	}
 
 	float* get_pose_parameter() {
-		return (float*)(this + netvar_manager::get_net_var(fnv::hash("DT_CSPlayer"), fnv::hash("m_flPoseParameter")));
+		return (float*)(this + netvar_manager::get_net_var(fnv::hash("DT_BaseAnimating"), fnv::hash("m_flPoseParameter")));
 	}
 
 	void get_anim_layers(anim_layer* layers) {

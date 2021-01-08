@@ -256,6 +256,10 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 			break;
 		}
 	}
+	else
+	{
+		csgo::local_player = nullptr;
+	}
 	frame_stage_notify_original(interfaces::client, stage);
 }
 
@@ -328,7 +332,7 @@ long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 	menu::render(csgo::menu::enabled, *csgo::conf, *csgo::kits);
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-	
+
 	pixel_state->Apply();
 	pixel_state->Release();
 	return end_scene_original(device);
