@@ -17,7 +17,7 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, vec3_t&
 	constexpr int hitboxes[] = { hitbox_pelvis, hitbox_stomach, hitbox_lower_chest, hitbox_chest, hitbox_upper_chest, hitbox_head, hitbox_neck, hitbox_right_thigh, hitbox_left_thigh, hitbox_right_calf, hitbox_left_calf, hitbox_right_foot, hitbox_left_foot, hitbox_right_upper_arm, hitbox_right_forearm, hitbox_left_upper_arm, hitbox_left_forearm };
 	best_target target = {};
 	for (const auto i : hitboxes) {
-		if (!csgo::conf->aimbot().head && (i == hitbox_head || i == hitbox_neck))
+		if (!csgo::conf->aimbot().is_hitbox_enabled(i))
 			continue;
 		auto current_hitbox = entity->get_hitbox_position(i);
 		const auto new_viewangle = (math::calculate_angle(local_head, current_hitbox) - aimpunch).normalized();

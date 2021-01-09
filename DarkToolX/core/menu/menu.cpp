@@ -113,7 +113,16 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 					if (conf.aimbot().mode == 2)
 						ImGui::SliderFloat("Smoothness", &conf.aimbot().smoothness, 1, 10);
 					ImGui::SliderFloat("Fov", &conf.aimbot().fov, 0, 180);
+					ImGui::Separator();
 					ImGui::Checkbox("Head", &conf.aimbot().head);
+					if (conf.aimbot().mode == 1)
+					{
+						ImGui::Checkbox("Chest", &conf.aimbot().chest);
+						ImGui::Checkbox("Stomach", &conf.aimbot().stomach);
+						ImGui::Checkbox("Legs", &conf.aimbot().legs);
+						ImGui::Checkbox("Arms", &conf.aimbot().arms);
+					}
+					ImGui::Separator();
 					ImGui::Checkbox("Auto Shoot", &conf.aimbot().auto_shoot);
 					if (conf.aimbot().mode == 1)
 					{

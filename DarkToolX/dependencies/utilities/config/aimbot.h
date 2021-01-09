@@ -26,6 +26,10 @@ namespace config {
 		float smoothness{ 3.f };
 		float fov{ 0.f };
 		bool head{ true };
+		bool chest{ true };
+		bool stomach{ true };
+		bool legs{ true };
+		bool arms{ false };
 		bool auto_shoot{ false };
 		bool dmg_indicator{ false };
 		bool auto_cock_revolver{ true };
@@ -45,6 +49,38 @@ namespace config {
 				return {};
 			return weapons.at(i);
 		}
-		JSON_SERIALIZE(aimbot, conf_name, mode, enabled, key_bind_type, key_bind, min_dmg_override_active, min_dmg_override_key_bind_type, min_dmg_override_key_bind, smoothness, fov, head, auto_shoot, dmg_indicator, auto_cock_revolver, auto_scope, weapons)
+		constexpr bool is_hitbox_enabled(const int hitbox) const noexcept
+		{
+			switch (hitbox)
+			{
+			case hitbox_head:
+			case hitbox_neck:
+				return head;
+			case hitbox_pelvis:
+			case hitbox_stomach:
+				return stomach;
+			case hitbox_lower_chest:
+			case hitbox_chest:
+			case hitbox_upper_chest:
+				return chest;
+			case hitbox_right_thigh:
+			case hitbox_left_thigh:
+			case hitbox_right_calf:
+			case hitbox_left_calf:
+			case hitbox_right_foot:
+			case hitbox_left_foot:
+				return legs;
+			case hitbox_right_hand:
+			case hitbox_left_hand:
+			case hitbox_right_upper_arm:
+			case hitbox_right_forearm:
+			case hitbox_left_upper_arm:
+			case hitbox_left_forearm:
+				return arms;
+			default:
+				return false;
+			}
+		}
+		JSON_SERIALIZE(aimbot, conf_name, mode, enabled, key_bind_type, key_bind, min_dmg_override_active, min_dmg_override_key_bind_type, min_dmg_override_key_bind, smoothness, fov, head, chest, stomach, legs, arms, auto_shoot, dmg_indicator, auto_cock_revolver, auto_scope, weapons)
 	};
 };
