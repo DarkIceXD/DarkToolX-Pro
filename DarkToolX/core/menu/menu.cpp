@@ -471,6 +471,9 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::SameLine();
 				if (ImGui::Button("Dupe##0"))
 					conf._aimbot.push_back(conf.aimbot());
+				ImGui::SameLine();
+				if (ImGui::Button("Share to Clipboard##0"))
+					ImGui::SetClipboardText(conf.export_config(0).c_str());
 				ImGui::InputText("Aimbot Config Name", &conf.aimbot().conf_name);
 				ImGui::Separator();
 				if (ImGui::BeginCombo("Trigger##1", conf.trigger().conf_name.c_str()))
@@ -498,6 +501,9 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::SameLine();
 				if (ImGui::Button("Dupe##1"))
 					conf._trigger.push_back(conf.trigger());
+				ImGui::SameLine();
+				if (ImGui::Button("Share to Clipboard##1"))
+					ImGui::SetClipboardText(conf.export_config(1).c_str());
 				ImGui::InputText("Trigger Config Name", &conf.trigger().conf_name);
 				ImGui::Separator();
 				if (ImGui::BeginCombo("Visuals##1", conf.visuals().conf_name.c_str()))
@@ -525,6 +531,9 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::SameLine();
 				if (ImGui::Button("Dupe##2"))
 					conf._visuals.push_back(conf.visuals());
+				ImGui::SameLine();
+				if (ImGui::Button("Share to Clipboard##2"))
+					ImGui::SetClipboardText(conf.export_config(2).c_str());
 				ImGui::InputText("Visuals Config Name", &conf.visuals().conf_name);
 				ImGui::Separator();
 				if (ImGui::BeginCombo("View##1", conf.view().conf_name.c_str()))
@@ -552,6 +561,9 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::SameLine();
 				if (ImGui::Button("Dupe##3"))
 					conf._view.push_back(conf.view());
+				ImGui::SameLine();
+				if (ImGui::Button("Share to Clipboard##3"))
+					ImGui::SetClipboardText(conf.export_config(3).c_str());
 				ImGui::InputText("View Config Name", &conf.view().conf_name);
 				ImGui::Separator();
 				if (ImGui::BeginCombo("Skin Changer##1", conf.skin_changer().conf_name.c_str()))
@@ -579,6 +591,9 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::SameLine();
 				if (ImGui::Button("Dupe##4"))
 					conf._skin_changer.push_back(conf.skin_changer());
+				ImGui::SameLine();
+				if (ImGui::Button("Share to Clipboard##4"))
+					ImGui::SetClipboardText(conf.export_config(4).c_str());
 				ImGui::InputText("Skin Changer Config Name", &conf.skin_changer().conf_name);
 				ImGui::Separator();
 				if (ImGui::BeginCombo("Clan Tag Changer##1", conf.clan_tag_changer().conf_name.c_str()))
@@ -606,6 +621,9 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::SameLine();
 				if (ImGui::Button("Dupe##5"))
 					conf._clan_tag_changer.push_back(conf.clan_tag_changer());
+				ImGui::SameLine();
+				if (ImGui::Button("Share to Clipboard##5"))
+					ImGui::SetClipboardText(conf.export_config(5).c_str());
 				ImGui::InputText("Clan Tag Changer Config Name", &conf.clan_tag_changer().conf_name);
 				ImGui::Separator();
 				if (ImGui::BeginCombo("Chat Bot##1", conf.chat_bot().conf_name.c_str()))
@@ -633,6 +651,9 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::SameLine();
 				if (ImGui::Button("Dupe##6"))
 					conf._chat_bot.push_back(conf.chat_bot());
+				ImGui::SameLine();
+				if (ImGui::Button("Share to Clipboard##6"))
+					ImGui::SetClipboardText(conf.export_config(6).c_str());
 				ImGui::InputText("Chat Bot Config Name", &conf.chat_bot().conf_name);
 				ImGui::Separator();
 				if (ImGui::BeginCombo("Misc##1", conf.misc().conf_name.c_str()))
@@ -660,10 +681,16 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::SameLine();
 				if (ImGui::Button("Dupe##7"))
 					conf._misc.push_back(conf.misc());
+				ImGui::SameLine();
+				if (ImGui::Button("Share to Clipboard##7"))
+					ImGui::SetClipboardText(conf.export_config(7).c_str());
 				ImGui::InputText("Misc Config Name", &conf.misc().conf_name);
 				ImGui::Separator();
 				if (ImGui::Button("Save"))
 					conf.save();
+				ImGui::SameLine();
+				if (ImGui::Button("Import Config from Clipboard"))
+					conf.import_config(ImGui::GetClipboardText());
 				ImGui::EndTabItem();
 			}
 			ImGui::EndTabBar();

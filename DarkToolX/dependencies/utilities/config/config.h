@@ -8,6 +8,7 @@
 #include "chat_bot.h"
 #include "misc.h"
 #include <fstream>
+#include <sstream>
 
 struct conf
 {
@@ -17,50 +18,33 @@ struct conf
 		std::ifstream stream(conf_name);
 		if (stream.good())
 		{
-			try {
-				const auto json = nlohmann::json::parse(stream);
-				try {
-					json.at("s_aimbot").get_to(s_aimbot);
-					json.at("_aimbot").get_to(_aimbot);
-				}
-				catch (nlohmann::json::exception) {}
-				try {
-					json.at("s_trigger").get_to(s_trigger);
-					json.at("_trigger").get_to(_trigger);
-				}
-				catch (nlohmann::json::exception) {}
-				try {
-					s_visuals = json.value("s_visuals", 0);
-					_visuals = json.value<std::vector<config::visuals>>("_visuals", { {} });
-				}
-				catch (nlohmann::json::exception) {}
-				try {
-					s_view = json.value("s_view", 0);
-					_view = json.value<std::vector<config::view>>("_view", { {} });
-				}
-				catch (nlohmann::json::exception) {}
-				try {
-					s_skin_changer = json.value("s_skin_changer", 0);
-					_skin_changer = json.value<std::vector<config::skin_changer>>("_skin_changer", { {} });
-				}
-				catch (nlohmann::json::exception) {}
-				try {
-					s_clan_tag_changer = json.value("s_clan_tag_changer", 0);
-					_clan_tag_changer = json.value<std::vector<config::clan_tag_changer>>("_clan_tag_changer", { {} });
-				}
-				catch (nlohmann::json::exception) {}
-				try {
-					s_chat_bot = json.value("s_chat_bot", 0);
-					_chat_bot = json.value<std::vector<config::chat_bot>>("_chat_bot", { {} });
-				}
-				catch (nlohmann::json::exception) {}
-				try {
-					s_misc = json.value("s_misc", 0);
-					_misc = json.value<std::vector<config::misc>>("_misc", { {} });
-				}
-				catch (nlohmann::json::exception) {}
+			const auto json = nlohmann::json::parse(stream, nullptr, false);
+			if (!json.is_discarded())
+			{
+				s_aimbot = json.value("s_aimbot", 0);
+				_aimbot = json.value<std::vector<config::aimbot>>("_aimbot", { {} });
+
+				s_trigger = json.value("s_trigger", 0);
+				_trigger = json.value<std::vector<config::trigger>>("_trigger", { {} });
+
+				s_visuals = json.value("s_visuals", 0);
+				_visuals = json.value<std::vector<config::visuals>>("_visuals", { {} });
+
+				s_view = json.value("s_view", 0);
+				_view = json.value<std::vector<config::view>>("_view", { {} });
+
+				s_skin_changer = json.value("s_skin_changer", 0);
+				_skin_changer = json.value<std::vector<config::skin_changer>>("_skin_changer", { {} });
+
+				s_clan_tag_changer = json.value("s_clan_tag_changer", 0);
+				_clan_tag_changer = json.value<std::vector<config::clan_tag_changer>>("_clan_tag_changer", { {} });
+
+				s_chat_bot = json.value("s_chat_bot", 0);
+				_chat_bot = json.value<std::vector<config::chat_bot>>("_chat_bot", { {} });
+
+				s_misc = json.value("s_misc", 0);
+				_misc = json.value<std::vector<config::misc>>("_misc", { {} });
 			}
-			catch (nlohmann::json::exception) {}
 		}
 	}
 	void save() const
@@ -68,6 +52,76 @@ struct conf
 		nlohmann::json json(*this);
 		std::ofstream stream(conf_name);
 		stream << json;
+	}
+	std::string export_config(const int i)
+	{
+		nlohmann::json json;
+		switch (i)
+		{
+		case 1:
+			json = trigger();
+			break;
+		case 2:
+			json = visuals();
+			break;
+		case 3:
+			json = view();
+			break;
+		case 4:
+			json = skin_changer();
+			break;
+		case 5:
+			json = clan_tag_changer();
+			break;
+		case 6:
+			json = chat_bot();
+			break;
+		case 7:
+			json = misc();
+			break;
+		default:
+			json = aimbot();
+			break;
+		}
+		json["i"] = i;
+		std::stringstream ss;
+		ss << json;
+		return ss.str();
+	}
+	void import_config(const std::string& shared_config)
+	{
+		const auto json = nlohmann::json::parse(shared_config, nullptr, false);
+		if (!json.is_discarded() && json.contains("i"))
+		{
+			const auto i = json.at("i").get<int>();
+			switch (i)
+			{
+			case 1:
+				_trigger.push_back(json);
+				break;
+			case 2:
+				_visuals.push_back(json);
+				break;
+			case 3:
+				_view.push_back(json);
+				break;
+			case 4:
+				_skin_changer.push_back(json);
+				break;
+			case 5:
+				_clan_tag_changer.push_back(json);
+				break;
+			case 6:
+				_chat_bot.push_back(json);
+				break;
+			case 7:
+				_misc.push_back(json);
+				break;
+			default:
+				_aimbot.push_back(json);
+				break;
+			}
+		}
 	}
 	size_t s_aimbot{ 0 }, s_trigger{ 0 }, s_visuals{ 0 }, s_view{ 0 }, s_skin_changer{ 0 }, s_clan_tag_changer{ 0 }, s_chat_bot{ 0 }, s_misc{ 0 };
 	std::vector<config::aimbot> _aimbot{ {} };
