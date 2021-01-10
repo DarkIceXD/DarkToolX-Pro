@@ -10,7 +10,6 @@
 #include "console/console.hpp"
 #include "License.h"
 #include "config/config.h"
-#include "kit_parser.h"
 
 //interfaces
 #define sig_client_state "A1 ? ? ? ? 8B 80 ? ? ? ? C3"
@@ -27,7 +26,6 @@
 namespace csgo {
 	inline player_t* local_player = nullptr;
 	inline conf* conf = nullptr;
-	inline kit_parser* kits = nullptr;
 	inline bool want_to_shoot = false;
 	inline License::User user;
 	inline bool should_animate = false;

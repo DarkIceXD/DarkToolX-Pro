@@ -13,5 +13,5 @@ namespace ImGui {
 
 namespace menu {
 	void init(HWND window, IDirect3DDevice9* device);
-	void render(bool& enabled, conf& conf, const kit_parser& kits);
+	void render(bool& enabled, conf& conf);
 };

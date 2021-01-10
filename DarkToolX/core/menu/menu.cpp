@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "../../dependencies/utilities/kit_parser.h"
 
 void ImGui::HelpMarker(const char* description)
 {
@@ -93,7 +94,7 @@ void menu::init(HWND window, IDirect3DDevice9* device)
 	style.ItemSpacing = ImVec2(8, 6);
 }
 
-void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
+void menu::render(bool& enabled, conf& conf)
 {
 	ImGui::GetIO().MouseDrawCursor = enabled;
 	if (enabled)
@@ -115,13 +116,10 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 					ImGui::SliderFloat("Fov", &conf.aimbot().fov, 0, 180);
 					ImGui::Separator();
 					ImGui::Checkbox("Head", &conf.aimbot().head);
-					if (conf.aimbot().mode == 1)
-					{
-						ImGui::Checkbox("Chest", &conf.aimbot().chest);
-						ImGui::Checkbox("Stomach", &conf.aimbot().stomach);
-						ImGui::Checkbox("Legs", &conf.aimbot().legs);
-						ImGui::Checkbox("Arms", &conf.aimbot().arms);
-					}
+					ImGui::Checkbox("Chest", &conf.aimbot().chest);
+					ImGui::Checkbox("Stomach", &conf.aimbot().stomach);
+					ImGui::Checkbox("Legs", &conf.aimbot().legs);
+					ImGui::Checkbox("Arms", &conf.aimbot().arms);
 					ImGui::Separator();
 					ImGui::Checkbox("Auto Shoot", &conf.aimbot().auto_shoot);
 					if (conf.aimbot().mode == 1)
@@ -228,8 +226,8 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 					if (ImGui::Combo("Knife Type", &conf.skin_changer().knife_selection, "-\0Bayonet\0Classic\0Flip\0Gut\0Karambit\0M9 Bayonet\0Huntsman\0Falchion\0Bowie\0Butterfly\0Shadow Daggers\0Paracord\0Survival\0Ursus\0Navaja\0Nomad\0Stiletto\0Talon\0Skeleton\0"))
 						need_to_update = true;
 				}
-				const auto& kit_list = conf.skin_changer().selection == 0 ? kits.glove_kits : kits.paint_kits;
-				const int current_index = kits.find(kit_list, conf.skin_changer().get_selected().paint_kit);
+				const auto& kit_list = conf.skin_changer().selection == 0 ? kit_parser::glove_kits : kit_parser::paint_kits;
+				const int current_index = kit_parser::find(kit_list, conf.skin_changer().get_selected().paint_kit);
 				static ImGuiTextFilter filter;
 				filter.Draw("Search Paint Kit");
 				if (ImGui::BeginCombo("Paint Kit", kit_list.at(current_index).name.c_str()))
@@ -318,7 +316,7 @@ void menu::render(bool& enabled, conf& conf, const kit_parser& kits)
 					{
 						auto& e = conf.skin_changer().get_selected().animation.at(i);
 						ImGui::PushID(i);
-						const int ci = kits.find(kit_list, e.paint_kit);
+						const int ci = kit_parser::find(kit_list, e.paint_kit);
 						if (ImGui::BeginCombo("##paintkit", kit_list.at(ci).name.c_str()))
 						{
 							for (size_t i = 0; i < kit_list.size(); i++)

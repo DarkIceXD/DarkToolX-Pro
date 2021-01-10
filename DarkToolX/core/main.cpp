@@ -1,5 +1,6 @@
 #include "../dependencies/utilities/csgo.hpp"
 #include "features/features.hpp"
+#include "../dependencies/utilities/kit_parser.h"
 
 unsigned long WINAPI initialize(void* instance) {
 	csgo::user = License::check();
@@ -13,7 +14,7 @@ unsigned long WINAPI initialize(void* instance) {
 		csgo::conf = new conf();
 		try {
 			interfaces::initialize();
-			csgo::kits = new kit_parser();
+			kit_parser::initialize();
 			render::initialize();
 			hooks::initialize();
 		}
@@ -40,7 +41,6 @@ unsigned long WINAPI release() {
 	console::release();
 #endif
 	delete csgo::conf;
-	delete csgo::kits;
 	return TRUE;
 }
 

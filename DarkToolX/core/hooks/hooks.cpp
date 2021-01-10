@@ -329,7 +329,7 @@ long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 	auto draw_list = ImGui::GetBackgroundDrawList();
 	draw_list->AddText({ 5, 5 }, IM_COL32_WHITE, water_mark.c_str());
 	features::esp(draw_list);
-	menu::render(csgo::menu::enabled, *csgo::conf, *csgo::kits);
+	menu::render(csgo::menu::enabled, *csgo::conf);
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 

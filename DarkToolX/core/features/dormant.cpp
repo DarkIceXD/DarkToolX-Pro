@@ -29,26 +29,29 @@ public:
 	radar_player_t radar_info[65];
 };
 
+static uintptr_t find_hud_element(void* this_ptr, const char* name)
+{
+	static auto find_hud_element_fn = (uintptr_t(__thiscall*)(void*, const char*))utilities::pattern_scan("client.dll", "55 8B EC 53 8B 5D 08 56 57 8B F9 33 F6 39 77 28");
+	return find_hud_element_fn(this_ptr, name);
+}
+
 void features::dormant()
 {
 	if (!csgo::conf->visuals().dormant_esp)
 		return;
 
-	static auto FindHudElement = (uintptr_t(__thiscall*)(void*, const char*))utilities::pattern_scan("client.dll", "55 8B EC 53 8B 5D 08 56 57 8B F9 33 F6 39 77 28");
 	static auto hud_ptr = *(uintptr_t**)(utilities::pattern_scan("client.dll", "81 25 ? ? ? ? ? ? ? ? 8B 01") + 2);
-
-	auto radar_base = FindHudElement(hud_ptr, "CCSGO_HudRadar");
-	CCSGO_HudRadar* hud_radar = (CCSGO_HudRadar*)(radar_base - 20);
+	const auto hud_radar = (CCSGO_HudRadar*)(find_hud_element(hud_ptr, "CCSGO_HudRadar") - 20);
 	if (!hud_radar)
 		return;
 
 	for (auto i = 1; i <= interfaces::globals->max_clients; i++)
 	{
 		auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
-		if (!entity || !entity->dormant() || !entity->is_player() || entity == csgo::local_player)
+		if (!entity || entity == csgo::local_player || !entity->is_player())
 			continue;
 
-		if (!entity->is_alive())
+		if (!entity->dormant())
 			continue;
 
 		if (!entity->spotted())

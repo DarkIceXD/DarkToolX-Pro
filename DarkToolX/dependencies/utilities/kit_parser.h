@@ -2,9 +2,9 @@
 #include <vector>
 #include <string>
 
-struct kit_parser
+namespace kit_parser
 {
-	kit_parser();
+	void initialize() noexcept;
 	struct paint_kit
 	{
 		int id;
@@ -14,16 +14,8 @@ struct kit_parser
 			return name < other.name;
 		}
 	};
-	int find(const std::vector<paint_kit>& list, const int id) const noexcept
-	{
-		for (size_t i = 0; i < list.size(); i++)
-		{
-			if (list.at(i).id == id)
-				return i;
-		}
-		return 0;
-	}
-	std::vector<paint_kit> paint_kits;
-	std::vector<paint_kit> glove_kits;
-	std::vector<paint_kit> sticker_kits;
+	int find(const std::vector<paint_kit>& list, const int id) noexcept;
+	inline std::vector<paint_kit> paint_kits;
+	inline std::vector<paint_kit> glove_kits;
+	inline std::vector<paint_kit> sticker_kits;
 };

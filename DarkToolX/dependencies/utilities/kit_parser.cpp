@@ -79,10 +79,10 @@ struct CStickerKit
 	String_t image_inventory2;
 	String_t image_inventory_large;
 
-	std::uint32_t pad0[4];
+	uint32_t pad0[4];
 };
 
-kit_parser::kit_parser()
+void kit_parser::initialize() noexcept
 {
 	const auto V_UCS2ToUTF8 = static_cast<int(*)(const wchar_t* ucs2, char* utf8, int len)>(utilities::get_export("vstdlib.dll", "V_UCS2ToUTF8"));
 	// Search the relative calls
@@ -174,4 +174,14 @@ kit_parser::kit_parser()
 		std::sort(sticker_kits.begin(), sticker_kits.end());
 		sticker_kits.insert(sticker_kits.begin(), { 0, "None" });
 	}
+}
+
+int kit_parser::find(const std::vector<paint_kit>& list, const int id) noexcept
+{
+	for (size_t i = 0; i < list.size(); i++)
+	{
+		if (list.at(i).id == id)
+			return i;
+	}
+	return 0;
 }
