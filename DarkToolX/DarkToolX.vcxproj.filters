@@ -201,6 +201,9 @@
     <ClCompile Include="core\features\dormant.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="core\features\ragdolls.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\features\features.hpp">

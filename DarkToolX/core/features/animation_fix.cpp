@@ -9,9 +9,6 @@ void features::animation_fix()
 	if (!csgo::local_player)
 		return;
 
-	if (!csgo::local_player->is_alive())
-		return;
-
 	const auto animation_state = csgo::local_player->get_anim_state();
 	if (!animation_state)
 		return;

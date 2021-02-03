@@ -251,6 +251,7 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 			features::step_esp();
 			features::bullet_tracers();
 			features::animation_fix();
+			// features::ragdolls();
 			break;
 		case FRAME_RENDER_END:
 			break;
@@ -296,7 +297,7 @@ void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel
 
 long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 {
-	static auto water_mark = std::string("DarkToolX - beta v5.5 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX Pro - beta v6.0 - UID: ") + std::to_string(csgo::user.uid);
 	IDirect3DStateBlock9* pixel_state = NULL;
 	device->CreateStateBlock(D3DSBT_ALL, &pixel_state);
 	pixel_state->Capture();

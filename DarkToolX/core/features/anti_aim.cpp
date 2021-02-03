@@ -8,7 +8,10 @@ void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 	if (!csgo::local_player)
 		return;
 
-	if (!csgo::local_player->is_alive() || csgo::local_player->flags() & fl_frozen)
+	if (!csgo::local_player->is_alive())
+		return;
+
+	if (csgo::local_player->flags() & fl_frozen)
 		return;
 
 	const int move_type = csgo::local_player->move_type();

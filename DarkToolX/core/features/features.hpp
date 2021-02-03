@@ -50,4 +50,5 @@ namespace features {
 	void backtrack(c_usercmd* cmd);
 	void esp(ImDrawList* draw_list);
 	void dormant();
+	void ragdolls();
 }

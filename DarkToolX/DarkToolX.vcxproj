@@ -24,6 +24,7 @@
     <ProjectGuid>{a1d4219d-8d4b-444b-967a-33f82c60e312}</ProjectGuid>
     <RootNamespace>DarkToolX</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>DarkToolX</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -172,6 +173,7 @@
     <ClCompile Include="core\features\engine_prediction.cpp" />
     <ClCompile Include="core\features\hitsound.cpp" />
     <ClCompile Include="core\features\no_flash.cpp" />
+    <ClCompile Include="core\features\ragdolls.cpp" />
     <ClCompile Include="core\features\reveal_ranks.cpp" />
     <ClCompile Include="core\features\sky_box_changer.cpp" />
     <ClCompile Include="core\features\step_esp.cpp" />
