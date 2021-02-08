@@ -176,6 +176,7 @@
     <ClCompile Include="core\features\ragdolls.cpp" />
     <ClCompile Include="core\features\reveal_ranks.cpp" />
     <ClCompile Include="core\features\sky_box_changer.cpp" />
+    <ClCompile Include="core\features\slow_walk.cpp" />
     <ClCompile Include="core\features\step_esp.cpp" />
     <ClCompile Include="core\features\trigger.cpp" />
     <ClCompile Include="core\features\update_stattrak.cpp" />
@@ -193,6 +194,7 @@
     <ClCompile Include="dependencies\imgui\imgui_impl_dx9.cpp" />
     <ClCompile Include="dependencies\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="dependencies\imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui_tables.cpp" />
     <ClCompile Include="dependencies\imgui\imgui_widgets.cpp" />
     <ClCompile Include="dependencies\interfaces\interfaces.cpp" />
     <ClCompile Include="dependencies\math\math.cpp" />
