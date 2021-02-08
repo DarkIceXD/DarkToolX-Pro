@@ -159,8 +159,6 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	if (!cmd || !cmd->command_number)
 		return create_move_original(input_sample_frametime, cmd);
 
-	csgo::local_player = static_cast<player_t*>(interfaces::entity_list->get_client_entity(interfaces::engine->get_local_player()));
-
 	uintptr_t* frame_pointer;
 	__asm mov frame_pointer, ebp;
 	bool& send_packet = *reinterpret_cast<bool*>(*frame_pointer - 0x1C);
@@ -180,6 +178,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	features::trigger(cmd);
 	features::anti_aim(cmd, send_packet);
 	features::dormant();
+	features::slow_walk(cmd, old_forwardmove, old_sidemove);
 	prediction::end();
 	features::auto_switch(cmd);
 	math::correct_movement(old_viewangles, cmd, old_forwardmove, old_sidemove);
@@ -233,6 +232,7 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 {
 	if (interfaces::engine->is_in_game())
 	{
+		csgo::local_player = static_cast<player_t*>(interfaces::entity_list->get_client_entity(interfaces::engine->get_local_player()));
 		switch (stage)
 		{
 		case FRAME_START:

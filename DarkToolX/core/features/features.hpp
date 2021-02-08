@@ -51,4 +51,5 @@ namespace features {
 	void esp(ImDrawList* draw_list);
 	void dormant();
 	void ragdolls();
+	void slow_walk(c_usercmd* cmd, float& forwardmove, float& sidemove);
 }

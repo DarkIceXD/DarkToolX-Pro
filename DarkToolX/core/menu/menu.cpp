@@ -438,6 +438,7 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::SliderInt("Fake Lag Ticks", &conf.misc().fake_lag_ticks, 1, 6);
 				ImGui::Checkbox("Bunny hop", &conf.misc().bhop);
 				ImGui::Checkbox("Remove Duck delay", &conf.misc().no_duck_delay);
+				ImGui::Checkbox("Slow walk", &conf.misc().slow_walk);
 				ImGui::Checkbox("Hitsound", &conf.misc().hitsound);
 				ImGui::Checkbox("Auto Switch", &conf.misc().auto_switch);
 				ImGui::Checkbox("Auto Accept", &conf.misc().auto_accept);

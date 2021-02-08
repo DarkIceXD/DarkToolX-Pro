@@ -14,10 +14,11 @@ namespace config {
 		int fake_lag_ticks{ 1 };
 		bool bhop{ true };
 		bool no_duck_delay{ true };
+		bool slow_walk{ false };
 		bool hitsound{ false };
 		bool auto_switch{ false };
 		bool auto_accept{ true };
 		bool reveal_ranks{ true };
-		JSON_SERIALIZE(misc, conf_name, anti_aim, fake_lag, fake_lag_ticks, bhop, no_duck_delay, hitsound, auto_switch, auto_accept, reveal_ranks)
+		JSON_SERIALIZE(misc, conf_name, anti_aim, fake_lag, fake_lag_ticks, bhop, no_duck_delay, slow_walk, hitsound, auto_switch, auto_accept, reveal_ranks)
 	};
 };
