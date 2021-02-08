@@ -433,7 +433,7 @@ void menu::render(bool& enabled, conf& conf)
 			}
 			if (ImGui::BeginTabItem("Misc"))
 			{
-				ImGui::Combo("Anti Aim", &conf.misc().anti_aim, "Disabled\0Rage\0"); // Desync\0
+				ImGui::Combo("Anti Aim", &conf.misc().anti_aim, "Disabled\0Rage\0Desync (test)\0Rage Desync (test)\0"); 
 				ImGui::Checkbox("Fake Lag", &conf.misc().fake_lag);
 				ImGui::SliderInt("Fake Lag Ticks", &conf.misc().fake_lag_ticks, 1, 6);
 				ImGui::Checkbox("Bunny hop", &conf.misc().bhop);

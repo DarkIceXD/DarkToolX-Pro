@@ -564,4 +564,17 @@ public:
 		if (m_poses)
 			std::memcpy(m_poses, poses, sizeof(float) * 24);
 	}
+
+	float max_desync_angle() {
+		const auto anim_state = get_anim_state();
+		if (!anim_state)
+			return 0.0f;
+
+		auto yaw_modifier = (anim_state->stop_to_full_running_fraction * -0.3f - 0.2f) * std::clamp(anim_state->feet_speed_forwards_or_sideways, 0.0f, 1.0f) + 1.0f;
+
+		if (anim_state->duck_amount > 0.0f)
+			yaw_modifier += (anim_state->duck_amount * std::clamp(anim_state->feet_speed_unknown_forwards_or_sideways, 0.0f, 1.0f) * (0.5f - yaw_modifier));
+
+		return anim_state->velocity_subtract_y * yaw_modifier;
+	}
 };
