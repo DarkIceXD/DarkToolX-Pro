@@ -3,7 +3,6 @@
 void apply_desync(c_usercmd* cmd, bool& send_packet, const bool desync_left)
 {
 	const auto max_desync = std::abs(csgo::local_player->max_desync_angle());
-	send_packet = cmd->tick_count % 2;
 	if (send_packet)
 	{
 		cmd->viewangles.y += desync_left ? max_desync : -max_desync;
@@ -49,6 +48,9 @@ void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 
 	if (cmd->buttons & in_attack2 && type == WEAPONTYPE_KNIFE)
 		return;
+
+	if (csgo::conf->misc().smart_anti_aim && csgo::target.entity)
+		cmd->viewangles = csgo::target.angle;
 
 	constexpr auto desync_left = true;
 	switch (csgo::conf->misc().anti_aim)

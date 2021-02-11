@@ -11,6 +11,19 @@
 #include "License.h"
 #include "config/config.h"
 
+struct best_target {
+	player_t* entity;
+	vec3_t angle;
+	int damage;
+	float fov;
+	bool lethal;
+};
+
+constexpr bool sort_by_dmg(const best_target& a, const best_target& b)
+{
+	return a.lethal != b.lethal ? a.lethal : a.damage > b.damage;
+}
+
 namespace csgo {
 	inline player_t* local_player = nullptr;
 	inline conf* conf = nullptr;
@@ -18,8 +31,8 @@ namespace csgo {
 	inline License::User user;
 	inline bool should_animate = false;
 	inline vec3_t real = {};
+	inline best_target target = {};
 	namespace menu {
 		inline bool enabled = false;
-		inline int best_dmg = 0;
 	};
 }

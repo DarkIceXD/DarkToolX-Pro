@@ -1,11 +1,5 @@
 #include "features.hpp"
 
-struct best_target {
-	player_t* entity;
-	vec3_t angle;
-	float fov;
-};
-
 static best_target get_best_hitbox_angle(player_t* entity, const int hp, vec3_t& local_head, const vec3_t& aimpunch, const vec3_t& current_viewangle, const weapon_info_t* weapon_data)
 {
 	constexpr int hitboxes[] = { hitbox_pelvis, hitbox_stomach, hitbox_lower_chest, hitbox_chest, hitbox_upper_chest, hitbox_head, hitbox_neck, hitbox_right_thigh, hitbox_left_thigh, hitbox_right_calf, hitbox_left_calf, hitbox_right_foot, hitbox_left_foot, hitbox_right_upper_arm, hitbox_right_forearm, hitbox_left_upper_arm, hitbox_left_forearm };

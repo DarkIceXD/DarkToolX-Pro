@@ -123,7 +123,7 @@ auto_wall_data features::auto_wall(vec3_t direction, const weapon_info_t* weapon
 	trace_filter filter(csgo::local_player);
 	auto hits_left = 5;
 	auto current_distance = 0.f;
-	while (data.damage >= 1.0f && hits_left > 0) {
+	while (data.damage >= 1.0f /*&& hits_left > 0*/) {
 		max_range -= current_distance;
 		trace_t trace;
 		ray_t ray(start, start + direction * max_range);

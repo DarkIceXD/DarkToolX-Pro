@@ -1,17 +1,5 @@
 #include "features.hpp"
 
-struct best_target {
-	player_t* entity;
-	vec3_t angle;
-	int damage;
-	bool lethal;
-};
-
-constexpr bool sort_by_dmg(const best_target& a, const best_target& b)
-{
-	return a.lethal != b.lethal ? a.lethal : a.damage > b.damage;
-}
-
 static best_target get_best_hitbox_angle(player_t* entity, const int hp, vec3_t& local_head, const vec3_t& aimpunch, const vec3_t& current_viewangle, const weapon_info_t* weaponData)
 {
 	constexpr int hitboxes[] = { hitbox_pelvis, hitbox_stomach, hitbox_lower_chest, hitbox_chest, hitbox_upper_chest, hitbox_head, hitbox_neck, hitbox_right_thigh, hitbox_left_thigh, hitbox_right_calf, hitbox_left_calf, hitbox_right_foot, hitbox_left_foot, hitbox_right_upper_arm, hitbox_right_forearm, hitbox_left_upper_arm, hitbox_left_forearm };
@@ -112,7 +100,6 @@ void features::aimbot(c_usercmd* cmd)
 	if (csgo::conf->aimbot().mode != 1)
 		return;
 
-	csgo::menu::best_dmg = 0;
 	if (csgo::conf->aimbot().key_bind_type == 1 && GetAsyncKeyState(csgo::conf->aimbot().key_bind) & 1)
 		csgo::conf->aimbot().enabled = !csgo::conf->aimbot().enabled;
 	else if (csgo::conf->aimbot().key_bind_type == 2 && !GetAsyncKeyState(csgo::conf->aimbot().key_bind))
@@ -154,30 +141,28 @@ void features::aimbot(c_usercmd* cmd)
 		return;
 	}
 
-	const auto target = get_best_target(cmd->viewangles, weapon_data);
-	if (target.damage < 1)
+	csgo::target = get_best_target(cmd->viewangles, weapon_data);
+	if (csgo::target.damage < 1)
 		return;
-
-	csgo::menu::best_dmg = target.damage;
 
 	const bool is_shooting_manually = cmd->buttons & in_attack;
 	if (is_shooting_manually)
 	{
-		cmd->viewangles = target.angle;
+		cmd->viewangles = csgo::target.angle;
 	}
 	else if (csgo::conf->aimbot().auto_shoot)
 	{
 		const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(index);
-		if (!(target.lethal || target.damage >= (csgo::conf->aimbot().min_dmg_override_active ? weapon_setting.min_dmg_override : weapon_setting.min_dmg)))
+		if (!(csgo::target.lethal || csgo::target.damage >= (csgo::conf->aimbot().min_dmg_override_active ? weapon_setting.min_dmg_override : weapon_setting.min_dmg)))
 			return;
 
 		if (csgo::conf->aimbot().auto_scope && weapon_data->weapon_type == WEAPONTYPE_SNIPER_RIFLE && !csgo::local_player->is_scoped())
 			cmd->buttons |= in_attack2;
 
-		if (!features::hitchance(target.angle, target.entity, weapon_setting.hitchance, weapon, weapon_data))
+		if (!features::hitchance(csgo::target.angle, csgo::target.entity, weapon_setting.hitchance, weapon, weapon_data))
 			return;
 
-		cmd->viewangles = target.angle;
+		cmd->viewangles = csgo::target.angle;
 		cmd->buttons |= in_attack;
 		csgo::want_to_shoot = true;
 	}
