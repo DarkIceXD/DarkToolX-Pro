@@ -8,9 +8,10 @@ void features::slow_walk(c_usercmd* cmd, float& forwardmove, float& sidemove)
 	if (!(cmd->buttons & in_speed))
 		return;
 
-	cmd->buttons &= ~in_speed;
-
 	if (!csgo::local_player)
+		return;
+
+	if (!(csgo::local_player->flags() & fl_onground))
 		return;
 
 	const auto weapon = csgo::local_player->active_weapon();
@@ -21,11 +22,8 @@ void features::slow_walk(c_usercmd* cmd, float& forwardmove, float& sidemove)
 	if (!weapon_data)
 		return;
 
-	const auto max_speed = (csgo::local_player->is_scoped() ? weapon_data->weapon_max_speed_alt : weapon_data->weapon_max_speed) * 0.34f;
-	if (csgo::local_player->velocity().length() > max_speed)
-	{
-		cmd->buttons &= ~in_walk;
-		forwardmove = 0;
-		sidemove = 0;
-	}
+	const auto max_speed = (!csgo::local_player->is_scoped() ? weapon_data->weapon_max_speed : weapon_data->weapon_max_speed_alt) * 0.34f;
+	const auto scale = max_speed / sqrt(forwardmove * forwardmove + sidemove * sidemove);
+	forwardmove *= scale;
+	sidemove *= scale;
 }
