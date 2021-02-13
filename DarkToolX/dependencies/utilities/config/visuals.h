@@ -60,6 +60,7 @@ namespace config {
 		bool enemy_overhead_info{ true };
 		bool box_esp{ false };
 		bool dormant_esp{ true };
+		bool show_aimbot_spot{ false };
 		rgb box_team{ 0, 0, 1, 1 };
 		rgb box_enemy{ 1, 0, 0, 1 };
 		rgb step_color{ 0, 0.5f, 1, 1, false };
@@ -75,10 +76,7 @@ namespace config {
 			switch (class_id)
 			{
 			case ccsplayer:
-				if (enemy)
-					return 0;
-				else
-					return 1;
+				return enemy ? 0 : 1;
 			case cc4:
 			case cplantedc4:
 				return 2;
@@ -140,6 +138,6 @@ namespace config {
 				return nullptr;
 			return &glow.at(i);
 		}
-		JSON_SERIALIZE(visuals, conf_name, glow, health_based, enemy_overhead_info, box_esp, dormant_esp, box_team, box_team, step_color, step_max_radius, step_lifetime, step_width, bullet_trace_local_player, bullet_trace_team, bullet_trace_enemy, bullet_trace_lifetime)
+		JSON_SERIALIZE(visuals, conf_name, glow, health_based, enemy_overhead_info, box_esp, dormant_esp, show_aimbot_spot, box_team, box_team, step_color, step_max_radius, step_lifetime, step_width, bullet_trace_local_player, bullet_trace_team, bullet_trace_enemy, bullet_trace_lifetime)
 	};
 };

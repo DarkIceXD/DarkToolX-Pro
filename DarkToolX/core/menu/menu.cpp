@@ -174,6 +174,7 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::Checkbox("Dormant ESP", &conf.visuals().dormant_esp);
 				ImGui::ColorEdit4("Box Team Color", &conf.visuals().box_team.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
 				ImGui::ColorEdit4("Box Enemy Color", &conf.visuals().box_enemy.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
+				ImGui::Checkbox("Aimbot Spot", &conf.visuals().show_aimbot_spot);
 				ImGui::Separator();
 				ImGui::Checkbox("Step ESP", &conf.visuals().step_color.enabled);
 				ImGui::ColorEdit4("Step Color", &conf.visuals().step_color.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
