@@ -299,7 +299,7 @@ void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel
 
 long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 {
-	static auto water_mark = std::string("DarkToolX Pro - beta v6.5 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX Pro - beta v7.0 - UID: ") + std::to_string(csgo::user.uid);
 	IDirect3DStateBlock9* pixel_state = NULL;
 	device->CreateStateBlock(D3DSBT_ALL, &pixel_state);
 	pixel_state->Capture();
@@ -427,10 +427,10 @@ void __fastcall hooks::calculate_view::hook(player_t* this_pointer, void* edx, v
 	if (this_pointer != csgo::local_player)
 		return calculate_view_original(this_pointer, edx, eye_origin, eye_angles, z_near, z_far, fov);
 
-	const auto old_use_new_animation_state = this_pointer->use_new_animation_state();
+	const auto old = this_pointer->use_new_animation_state();
 	this_pointer->use_new_animation_state() = false;
 	calculate_view_original(this_pointer, edx, eye_origin, eye_angles, z_near, z_far, fov);
-	this_pointer->use_new_animation_state() = old_use_new_animation_state;
+	this_pointer->use_new_animation_state() = old;
 }
 
 void __fastcall hooks::modify_eye_position::hook(anim_state* this_pointer, void* edx, vec3_t& input_eye_position)

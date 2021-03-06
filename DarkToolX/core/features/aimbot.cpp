@@ -18,6 +18,7 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, vec3_t&
 			target.damage = static_cast<int>(data.damage);
 			target.angle = new_viewangle;
 			target.lethal = target.damage >= hp;
+			target.hitbox = i;
 			if (target.lethal)
 				break;
 		}
@@ -159,7 +160,7 @@ void features::aimbot(c_usercmd* cmd)
 		if (csgo::conf->aimbot().auto_scope && weapon_data->weapon_type == WEAPONTYPE_SNIPER_RIFLE && !csgo::local_player->is_scoped())
 			cmd->buttons |= in_attack2;
 
-		if (!features::hitchance(csgo::target.angle, csgo::target.entity, weapon_setting.hitchance, weapon, weapon_data))
+		if (!features::hitchance(csgo::target.angle, csgo::target.entity, weapon_setting.hitchance, weapon, weapon_data, features::hitbox_to_hitgroup(csgo::target.hitbox)))
 			return;
 
 		cmd->viewangles = csgo::target.angle;

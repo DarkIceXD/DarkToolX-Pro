@@ -14,7 +14,8 @@ void features::ragdolls()
 			continue;
 
 		auto ragdoll = (ragdoll_t*)entity;
-		ragdoll->force() *= 100;
-		ragdoll->velocity() *= 100;
+		console::log("%f, %f, %f\n", ragdoll->force().x, ragdoll->force().y, ragdoll->force().z);
+		/*ragdoll->force() *= 0;
+		ragdoll->force().z = 1000;*/
 	}
 }
