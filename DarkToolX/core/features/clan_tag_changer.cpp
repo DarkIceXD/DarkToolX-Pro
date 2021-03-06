@@ -26,7 +26,7 @@ void features::clan_tag_changer(const c_usercmd* cmd)
 
 	static size_t index = 0;
 	const auto new_index = static_cast<size_t>(cmd->tick_count * interfaces::globals->interval_per_tick * 1000 / csgo::conf->clan_tag_changer().get_selected().delay) % size;
-	if (index != new_index || size == 1)
+	if (index != new_index || (size == 1 && !(cmd->tick_count % 1000)))
 	{
 		set_clan_tag(csgo::conf->clan_tag_changer().get_selected().tags.at(new_index).c_str());
 		index = new_index;
