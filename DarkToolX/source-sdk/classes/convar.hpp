@@ -49,13 +49,14 @@ public:
 
 	float get_float()
 	{
-		std::uint32_t uXored = *reinterpret_cast<std::uint32_t*>(&parent->float_value) ^ reinterpret_cast<std::uint32_t>(this);
-		return *reinterpret_cast<float*>(&uXored);
+		using original_fn = float(__thiscall*)(convar*);
+		return (*(original_fn**)this)[12](this);
 	}
 
 	int get_int()
 	{
-		return static_cast<int>(parent->numerical_value ^ reinterpret_cast<int>(this));
+		using original_fn = int(__thiscall*)(convar*);
+		return (*(original_fn**)this)[13](this);
 	}
 
 	bool get_bool()
@@ -73,17 +74,16 @@ public:
 		using original_fn = void(__thiscall*)(convar*, const char*);
 		return (*(original_fn * *)this)[14](this, value);
 	}
-	void set_value(float value) {
+	void set_value(const float value) {
 		using original_fn = void(__thiscall*)(convar*, float);
 		return (*(original_fn * *)this)[15](this, value);
 	}
-	void set_value(int value) {
+	void set_value(const int value) {
 		using original_fn = void(__thiscall*)(convar*, int);
 		return (*(original_fn * *)this)[16](this, value);
 	}
-	void set_value(bool value) {
-		using original_fn = void(__thiscall*)(convar*, int);
-		return (*(original_fn * *)this)[16](this, static_cast<int>(value));
+	void set_value(const bool value) {
+		set_value(static_cast<int>(value));
 	}
 
 private:

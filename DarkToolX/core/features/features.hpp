@@ -24,7 +24,8 @@ namespace features {
 	void fov(view_setup_t* view);
 	void glow();
 	int hitbox_to_hitgroup(const int hitbox);
-	bool hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const weapon_info_t* weapon_data, const int hitgroup = 0);
+	//bool hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const weapon_info_t* weapon_data, const int hitgroup = 0);
+	bool hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const float range);
 	void legit_aimbot(c_usercmd* cmd);
 	void night_mode(i_material* mat, float& r, float& g, float& b);
 	void no_duck_delay(c_usercmd* cmd);

@@ -15,7 +15,7 @@ void features::crosshair()
 	{
 		vec3_t view_angles;
 		interfaces::engine->get_view_angles(view_angles);
-		view_angles += csgo::local_player->aim_punch_angle() * 2.f;
+		view_angles += csgo::local_player->recoil();
 
 		const auto forward = math::angle_vector(view_angles) * 10000;
 		const auto end = csgo::local_player->get_eye_pos() + forward;

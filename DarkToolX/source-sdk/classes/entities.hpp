@@ -243,7 +243,7 @@ public:
 	}
 	void set_position(vec3_t position) {
 		using original_fn = void(__thiscall*)(void*, const vec3_t&);
-		static original_fn set_position_fn = (original_fn)((DWORD)utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F8 51 53 56 57 8B F1 E8"));
+		static original_fn set_position_fn = (original_fn)((DWORD)utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F8 51 53 56 57 8B F1 E8 ? ? ? ? 8B 7D 08"));
 		set_position_fn(this, position);
 	}
 
@@ -577,5 +577,10 @@ public:
 			yaw_modifier += (anim_state->duck_amount * std::clamp(anim_state->feet_speed_unknown_forwards_or_sideways, 0.0f, 1.0f) * (0.5f - yaw_modifier));
 
 		return anim_state->velocity_subtract_y * yaw_modifier;
+	}
+
+	vec3_t recoil() {
+		static auto recoil_scale = interfaces::console->get_convar("weapon_recoil_scale");
+		return aim_punch_angle() * recoil_scale->get_float();
 	}
 };

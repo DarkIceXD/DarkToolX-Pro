@@ -35,7 +35,34 @@ int features::hitbox_to_hitgroup(const int hitbox)
 	}
 }
 
-bool features::hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const weapon_info_t* weapon_data, const int hitgroup)
+static bool hitgroup_is_allowed(const int wanted_hitgroup, const int hitted_hitgroup)
+{
+	switch (wanted_hitgroup)
+	{
+	case hitgroup_head:
+		return hitted_hitgroup == hitgroup_head;
+	case hitgroup_stomach:
+		return hitted_hitgroup == hitgroup_stomach;
+	default:
+		return true;
+	}
+}
+
+static float RandomFloat(float min, float max)
+{
+	typedef float(*fn)(float, float);
+	static fn rand_float = (fn)GetProcAddress(GetModuleHandle("vstdlib.dll"), "RandomFloat");
+	return rand_float(min, max);
+}
+
+static void RandomSeed(unsigned int seed)
+{
+	typedef void(*fn)(unsigned int);
+	static fn rand_seed = (fn)GetProcAddress(GetModuleHandle("vstdlib.dll"), "RandomSeed");
+	rand_seed(seed);
+}
+// old hitchance
+/*bool features::hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const weapon_info_t* weapon_data, const int hitgroup)
 {
 	constexpr auto max_traces = 200;
 	const int needed_hits = static_cast<int>(static_cast<float>(max_traces) * needed_hitchance / 100.f);
@@ -58,7 +85,7 @@ bool features::hitchance(const vec3_t& view_angles, player_t* player, const int 
 		{
 			if (hitgroup)
 			{
-				if (tr.hitGroup == hitgroup)
+				if (hitgroup_is_allowed(hitgroup, tr.hitGroup))
 					hits++;
 			}
 			else
@@ -71,6 +98,46 @@ bool features::hitchance(const vec3_t& view_angles, player_t* player, const int 
 			return true;
 
 		if ((max_traces - i + hits) < needed_hits)
+			return false;
+	}
+	return false;
+}*/
+
+bool features::hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const float range)
+{
+	constexpr auto seeds = 256;
+	const int needed_hits = static_cast<int>(static_cast<float>(seeds) * needed_hitchance / 100.f);
+	const auto start = csgo::local_player->get_eye_pos();
+	const auto inaccuracy = weapon->inaccuracy();
+	const auto spread = weapon->get_spread();
+	int hits = 0;
+	vec3_t forward, right, up, spread_view_angles;
+	math::angle_vectors(view_angles + csgo::local_player->recoil(), &forward, &right, &up);
+	for (int i = 0; i < seeds; i++)
+	{
+		RandomSeed(i);
+		const auto rand_inaccuracy = RandomFloat(0.f, 1.f) * inaccuracy;
+		const auto rand_angle_1 = RandomFloat(0.f, (math::M_PI * 2));
+		const auto rand_spread = RandomFloat(0.f, 1.f) * spread;
+		const auto rand_angle_2 = RandomFloat(0.f, (math::M_PI * 2));
+		const auto spread_offset_x = cos(rand_angle_1) * rand_inaccuracy + cos(rand_angle_2) * rand_spread;
+		const auto spread_offset_y = sin(rand_angle_1) * rand_inaccuracy + sin(rand_angle_2) * rand_spread;
+		auto spread_forward = forward + right * spread_offset_x + up * spread_offset_y;
+
+		math::vector_angles(spread_forward, up, spread_view_angles);
+		spread_view_angles.normalize();
+
+		const auto end_pos = start + math::angle_vector(spread_view_angles) * range;
+		ray_t ray(start, end_pos);
+		trace_t tr;
+		interfaces::trace_ray->clip_ray_to_entity(ray, MASK_SHOT, player, &tr);
+		if (tr.entity == player)
+			hits++;
+
+		if (hits >= needed_hits)
+			return true;
+
+		if ((seeds - i + hits) < needed_hits)
 			return false;
 	}
 	return false;

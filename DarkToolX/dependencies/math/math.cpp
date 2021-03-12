@@ -74,6 +74,30 @@ void math::vector_angles(const vec3_t& forward, vec3_t& angles) {
 	angles.z = 0.0f;
 }
 
+void math::vector_angles(const vec3_t& forward, const vec3_t& up, vec3_t& angles)
+{
+	auto left = vec3_t::crossproduct(up, forward);
+	left.normalize_in_place();
+
+	const auto xyDist = forward.length_2d();
+
+	if (xyDist > 0.001f)
+	{
+		angles.x = math::RAD2DEG(atan2f(-forward.z, xyDist));
+		angles.y = math::RAD2DEG(atan2f(forward.y, forward.x));
+
+		const auto up_z = (left.y * forward.x) - (left.x * forward.y);
+
+		angles.z = math::RAD2DEG(atan2f(left.z, up_z));
+	}
+	else
+	{
+		angles.x = math::RAD2DEG(atan2f(-forward.z, xyDist));
+		angles.y = math::RAD2DEG(atan2f(-left.x, left.y));
+		angles.z = 0;
+	}
+}
+
 void math::angle_vectors(const vec3_t& angles, vec3_t* forward, vec3_t* right, vec3_t* up) {
 	const auto sp = sin(DEG2RAD(angles.x));
 	const auto sy = sin(DEG2RAD(angles.y));

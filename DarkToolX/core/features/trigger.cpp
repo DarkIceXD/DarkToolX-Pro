@@ -17,7 +17,7 @@ void features::auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t*
 		return;
 
 	const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(weapon->item_definition_index());
-	if (!features::hitchance(cmd->viewangles, entity, weapon_setting.hitchance, weapon, weapon_data))
+	if (!features::hitchance(cmd->viewangles, entity, weapon_setting.hitchance, weapon, weapon_data->weapon_range))
 		return;
 	
 	cmd->buttons |= in_attack;
