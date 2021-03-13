@@ -1,24 +1,13 @@
 #include "features.hpp"
-#include <deque>
-
-constexpr auto time_limit = 200;
-constexpr auto mode = 1;
-
-struct record {
-	vec3_t origin;
-	vec3_t view_angles;
-	float simulation_time;
-	// matrix_t matrix[256];
-};
 
 static std::array<std::deque<record>, 65> records;
 
-int features::backtrack::time_to_ticks(const float time)
+int time_to_ticks(const float time)
 {
 	return static_cast<int>(0.5f + time / interfaces::globals->interval_per_tick);
 }
 
-float features::backtrack::get_lerp()
+float get_lerp()
 {
 	static auto interp_ratio = interfaces::console->get_convar("cl_interp_ratio");
 	static auto min_interp_ratio = interfaces::console->get_convar("sv_client_min_interp_ratio");
@@ -29,6 +18,16 @@ float features::backtrack::get_lerp()
 	static auto max_update_rate = interfaces::console->get_convar("sv_maxupdaterate");
 	static auto update_rate = interfaces::console->get_convar("cl_updaterate");
 	return (std::max)(interp->get_float(), (ratio / ((max_update_rate) ? max_update_rate->get_float() : update_rate->get_float())));
+}
+
+std::deque<record>& features::backtrack::get_records(const int player_index)
+{
+	return records[player_index];
+}
+
+int features::backtrack::restore_tick_count(const int player_index, const int record_index)
+{
+	return time_to_ticks(records[player_index][record_index].simulation_time + get_lerp());
 }
 
 bool features::backtrack::valid(const float simtime)
@@ -81,11 +80,6 @@ void features::backtrack::update()
 		if (auto invalid = std::find_if(std::cbegin(records[i]), std::cend(records[i]), [](const record& rec) { return !valid(rec.simulation_time); }); invalid != std::cend(records[i]))
 			records[i].erase(invalid, std::cend(records[i]));
 	}
-}
-
-vec3_t calc_relative_angle(const vec3_t& source, const vec3_t& destination, const vec3_t& view_angles)
-{
-	return (math::calculate_angle(source, destination) - view_angles).normalized_angles();
 }
 
 static void rage_backtrack(c_usercmd* cmd)
@@ -177,7 +171,7 @@ static void rage_backtrack(c_usercmd* cmd)
 
 	if (!best_target_index || !best_record)
 		return;
-	
+
 	const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(weapon->item_definition_index());
 	if (!(target.lethal || target.damage >= (csgo::conf->aimbot().min_dmg_override_active ? weapon_setting.min_dmg_override : weapon_setting.min_dmg)))
 		return;
@@ -186,8 +180,7 @@ static void rage_backtrack(c_usercmd* cmd)
 		return;
 */
 	csgo::target = target;
-	const auto& record = records[best_target_index][best_record];
-	cmd->tick_count = features::backtrack::time_to_ticks(record.simulation_time + features::backtrack::get_lerp());
+	cmd->tick_count = features::backtrack::restore_tick_count(best_target_index, best_record);
 	cmd->viewangles = target.angle;
 	cmd->buttons |= in_attack;
 	csgo::want_to_shoot = true;
@@ -222,9 +215,7 @@ void features::backtrack::run(c_usercmd* cmd)
 			continue;
 
 		const auto& origin = entity->abs_origin();
-
-		const auto angle = calc_relative_angle(local_head, origin, view_angles);
-		const auto fov = std::hypotf(angle.x, angle.y);
+		const auto fov = math::fov(view_angles, math::calculate_angle(local_head, origin));
 		if (fov < best_fov)
 		{
 			best_fov = fov;
@@ -243,11 +234,10 @@ void features::backtrack::run(c_usercmd* cmd)
 		for (size_t i = 0; i < records[best_target_index].size(); i++)
 		{
 			const auto& record = records[best_target_index][i];
-			if (!features::backtrack::valid(record.simulation_time))
+			if (!valid(record.simulation_time))
 				continue;
 
-			const auto angle = calc_relative_angle(local_head, record.origin, view_angles);
-			const auto fov = std::hypotf(angle.x, angle.y);
+			const auto fov = math::fov(view_angles, math::calculate_angle(local_head, record.origin));
 			if (fov < best_fov)
 			{
 				best_fov = fov;
@@ -257,8 +247,5 @@ void features::backtrack::run(c_usercmd* cmd)
 	}
 
 	if (best_record)
-	{
-		const auto& record = records[best_target_index][best_record];
-		cmd->tick_count = features::backtrack::time_to_ticks(record.simulation_time + features::backtrack::get_lerp());
-	}
+		cmd->tick_count = restore_tick_count(best_target_index, best_record);
 }

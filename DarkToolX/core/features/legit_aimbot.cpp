@@ -14,8 +14,8 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 		const auto fov = math::fov(current_viewangle, new_viewangle);
 		if (fov > csgo::conf->aimbot().fov)
 			continue;
-		const auto can_see = features::auto_wall(current_hitbox - local_head, weapon_data, false).entity != nullptr;
-		if (can_see && target.fov > fov)
+		const auto entity = features::auto_wall(current_hitbox - local_head, weapon_data, false).entity;
+		if (entity && target.fov > fov)
 		{
 			target.angle = new_viewangle;
 			target.fov = fov;

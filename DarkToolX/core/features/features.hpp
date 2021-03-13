@@ -1,10 +1,18 @@
 #pragma once
 #include "../../dependencies/utilities/csgo.hpp"
 #include "../../dependencies/imgui/imgui.h"
+#include <deque>
 
 struct auto_wall_data {
 	player_t* entity;
 	float damage;
+};
+
+struct record {
+	vec3_t origin;
+	vec3_t view_angles;
+	float simulation_time;
+	// matrix_t matrix[256];
 };
 
 namespace features {
@@ -43,9 +51,9 @@ namespace features {
 	void thirdperson();
 	void trigger(c_usercmd* cmd);
 	namespace backtrack {
-		int time_to_ticks(const float time);
-		float get_lerp();
+		std::deque<record>& get_records(const int player_index);
 		bool valid(const float simtime);
+		int restore_tick_count(const int player_index, const int record_index);
 		void update();
 		void run(c_usercmd* cmd);
 	}
