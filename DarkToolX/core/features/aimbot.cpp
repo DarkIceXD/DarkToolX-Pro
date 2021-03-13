@@ -8,7 +8,7 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 		if (!csgo::conf->aimbot().is_hitbox_enabled(i))
 			continue;
 		auto current_hitbox = entity->get_hitbox_position(i);
-		const auto new_viewangle = (math::calculate_angle(local_head, current_hitbox) - aimpunch).normalized();
+		const auto new_viewangle = (math::calculate_angle(local_head, current_hitbox) - aimpunch).normalized_angles();
 		if (math::fov(current_viewangle, new_viewangle) > csgo::conf->aimbot().fov)
 			continue;
 		const auto data = features::auto_wall(current_hitbox - local_head, weaponData, true);

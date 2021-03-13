@@ -112,7 +112,7 @@ bool features::hitchance(const vec3_t& view_angles, player_t* player, const int 
 	const auto inaccuracy = weapon->inaccuracy();
 	const auto spread = weapon->get_spread();
 	int hits = 0;
-	vec3_t forward, right, up, spread_view_angles;
+	vec3_t forward, right, up;
 	math::angle_vectors(view_angles + csgo::local_player->recoil(), &forward, &right, &up);
 	for (int i = 0; i < seeds; i++)
 	{
@@ -125,9 +125,8 @@ bool features::hitchance(const vec3_t& view_angles, player_t* player, const int 
 		const auto spread_offset_y = sin(rand_angle_1) * rand_inaccuracy + sin(rand_angle_2) * rand_spread;
 		auto spread_forward = forward + right * spread_offset_x + up * spread_offset_y;
 
-		math::vector_angles(spread_forward, up, spread_view_angles);
-		spread_view_angles.normalize();
-
+		const auto spread_view_angles = math::vector_angles(spread_forward, up).normalized_angles();
+		
 		const auto end_pos = start + math::angle_vector(spread_view_angles) * range;
 		ray_t ray(start, end_pos);
 		trace_t tr;

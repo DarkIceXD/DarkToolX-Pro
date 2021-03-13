@@ -85,7 +85,7 @@ void features::backtrack::update()
 
 vec3_t calc_relative_angle(const vec3_t& source, const vec3_t& destination, const vec3_t& view_angles)
 {
-	return (math::calculate_angle(source, destination) - view_angles).normalized();
+	return (math::calculate_angle(source, destination) - view_angles).normalized_angles();
 }
 
 static void rage_backtrack(c_usercmd* cmd)
@@ -149,7 +149,7 @@ static void rage_backtrack(c_usercmd* cmd)
 			for (const auto k : hitboxes)
 			{
 				auto current_hitbox = entity->get_hitbox_position(k);
-				const auto new_viewangle = (math::calculate_angle(local_head, current_hitbox) - aimpunch).normalized();
+				const auto new_viewangle = (math::calculate_angle(local_head, current_hitbox) - aimpunch).normalized_angles();
 				if (math::fov(cmd->viewangles, new_viewangle) > csgo::conf->aimbot().fov)
 					continue;
 				const auto data = features::auto_wall(current_hitbox - local_head, weapon_data, false);
@@ -201,7 +201,7 @@ void features::backtrack::run(c_usercmd* cmd)
 	if (!csgo::local_player)
 		return;
 
-	if (!csgo::want_to_shoot)
+	if (!csgo::manual_shoot)
 		return;
 
 	auto best_fov{ 255.f };

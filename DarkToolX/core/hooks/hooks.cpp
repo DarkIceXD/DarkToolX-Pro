@@ -167,6 +167,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	auto old_forwardmove = cmd->forwardmove;
 	auto old_sidemove = cmd->sidemove;
 	csgo::want_to_shoot = cmd->buttons & in_attack;
+	csgo::manual_shoot = csgo::want_to_shoot;
 	csgo::target = {};
 
 	features::bunny_hop(cmd);
@@ -192,7 +193,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	cmd->sidemove = std::clamp(cmd->sidemove, -450.0f, 450.0f);
 	cmd->upmove = std::clamp(cmd->upmove, -320.0f, 320.0f);
 
-	cmd->viewangles.normalize();
+	cmd->viewangles.normalize_angles();
 	cmd->viewangles.x = std::clamp(cmd->viewangles.x, -89.0f, 89.0f);
 	cmd->viewangles.y = std::clamp(cmd->viewangles.y, -180.0f, 180.0f);
 	cmd->viewangles.z = 0.0f;

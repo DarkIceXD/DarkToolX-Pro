@@ -54,7 +54,9 @@ vec3_t math::transform_vector(const vec3_t& a, const matrix_t& b) {
 	};
 }
 
-void math::vector_angles(const vec3_t& forward, vec3_t& angles) {
+vec3_t math::vector_angles(const vec3_t& forward) {
+	vec3_t angles;
+
 	if (forward.y == 0.0f && forward.x == 0.0f) {
 		angles.x = (forward.z > 0.0f) ? 270.0f : 90.0f;
 		angles.y = 0.0f;
@@ -70,32 +72,31 @@ void math::vector_angles(const vec3_t& forward, vec3_t& angles) {
 		else if (angles.y == 90)
 			angles.y = 0;
 	}
-
 	angles.z = 0.0f;
+
+	return angles;
 }
 
-void math::vector_angles(const vec3_t& forward, const vec3_t& up, vec3_t& angles)
+vec3_t math::vector_angles(const vec3_t& forward, const vec3_t& up)
 {
-	auto left = vec3_t::crossproduct(up, forward);
-	left.normalize_in_place();
+	auto left = vec3_t::crossproduct(up, forward).normalized();
 
-	const auto xyDist = forward.length_2d();
-
-	if (xyDist > 0.001f)
+	const auto xy_dist = forward.length_2d();
+	vec3_t angles;
+	if (xy_dist > 0.001f)
 	{
-		angles.x = math::RAD2DEG(atan2f(-forward.z, xyDist));
+		angles.x = math::RAD2DEG(atan2f(-forward.z, xy_dist));
 		angles.y = math::RAD2DEG(atan2f(forward.y, forward.x));
-
 		const auto up_z = (left.y * forward.x) - (left.x * forward.y);
-
 		angles.z = math::RAD2DEG(atan2f(left.z, up_z));
 	}
 	else
 	{
-		angles.x = math::RAD2DEG(atan2f(-forward.z, xyDist));
+		angles.x = math::RAD2DEG(atan2f(-forward.z, xy_dist));
 		angles.y = math::RAD2DEG(atan2f(-left.x, left.y));
 		angles.z = 0;
 	}
+	return angles;
 }
 
 void math::angle_vectors(const vec3_t& angles, vec3_t* forward, vec3_t* right, vec3_t* up) {
@@ -222,6 +223,6 @@ bool math::IntersectLineWithOBB(const vec3_t& vStart, const vec3_t& vEndDelta, c
 }
 
 float math::fov(const vec3_t& a, const vec3_t& b) {
-	const auto angles_delta = (b - a).normalized();
+	const auto angles_delta = (b - a).normalized_angles();
 	return sin(DEG2RAD(angles_delta.length()) / 2.0f) * 180.0f;
 }

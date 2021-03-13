@@ -29,6 +29,7 @@ namespace csgo {
 	inline player_t* local_player = nullptr;
 	inline conf* conf = nullptr;
 	inline bool want_to_shoot = false;
+	inline bool manual_shoot = false;
 	inline License::User user;
 	inline bool should_animate = false;
 	inline vec3_t real = {};

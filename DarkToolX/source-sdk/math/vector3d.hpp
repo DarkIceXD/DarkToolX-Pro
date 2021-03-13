@@ -89,24 +89,30 @@ public:
 		clamped.clamp();
 		return clamped;
 	}
-	void normalize() noexcept
+	void normalize_angles() noexcept
 	{
 		x = std::isfinite(x) ? std::remainder(x, 360.0f) : 0.0f;
 		y = std::isfinite(y) ? std::remainder(y, 360.0f) : 0.0f;
 		z = 0.0f;
+	}
+	vec3_t normalized_angles() const noexcept
+	{
+		vec3_t vec(*this);
+		vec.normalize_angles();
+		return vec;
+	}
+	float normalize() noexcept
+	{
+		const auto len = length();
+		if (len != 0)
+			*this /= len;
+		return len;
 	}
 	vec3_t normalized() const noexcept
 	{
 		vec3_t vec(*this);
 		vec.normalize();
 		return vec;
-	}
-	float normalize_in_place() noexcept
-	{
-		const auto len = length();
-		if (len != 0)
-			*this /= len;
-		return len;
 	}
 	static constexpr vec3_t crossproduct(const vec3_t v1, const vec3_t v2) noexcept
 	{

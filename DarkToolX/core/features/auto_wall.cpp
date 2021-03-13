@@ -118,7 +118,7 @@ auto_wall_data features::auto_wall(vec3_t direction, const weapon_info_t* weapon
 {
 	auto_wall_data data{ nullptr, static_cast<float>(weapon_data->weapon_damage) };
 	auto start(csgo::local_player->get_eye_pos());
-	direction.normalize_in_place();
+	direction.normalize();
 	auto max_range = weapon_data->weapon_range;
 	trace_filter filter(csgo::local_player);
 	auto hits_left = 5;
