@@ -140,6 +140,9 @@ void menu::render(bool& enabled, conf& conf)
 						ImGui::Checkbox("Min Damage Override Active", &conf.aimbot().min_dmg_override_active);
 					}
 				}
+				ImGui::Separator();
+				ImGui::Checkbox("Backtrack", &conf.aimbot().backtrack);
+				ImGui::SliderInt("Backtrack time limit", &conf.aimbot().backtrack_time_limit, 1, 200);
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Trigger"))

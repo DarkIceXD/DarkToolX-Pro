@@ -1,5 +1,6 @@
 #include "features.hpp"
 
+/* old hitchance
 int features::hitbox_to_hitgroup(const int hitbox)
 {
 	switch (hitbox)
@@ -48,21 +49,7 @@ static bool hitgroup_is_allowed(const int wanted_hitgroup, const int hitted_hitg
 	}
 }
 
-static float RandomFloat(float min, float max)
-{
-	typedef float(*fn)(float, float);
-	static fn rand_float = (fn)GetProcAddress(GetModuleHandle("vstdlib.dll"), "RandomFloat");
-	return rand_float(min, max);
-}
-
-static void RandomSeed(unsigned int seed)
-{
-	typedef void(*fn)(unsigned int);
-	static fn rand_seed = (fn)GetProcAddress(GetModuleHandle("vstdlib.dll"), "RandomSeed");
-	rand_seed(seed);
-}
-// old hitchance
-/*bool features::hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const weapon_info_t* weapon_data, const int hitgroup)
+bool features::hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const weapon_info_t* weapon_data, const int hitgroup)
 {
 	constexpr auto max_traces = 200;
 	const int needed_hits = static_cast<int>(static_cast<float>(max_traces) * needed_hitchance / 100.f);
@@ -102,6 +89,20 @@ static void RandomSeed(unsigned int seed)
 	}
 	return false;
 }*/
+
+static float RandomFloat(float min, float max)
+{
+	typedef float(*fn)(float, float);
+	static fn rand_float = (fn)GetProcAddress(GetModuleHandle("vstdlib.dll"), "RandomFloat");
+	return rand_float(min, max);
+}
+
+static void RandomSeed(unsigned int seed)
+{
+	typedef void(*fn)(unsigned int);
+	static fn rand_seed = (fn)GetProcAddress(GetModuleHandle("vstdlib.dll"), "RandomSeed");
+	rand_seed(seed);
+}
 
 bool features::hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const float range)
 {

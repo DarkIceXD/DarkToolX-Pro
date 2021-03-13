@@ -36,6 +36,8 @@ namespace config {
 		bool auto_scope{ true };
 		int weapon_selection{ 0 };
 		std::vector<weapon_settings> weapons{ {20, 1, 1}, {75, 20, 1}, {55, 1, 1}, {60, 10, 1}, {40, 1, 1}, {40, 1, 1}, {50, 1, 1}, {50, 15, 1}, {40, 1, 1}, {55, 1, 1}, {70, 1, 1}, {70, 1, 1}, {90, 100, 1}, {60, 1, 1}, {85, 1, 1}, {60, 1, 1}, {60, 1, 1}, {60, 1, 1}, {85, 1, 1}, {1, 1, 1}, {80, 70, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1} };
+		bool backtrack{ false };
+		int backtrack_time_limit{ 200 };
 		weapon_settings& get_selected() noexcept
 		{
 			weapons.resize(34);
@@ -81,6 +83,6 @@ namespace config {
 				return false;
 			}
 		}
-		JSON_SERIALIZE(aimbot, conf_name, mode, enabled, key_bind_type, key_bind, min_dmg_override_active, min_dmg_override_key_bind_type, min_dmg_override_key_bind, smoothness, fov, head, chest, stomach, legs, arms, auto_shoot, dmg_indicator, auto_cock_revolver, auto_scope, weapons)
+		JSON_SERIALIZE(aimbot, conf_name, mode, enabled, key_bind_type, key_bind, min_dmg_override_active, min_dmg_override_key_bind_type, min_dmg_override_key_bind, smoothness, fov, head, chest, stomach, legs, arms, auto_shoot, dmg_indicator, auto_cock_revolver, auto_scope, weapons, backtrack, backtrack_time_limit)
 	};
 };

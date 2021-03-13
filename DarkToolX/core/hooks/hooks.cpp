@@ -174,14 +174,16 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	features::clan_tag_changer(cmd);
 	features::reveal_ranks(cmd);
 	prediction::start(cmd);
-	features::aimbot(cmd);
-	features::legit_aimbot(cmd);
-	features::trigger(cmd);
-	// features::backtrack(cmd);
-	features::fake_lag(send_packet);
-	features::anti_aim(cmd, send_packet);
-	features::dormant();
-	features::slow_walk(cmd, old_forwardmove, old_sidemove);
+	{
+		features::aimbot(cmd);
+		features::legit_aimbot(cmd);
+		features::trigger(cmd);
+		features::backtrack::run(cmd);
+		features::fake_lag(send_packet);
+		features::anti_aim(cmd, send_packet);
+		features::dormant();
+		features::slow_walk(cmd, old_forwardmove, old_sidemove);
+	}
 	prediction::end();
 	features::auto_switch(cmd);
 	math::correct_movement(old_viewangles, cmd, old_forwardmove, old_sidemove);
@@ -250,7 +252,7 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 		case FRAME_NET_UPDATE_END:
 			break;
 		case FRAME_RENDER_START:
-			// features::backtrack_update();
+			features::backtrack::update();
 			features::sky_box_changer();
 			features::step_esp();
 			features::bullet_tracers();
@@ -301,7 +303,7 @@ void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel
 
 long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 {
-	static auto water_mark = std::string("DarkToolX Pro - beta v7.5 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX Pro - beta v8.0 - UID: ") + std::to_string(csgo::user.uid);
 	IDirect3DStateBlock9* pixel_state = NULL;
 	device->CreateStateBlock(D3DSBT_ALL, &pixel_state);
 	pixel_state->Capture();
