@@ -15,7 +15,6 @@ struct best_target {
 	player_t* entity;
 	vec3_t angle;
 	int damage;
-	int hitbox;
 	float fov;
 	int best_record;
 	bool lethal;

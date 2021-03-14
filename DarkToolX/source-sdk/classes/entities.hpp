@@ -318,6 +318,11 @@ public:
 		using original_fn = vec3_t & (__thiscall*)(void*);
 		return (*(original_fn**)this)[11](this);
 	}
+
+	utl_vector<matrix_t>& get_cached_bones()
+	{
+		return *reinterpret_cast<utl_vector<matrix_t>*>(uintptr_t(this) + 0x2910);
+	}
 };
 
 class ragdoll_t : public entity_t

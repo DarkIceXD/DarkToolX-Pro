@@ -25,6 +25,15 @@ std::deque<record>& features::backtrack::get_records(const int player_index)
 	return records[player_index];
 }
 
+void features::backtrack::restore_record(player_t* entity, const int record_index)
+{
+	const auto& record = records[entity->index()][record_index];
+	auto& bone_cache = entity->get_cached_bones();
+	std::memcpy(bone_cache.base(), record.matrix, bone_cache.count() * sizeof(matrix_t));
+	entity->collideable()->mins() = record.mins;
+	entity->collideable()->maxs() = record.maxs;
+}
+
 int features::backtrack::restore_tick_count(const int player_index, const int record_index)
 {
 	return time_to_ticks(records[player_index][record_index].simulation_time + get_lerp());
@@ -43,9 +52,6 @@ bool features::backtrack::valid(const float simtime)
 
 void features::backtrack::update()
 {
-	if (!csgo::conf->aimbot().backtrack)
-		return;
-
 	if (!csgo::local_player || !csgo::local_player->is_alive())
 	{
 		for (auto& record : records)
@@ -67,10 +73,10 @@ void features::backtrack::update()
 
 		record rec{ };
 		rec.origin = entity->abs_origin();
-		rec.view_angles = entity->abs_angles();
+		rec.mins = entity->collideable()->mins();
+		rec.maxs = entity->collideable()->maxs();
 		rec.simulation_time = entity->simulation_time();
-
-		//entity->setup_bones(rec.matrix, 256, BONE_USED_BY_ANYTHING, interfaces::globals->cur_time);
+		entity->setup_bones(rec.matrix, 256, BONE_USED_BY_ANYTHING, interfaces::globals->cur_time);
 
 		records[i].push_front(rec);
 
@@ -80,110 +86,6 @@ void features::backtrack::update()
 		if (auto invalid = std::find_if(std::cbegin(records[i]), std::cend(records[i]), [](const record& rec) { return !valid(rec.simulation_time); }); invalid != std::cend(records[i]))
 			records[i].erase(invalid, std::cend(records[i]));
 	}
-}
-
-static void rage_backtrack(c_usercmd* cmd)
-{
-	if (csgo::want_to_shoot)
-		return;
-
-	const auto time = interfaces::globals->interval_per_tick * cmd->tick_count;
-	if (csgo::local_player->next_attack() > time)
-		return;
-
-	const auto weapon = csgo::local_player->active_weapon();
-	if (!weapon)
-		return;
-
-	if (weapon->clip1_count() < 1)
-		return;
-
-	const auto weapon_data = weapon->get_weapon_data();
-	if (!weapon_data)
-		return;
-
-	if (!weapon_data->weapon_full_auto && weapon->next_primary_attack() > time)
-		return;
-
-	int best_target_index{};
-	int best_record{};
-	best_target target = {};
-	const auto local_head = csgo::local_player->get_eye_pos();
-	const auto aimpunch = csgo::local_player->recoil();
-	for (int i = 1; i <= interfaces::globals->max_clients; i++)
-	{
-		auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
-		if (!entity || entity == csgo::local_player || entity->dormant())
-			continue;
-
-		const auto hp = entity->health();
-		if (hp < 1)
-			continue;
-
-		if (entity->has_gun_game_immunity())
-			continue;
-
-		if (!csgo::local_player->is_enemy(entity))
-			continue;
-
-		if (records[i].size() <= 3)
-			continue;
-
-		const auto abs_angles = entity->abs_angles();
-		const auto abs_origin = entity->abs_origin();
-		for (size_t j = 0; j < records[i].size(); j++)
-		{
-			const auto& record = records[i][j];
-			if (!features::backtrack::valid(record.simulation_time))
-				continue;
-
-			entity->set_angles(record.view_angles);
-			entity->set_position(record.origin);
-			constexpr int hitboxes[] = { hitbox_pelvis, hitbox_stomach, hitbox_head };
-			for (const auto k : hitboxes)
-			{
-				auto current_hitbox = entity->get_hitbox_position(k);
-				const auto new_viewangle = (math::calculate_angle(local_head, current_hitbox) - aimpunch).normalized_angles();
-				if (math::fov(cmd->viewangles, new_viewangle) > csgo::conf->aimbot().fov)
-					continue;
-				const auto data = features::auto_wall(current_hitbox - local_head, weapon_data, false);
-				if (data.damage > target.damage)
-				{
-					target.entity = data.entity;
-					target.damage = static_cast<int>(data.damage);
-					target.angle = new_viewangle;
-					target.lethal = target.damage >= hp;
-					target.hitbox = k;
-					best_target_index = i;
-					best_record = j;
-					if (target.lethal)
-						break;
-				}
-			}
-			if (target.lethal)
-				break;
-		}
-		if (target.lethal)
-			break;
-		entity->set_angles(abs_angles);
-		entity->set_position(abs_origin);
-	}
-
-	if (!best_target_index || !best_record)
-		return;
-
-	const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(weapon->item_definition_index());
-	if (!(target.lethal || target.damage >= (csgo::conf->aimbot().min_dmg_override_active ? weapon_setting.min_dmg_override : weapon_setting.min_dmg)))
-		return;
-	//das ist das problem
-	/*if (!features::hitchance(target.angle, target.entity, weapon_setting.hitchance, weapon, weapon_data, features::hitbox_to_hitgroup(target.hitbox)))
-		return;
-*/
-	csgo::target = target;
-	cmd->tick_count = features::backtrack::restore_tick_count(best_target_index, best_record);
-	cmd->viewangles = target.angle;
-	cmd->buttons |= in_attack;
-	csgo::want_to_shoot = true;
 }
 
 void features::backtrack::run(c_usercmd* cmd)
@@ -197,11 +99,9 @@ void features::backtrack::run(c_usercmd* cmd)
 	if (!csgo::manual_shoot)
 		return;
 
-	auto best_fov{ 255.f };
-	entity_t* best_target{ };
-	int best_record{ };
-	int best_target_index;
-
+	int best_target = 0;
+	int best_record = 0;
+	float best_fov = FLT_MAX;
 	const auto local_head = csgo::local_player->get_eye_pos();
 	const auto view_angles = cmd->viewangles + csgo::local_player->recoil();
 	for (int i = 1; i <= interfaces::globals->max_clients; i++)
@@ -213,22 +113,9 @@ void features::backtrack::run(c_usercmd* cmd)
 		if (!csgo::local_player->is_enemy(entity))
 			continue;
 
-		const auto& origin = entity->abs_origin();
-		const auto fov = math::fov(view_angles, math::calculate_angle(local_head, origin));
-		if (fov < best_fov)
+		for (size_t j = 3; j < records[i].size(); j++)
 		{
-			best_fov = fov;
-			best_target = entity;
-			best_target_index = i;
-		}
-	}
-
-	if (best_target)
-	{
-		best_fov = 255.f;
-		for (size_t i = 3; i < records[best_target_index].size(); i++)
-		{
-			const auto& record = records[best_target_index][i];
+			const auto& record = records[i][j];
 			if (!valid(record.simulation_time))
 				continue;
 
@@ -236,11 +123,12 @@ void features::backtrack::run(c_usercmd* cmd)
 			if (fov < best_fov)
 			{
 				best_fov = fov;
-				best_record = i;
+				best_target = i;
+				best_record = j;
 			}
 		}
 	}
 
-	if (best_record)
-		cmd->tick_count = restore_tick_count(best_target_index, best_record);
+	if (best_target && best_record)
+		cmd->tick_count = restore_tick_count(best_target, best_record);
 }

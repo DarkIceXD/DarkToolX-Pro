@@ -9,10 +9,9 @@ struct auto_wall_data {
 };
 
 struct record {
-	vec3_t origin;
-	vec3_t view_angles;
+	vec3_t origin, mins, maxs;
 	float simulation_time;
-	// matrix_t matrix[256];
+	matrix_t matrix[256];
 };
 
 namespace features {
@@ -52,6 +51,7 @@ namespace features {
 	void trigger(c_usercmd* cmd);
 	namespace backtrack {
 		std::deque<record>& get_records(const int player_index);
+		void restore_record(player_t* entity, const int record_index);
 		bool valid(const float simtime);
 		int restore_tick_count(const int player_index, const int record_index);
 		void update();
