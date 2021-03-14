@@ -33,8 +33,6 @@ static void apply_desync(c_usercmd* cmd, bool& send_packet)
 	{
 		cmd->viewangles.y += desync_left ? max_desync : -max_desync;
 	}
-	/*if (!send_packet)
-		cmd->viewangles.y += desync_left ? max_desync : -max_desync;*/
 }
 
 static vec3_t get_best_angle(const vec3_t& view_angles)

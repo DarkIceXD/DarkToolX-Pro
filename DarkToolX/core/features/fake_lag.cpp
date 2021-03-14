@@ -2,6 +2,9 @@
 
 void features::fake_lag(bool& send_packet)
 {
+	if (csgo::want_to_shoot)
+		return;
+
 	if (!csgo::local_player)
 		return;
 

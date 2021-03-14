@@ -2,9 +2,6 @@
 
 void features::damage_indicator()
 {
-	if (csgo::conf->aimbot().mode != 1)
-		return;
-	
 	if (!csgo::conf->aimbot().dmg_indicator)
 		return;
 
@@ -12,6 +9,9 @@ void features::damage_indicator()
 		return;
 
 	if (!csgo::local_player->is_alive())
+		return;
+
+	if (csgo::target.damage == 0)
 		return;
 
 	auto text_pos_w = 0;
