@@ -201,7 +201,6 @@ void features::backtrack::run(c_usercmd* cmd)
 	entity_t* best_target{ };
 	int best_record{ };
 	int best_target_index;
-	vec3_t best_target_origin;
 
 	const auto local_head = csgo::local_player->get_eye_pos();
 	const auto view_angles = cmd->viewangles + csgo::local_player->recoil();
@@ -221,17 +220,13 @@ void features::backtrack::run(c_usercmd* cmd)
 			best_fov = fov;
 			best_target = entity;
 			best_target_index = i;
-			best_target_origin = origin;
 		}
 	}
 
 	if (best_target)
 	{
-		if (records[best_target_index].size() <= 3)
-			return;
-
 		best_fov = 255.f;
-		for (size_t i = 0; i < records[best_target_index].size(); i++)
+		for (size_t i = 3; i < records[best_target_index].size(); i++)
 		{
 			const auto& record = records[best_target_index][i];
 			if (!valid(record.simulation_time))

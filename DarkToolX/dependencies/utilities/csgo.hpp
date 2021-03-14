@@ -17,6 +17,7 @@ struct best_target {
 	int damage;
 	int hitbox;
 	float fov;
+	int best_record;
 	bool lethal;
 };
 

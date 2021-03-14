@@ -1,22 +1,22 @@
 #include "features.hpp"
 
-static best_target get_best_hitbox_angle(player_t* entity, const int hp, const vec3_t& local_head, const vec3_t& aimpunch, const vec3_t& current_viewangle, const weapon_info_t* weaponData)
+static best_target get_best_hitbox_angle(player_t* entity, const int hp, const vec3_t& local_head, const vec3_t& aimpunch, const vec3_t& viewangles, const weapon_info_t* weapon_data)
 {
 	constexpr int hitboxes[] = { hitbox_pelvis, hitbox_stomach, hitbox_lower_chest, hitbox_chest, hitbox_upper_chest, hitbox_head, hitbox_neck, hitbox_right_thigh, hitbox_left_thigh, hitbox_right_calf, hitbox_left_calf, hitbox_right_foot, hitbox_left_foot, hitbox_right_upper_arm, hitbox_right_forearm, hitbox_left_upper_arm, hitbox_left_forearm };
 	best_target target = {};
 	for (const auto i : hitboxes) {
 		if (!csgo::conf->aimbot().is_hitbox_enabled(i))
 			continue;
-		auto current_hitbox = entity->get_hitbox_position(i);
-		const auto new_viewangle = (math::calculate_angle(local_head, current_hitbox) - aimpunch).normalized_angles();
-		if (math::fov(current_viewangle, new_viewangle) > csgo::conf->aimbot().fov)
+		const auto current_hitbox = entity->get_hitbox_position(i);
+		const auto new_viewangles = (math::calculate_angle(local_head, current_hitbox) - aimpunch).normalized_angles();
+		if (math::fov(viewangles, new_viewangles) > csgo::conf->aimbot().fov)
 			continue;
-		const auto data = features::auto_wall(current_hitbox - local_head, weaponData, true);
+		const auto data = features::auto_wall(current_hitbox - local_head, weapon_data, true);
 		if (data.damage > target.damage)
 		{
 			target.entity = data.entity;
 			target.damage = static_cast<int>(data.damage);
-			target.angle = new_viewangle;
+			target.angle = new_viewangles;
 			target.lethal = target.damage >= hp;
 			target.hitbox = i;
 			if (target.lethal)

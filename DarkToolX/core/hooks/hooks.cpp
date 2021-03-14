@@ -156,8 +156,9 @@ void hooks::release() {
 }
 
 bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd* cmd) {
+	create_move_original(input_sample_frametime, cmd);
 	if (!cmd || !cmd->command_number)
-		return create_move_original(input_sample_frametime, cmd);
+		return false;
 
 	uintptr_t* frame_pointer;
 	__asm mov frame_pointer, ebp;
