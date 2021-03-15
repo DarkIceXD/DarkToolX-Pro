@@ -11,9 +11,9 @@ namespace config {
 		std::string conf_name{ "New Config" };
 		int anti_aim{ 0 };
 		bool smart_anti_aim{ false };
-		int pitch{ 0 };
-		int yaw{ 0 };
-		int desync{ 0 };
+		int pitch{ 89 };
+		int yaw{ 160 };
+		int desync{ 1 };
 		bool fake_lag{ false };
 		int fake_lag_ticks{ 1 };
 		bool bhop{ true };

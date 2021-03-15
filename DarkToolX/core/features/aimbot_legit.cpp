@@ -1,8 +1,8 @@
 #include "features.hpp"
 
-static best_target get_best_hitbox_angle(player_t* entity, const int hp, const vec3_t& local_head, const vec3_t& aimpunch, const vec3_t& viewangles, const weapon_info_t* weapon_data)
+static best_target get_best_hitbox_angle(player_t* entity, const int hp, const vec3_t& local_head, const vec3_t& viewangles, const weapon_info_t* weapon_data)
 {
-	constexpr int hitboxes[] = { hitbox_pelvis, hitbox_stomach, hitbox_lower_chest, hitbox_chest, hitbox_upper_chest, hitbox_head, hitbox_neck, hitbox_right_thigh, hitbox_left_thigh, hitbox_right_calf, hitbox_left_calf, hitbox_right_foot, hitbox_left_foot, hitbox_right_upper_arm, hitbox_right_forearm, hitbox_left_upper_arm, hitbox_left_forearm };
+	constexpr int hitboxes[] = { hitbox_stomach, hitbox_lower_chest, hitbox_chest, hitbox_upper_chest, hitbox_head, hitbox_right_thigh, hitbox_left_thigh, hitbox_right_calf, hitbox_left_calf, hitbox_right_foot, hitbox_left_foot, hitbox_right_upper_arm, hitbox_right_forearm, hitbox_left_upper_arm, hitbox_left_forearm };
 	best_target target = {};
 	target.entity = entity;
 	target.fov = FLT_MAX;
@@ -10,7 +10,7 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 		if (!csgo::conf->aimbot().is_hitbox_enabled(hitbox))
 			continue;
 		const auto hitbox_position = entity->get_hitbox_position(hitbox);
-		const auto new_viewangles = (math::calculate_angle(local_head, hitbox_position) /*- aimpunch*/).normalized_angles();
+		const auto new_viewangles = math::calculate_angle(local_head, hitbox_position).normalized_angles();
 		const auto fov = math::fov(viewangles, new_viewangles);
 		if (fov > csgo::conf->aimbot().fov)
 			continue;
@@ -26,9 +26,9 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 	return target;
 }
 
-static best_target get_best_hitbox_angle(player_t* entity, const int hp, const vec3_t& local_head, const vec3_t& aimpunch, const vec3_t& viewangles, const weapon_info_t* weapon_data, const std::deque<record>& records)
+static best_target get_best_hitbox_angle(player_t* entity, const int hp, const vec3_t& local_head, const vec3_t& viewangles, const weapon_info_t* weapon_data, const std::deque<record>& records)
 {
-	auto target = get_best_hitbox_angle(entity, hp, local_head, aimpunch, viewangles, weapon_data);
+	auto target = get_best_hitbox_angle(entity, hp, local_head, viewangles, weapon_data);
 	if (csgo::conf->aimbot().backtrack)
 	{
 		auto changed = false;
@@ -40,7 +40,7 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 
 			features::backtrack::restore_record(entity, i);
 			changed = true;
-			const auto target_i = get_best_hitbox_angle(entity, hp, local_head, aimpunch, viewangles, weapon_data);
+			const auto target_i = get_best_hitbox_angle(entity, hp, local_head, viewangles, weapon_data);
 			if (target_i.fov < target.fov)
 			{
 				target = target_i;
@@ -56,7 +56,6 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 static best_target get_best_target(const vec3_t& viewangles, const weapon_info_t* weapon_data)
 {
 	const auto local_head = csgo::local_player->get_eye_pos();
-	const auto aimpunch = csgo::local_player->recoil();
 	best_target target = {};
 	target.fov = FLT_MAX;
 	for (auto i = 1; i <= interfaces::globals->max_clients; i++)
@@ -75,7 +74,7 @@ static best_target get_best_target(const vec3_t& viewangles, const weapon_info_t
 		if (!csgo::local_player->is_enemy(entity))
 			continue;
 
-		const auto target_i = get_best_hitbox_angle(entity, hp, local_head, aimpunch, viewangles, weapon_data, features::backtrack::get_records(i));
+		const auto target_i = get_best_hitbox_angle(entity, hp, local_head, viewangles, weapon_data, features::backtrack::get_records(i));
 		if (target_i.fov < target.fov)
 			target = target_i;
 	}
