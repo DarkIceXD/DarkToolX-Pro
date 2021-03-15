@@ -122,9 +122,9 @@ void menu::render(bool& enabled, conf& conf)
 					ImGui::Checkbox("Arms", &conf.aimbot().arms);
 					ImGui::Separator();
 					ImGui::Checkbox("Auto Shoot", &conf.aimbot().auto_shoot);
+					ImGui::Checkbox("Damage Indicator", &conf.aimbot().dmg_indicator);
 					if (conf.aimbot().mode == 1)
 					{
-						ImGui::Checkbox("Damage Indicator", &conf.aimbot().dmg_indicator);
 						ImGui::Checkbox("Auto Cock Revolver", &conf.aimbot().auto_cock_revolver);
 						ImGui::Checkbox("Auto Scope", &conf.aimbot().auto_scope);
 					}
@@ -437,8 +437,15 @@ void menu::render(bool& enabled, conf& conf)
 			}
 			if (ImGui::BeginTabItem("Misc"))
 			{
-				ImGui::Combo("Anti Aim", &conf.misc().anti_aim, "Disabled\0Rage\0Desync\0Rage Desync\0");
+				ImGui::Combo("Anti Aim", &conf.misc().anti_aim, "Disabled\0Rage\0Desync\0Rage Desync\0Custom\0");
 				ImGui::Checkbox("Smart Anti Aim", &conf.misc().smart_anti_aim);
+				if (conf.misc().anti_aim == 4)
+				{
+					ImGui::SliderInt("Pitch", &conf.misc().pitch, -89, 89);
+					ImGui::SliderInt("Yaw", &conf.misc().yaw, -180, 180);
+					ImGui::Combo("Desync", &conf.misc().desync, "Disabled\0Left\0Right\0");
+				}
+				ImGui::Separator();
 				ImGui::Checkbox("Fake Lag", &conf.misc().fake_lag);
 				ImGui::SliderInt("Fake Lag Ticks", &conf.misc().fake_lag_ticks, 1, 6);
 				ImGui::Checkbox("Bunny hop", &conf.misc().bhop);

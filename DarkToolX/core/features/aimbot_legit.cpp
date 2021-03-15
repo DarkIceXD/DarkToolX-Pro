@@ -10,7 +10,7 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 		if (!csgo::conf->aimbot().is_hitbox_enabled(hitbox))
 			continue;
 		const auto hitbox_position = entity->get_hitbox_position(hitbox);
-		const auto new_viewangles = (math::calculate_angle(local_head, hitbox_position) - aimpunch).normalized_angles();
+		const auto new_viewangles = (math::calculate_angle(local_head, hitbox_position) /*- aimpunch*/).normalized_angles();
 		const auto fov = math::fov(viewangles, new_viewangles);
 		if (fov > csgo::conf->aimbot().fov)
 			continue;
@@ -82,43 +82,19 @@ static best_target get_best_target(const vec3_t& viewangles, const weapon_info_t
 	return target;
 }
 
-void features::legit_aimbot(c_usercmd* cmd)
+void features::aimbot::legit(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data)
 {
-	if (csgo::conf->aimbot().mode != 2)
-		return;
-
-	if (csgo::conf->aimbot().key_bind_type == 1 && GetAsyncKeyState(csgo::conf->aimbot().key_bind) & 1)
-		csgo::conf->aimbot().enabled = !csgo::conf->aimbot().enabled;
-	else if (csgo::conf->aimbot().key_bind_type == 2 && !GetAsyncKeyState(csgo::conf->aimbot().key_bind))
-		return;
-
-	if (!csgo::conf->aimbot().enabled)
-		return;
-
-	if (!csgo::local_player)
-		return;
-
-	const auto weapon = csgo::local_player->active_weapon();
-	if (!weapon)
-		return;
-
-	if (weapon->clip1_count() < 1)
-		return;
-
-	const auto weapon_data = weapon->get_weapon_data();
-	if (!weapon_data)
-		return;
-
 	csgo::target = get_best_target(cmd->viewangles, weapon_data);
 	if (csgo::target.fov < FLT_MAX)
 	{
+		auto recoil_compensated_angle = (csgo::target.angle - csgo::local_player->recoil()).normalized_angles();
 		if (csgo::conf->aimbot().smoothness > 1 && csgo::target.fov > 1)
 		{
-			const auto delta = (csgo::target.angle - cmd->viewangles).normalized_angles();
-			csgo::target.angle = (cmd->viewangles + delta / csgo::conf->aimbot().smoothness).normalized_angles();
+			const auto delta = (recoil_compensated_angle - cmd->viewangles).normalized_angles();
+			recoil_compensated_angle = (cmd->viewangles + delta / csgo::conf->aimbot().smoothness).normalized_angles();
 		}
-		cmd->viewangles = csgo::target.angle;
-		interfaces::engine->set_view_angles(csgo::target.angle);
+		cmd->viewangles = recoil_compensated_angle;
+		interfaces::engine->set_view_angles(recoil_compensated_angle);
 	}
 	const bool is_shooting_manually = cmd->buttons & in_attack;
 	if (is_shooting_manually)

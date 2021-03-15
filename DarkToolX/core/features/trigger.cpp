@@ -12,7 +12,7 @@ void features::auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t*
 	if (!weapon_data->weapon_full_auto && weapon->next_primary_attack() > time)
 		return;
 
-	const auto entity = features::auto_wall(math::angle_vector(cmd->viewangles + csgo::local_player->aim_punch_angle() * 2), weapon_data, false).entity;
+	const auto entity = features::auto_wall(math::angle_vector(cmd->viewangles + csgo::local_player->recoil()), weapon_data, false).entity;
 	if (!entity)
 		return;
 

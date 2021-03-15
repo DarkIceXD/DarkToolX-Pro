@@ -177,8 +177,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	features::reveal_ranks(cmd);
 	prediction::start(cmd);
 	{
-		features::aimbot(cmd);
-		features::legit_aimbot(cmd);
+		features::aimbot::run(cmd);
 		features::trigger(cmd);
 		features::backtrack::run(cmd);
 		features::fake_lag(send_packet);

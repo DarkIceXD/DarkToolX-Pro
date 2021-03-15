@@ -39,7 +39,7 @@
     <ClCompile Include="core\features\hitchance.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="core\features\legit_aimbot.cpp">
+    <ClCompile Include="core\features\aimbot_legit.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="core\features\sequence_remapping.cpp">
@@ -208,6 +208,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="core\features\slow_walk.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="core\features\aimbot_silent.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

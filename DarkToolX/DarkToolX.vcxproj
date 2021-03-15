@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="core\features\aimbot.cpp" />
+    <ClCompile Include="core\features\aimbot_silent.cpp" />
     <ClCompile Include="core\features\animation_fix.cpp" />
     <ClCompile Include="core\features\anti_aim.cpp" />
     <ClCompile Include="core\features\auto_accept.cpp" />
@@ -166,7 +167,7 @@
     <ClCompile Include="core\features\fov.cpp" />
     <ClCompile Include="core\features\glow.cpp" />
     <ClCompile Include="core\features\hitchance.cpp" />
-    <ClCompile Include="core\features\legit_aimbot.cpp" />
+    <ClCompile Include="core\features\aimbot_legit.cpp" />
     <ClCompile Include="core\features\bunny_hop.cpp" />
     <ClCompile Include="core\features\night_mode.cpp" />
     <ClCompile Include="core\features\no_duck_delay.cpp" />

@@ -11,6 +11,6 @@ namespace config {
 		bool enabled{ false };
 		int key_bind_type{ 0 };
 		int key_bind{ 0x12 };
-		JSON_SERIALIZE(trigger, enabled, key_bind_type, key_bind)
+		JSON_SERIALIZE(trigger, conf_name, enabled, key_bind_type, key_bind)
 	};
 };

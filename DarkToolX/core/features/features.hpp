@@ -15,7 +15,6 @@ struct record {
 };
 
 namespace features {
-	void aimbot(c_usercmd* cmd);
 	void animation_fix();
 	void anti_aim(c_usercmd* cmd, bool& send_packet);
 	void auto_accept();
@@ -49,6 +48,11 @@ namespace features {
 	void step_esp();
 	void thirdperson();
 	void trigger(c_usercmd* cmd);
+	namespace aimbot {
+		void run(c_usercmd* cmd);
+		void silent(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data);
+		void legit(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data);
+	}
 	namespace backtrack {
 		std::deque<record>& get_records(const int player_index);
 		void restore_record(player_t* entity, const int record_index);

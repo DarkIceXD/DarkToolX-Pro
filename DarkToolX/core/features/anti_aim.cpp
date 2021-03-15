@@ -20,9 +20,8 @@ static bool updating_lby()
 	return false;
 }
 
-static void apply_desync(c_usercmd* cmd, bool& send_packet)
+static void apply_desync(c_usercmd* cmd, bool& send_packet, const bool desync_left)
 {
-	const auto desync_left = cmd->sidemove < 0;
 	const auto max_desync = std::abs(csgo::local_player->max_desync_angle());
 	if (updating_lby())
 	{
@@ -112,12 +111,18 @@ void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 		cmd->viewangles.y += 180;
 		break;
 	case 2:
-		apply_desync(cmd, send_packet);
+		apply_desync(cmd, send_packet, cmd->sidemove < 0);
 		break;
 	case 3:
 		cmd->viewangles.x = 89;
 		cmd->viewangles.y += 180;
-		apply_desync(cmd, send_packet);
+		apply_desync(cmd, send_packet, cmd->sidemove < 0);
+		break;
+	case 4:
+		cmd->viewangles.x = csgo::conf->misc().pitch;
+		cmd->viewangles.y += csgo::conf->misc().yaw;
+		if (csgo::conf->misc().desync)
+			apply_desync(cmd, send_packet, csgo::conf->misc().desync == 1);
 		break;
 	}
 }
