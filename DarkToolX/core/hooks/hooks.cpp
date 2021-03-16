@@ -183,6 +183,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 		features::fake_lag(send_packet);
 		features::anti_aim(cmd, send_packet);
 		features::dormant();
+		features::auto_stop(old_forwardmove, old_sidemove);
 		features::slow_walk(cmd, old_forwardmove, old_sidemove);
 	}
 	prediction::end();

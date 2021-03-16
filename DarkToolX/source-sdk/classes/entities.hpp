@@ -5,7 +5,6 @@
 #include "../structs/animstate.hpp"
 #include "../../dependencies/utilities/netvars/netvars.hpp"
 #include "../structs/models.hpp"
-#include "../../dependencies/utilities/utilities.hpp"
 #include "../../dependencies/interfaces/interfaces.hpp"
 
 enum data_update_type_t {

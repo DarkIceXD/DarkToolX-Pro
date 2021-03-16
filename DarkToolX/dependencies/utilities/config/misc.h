@@ -19,10 +19,11 @@ namespace config {
 		bool bhop{ true };
 		bool no_duck_delay{ true };
 		bool slow_walk{ false };
+		bool auto_stop{ false };
 		bool hitsound{ false };
 		bool auto_switch{ false };
 		bool auto_accept{ true };
 		bool reveal_ranks{ true };
-		JSON_SERIALIZE(misc, conf_name, anti_aim, smart_anti_aim, pitch, yaw, desync, fake_lag, fake_lag_ticks, bhop, no_duck_delay, slow_walk, hitsound, auto_switch, auto_accept, reveal_ranks)
+		JSON_SERIALIZE(misc, conf_name, anti_aim, smart_anti_aim, pitch, yaw, desync, fake_lag, fake_lag_ticks, bhop, no_duck_delay, slow_walk, auto_stop, hitsound, auto_switch, auto_accept, reveal_ranks)
 	};
 };

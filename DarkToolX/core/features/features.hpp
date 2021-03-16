@@ -19,6 +19,7 @@ namespace features {
 	void anti_aim(c_usercmd* cmd, bool& send_packet);
 	void auto_accept();
 	void auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data);
+	void auto_stop(float& forwardmove, float& sidemove);
 	void auto_switch(c_usercmd* cmd);
 	auto_wall_data auto_wall(vec3_t direction, const weapon_info_t* weapon_data, const bool bangable);
 	void bullet_tracers();

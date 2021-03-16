@@ -30,8 +30,8 @@ void features::backtrack::restore_record(player_t* entity, const int record_inde
 	const auto& record = records[entity->index()][record_index];
 	auto& bone_cache = entity->get_cached_bones();
 	std::memcpy(bone_cache.base(), record.matrix, bone_cache.count() * sizeof(matrix_t));
-	entity->collideable()->mins() = record.mins;
-	entity->collideable()->maxs() = record.maxs;
+	entity->set_position(record.origin);
+	entity->collideable()->set_collision_bounds(record.mins, record.maxs);
 }
 
 int features::backtrack::restore_tick_count(const int player_index, const int record_index)

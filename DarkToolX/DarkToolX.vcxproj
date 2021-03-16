@@ -152,6 +152,7 @@
     <ClCompile Include="core\features\animation_fix.cpp" />
     <ClCompile Include="core\features\anti_aim.cpp" />
     <ClCompile Include="core\features\auto_accept.cpp" />
+    <ClCompile Include="core\features\auto_stop.cpp" />
     <ClCompile Include="core\features\auto_switch.cpp" />
     <ClCompile Include="core\features\auto_wall.cpp" />
     <ClCompile Include="core\features\backtrack.cpp" />
