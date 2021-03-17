@@ -113,7 +113,7 @@ bool features::util::hitchance(const vec3_t& view_angles, player_t* player, cons
 	const auto spread = weapon->get_spread();
 	int hits = 0;
 	vec3_t forward, right, up;
-	math::angle_vectors(view_angles + csgo::local_player->recoil(), &forward, &right, &up);
+	math::angle_vector(view_angles + csgo::local_player->recoil(), &forward, &right, &up);
 	for (int i = 0; i < seeds; i++)
 	{
 		RandomSeed(i);

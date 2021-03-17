@@ -14,11 +14,11 @@ namespace math {
 	}
 	void correct_movement(c_usercmd* cmd, const float old_yaw);
 	vec3_t calculate_angle(const vec3_t& a, const vec3_t& b);
-	vec3_t angle_vector(const vec3_t& angle);
 	vec3_t transform_vector(const vec3_t& a, const matrix_t& b);
 	vec3_t vector_angles(const vec3_t& forward);
 	vec3_t vector_angles(const vec3_t& forward, const vec3_t& up);
-	void angle_vectors(const vec3_t& angles, vec3_t* forward, vec3_t* right, vec3_t* up);
+	vec3_t angle_vector(const vec3_t& angle);
+	void angle_vector(const vec3_t& angles, vec3_t* forward, vec3_t* right, vec3_t* up);
 	bool screen_transform(const vec3_t& point, vec3_t& screen);
 	bool world_to_screen(const vec3_t& origin, vec2_t& screen);
 	vec3_t vector_rotate(const vec3_t& in1, const matrix_t& in2);

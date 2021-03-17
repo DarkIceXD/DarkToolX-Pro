@@ -21,16 +21,6 @@ vec3_t math::calculate_angle(const vec3_t& a, const vec3_t& b) {
 	return angles;
 }
 
-vec3_t math::angle_vector(const vec3_t& angle) {
-	auto sy = sin(angle.y / 180.f * static_cast<float>(M_PI));
-	auto cy = cos(angle.y / 180.f * static_cast<float>(M_PI));
-
-	auto sp = sin(angle.x / 180.f * static_cast<float>(M_PI));
-	auto cp = cos(angle.x / 180.f * static_cast<float>(M_PI));
-
-	return vec3_t(cp * cy, cp * sy, -sp);
-}
-
 vec3_t math::transform_vector(const vec3_t& a, const matrix_t& b) {
 	return {
 		a.dot(b[0]) + b[0][3],
@@ -84,7 +74,16 @@ vec3_t math::vector_angles(const vec3_t& forward, const vec3_t& up)
 	return angles;
 }
 
-void math::angle_vectors(const vec3_t& angles, vec3_t* forward, vec3_t* right, vec3_t* up) {
+vec3_t math::angle_vector(const vec3_t& angle) {
+	const auto sp = sin(DEG2RAD(angle.x));
+	const auto sy = sin(DEG2RAD(angle.y));
+	const auto cp = cos(DEG2RAD(angle.x));
+	const auto cy = cos(DEG2RAD(angle.y));
+
+	return vec3_t(cp * cy, cp * sy, -sp);
+}
+
+void math::angle_vector(const vec3_t& angles, vec3_t* forward, vec3_t* right, vec3_t* up) {
 	const auto sp = sin(DEG2RAD(angles.x));
 	const auto sy = sin(DEG2RAD(angles.y));
 	const auto cp = cos(DEG2RAD(angles.x));
