@@ -147,14 +147,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="core\features\aimbot.cpp" />
-    <ClCompile Include="core\features\aimbot_silent.cpp" />
+    <ClCompile Include="core\features\aimbot\run.cpp" />
+    <ClCompile Include="core\features\aimbot\silent.cpp" />
     <ClCompile Include="core\features\animation_fix.cpp" />
     <ClCompile Include="core\features\anti_aim.cpp" />
     <ClCompile Include="core\features\auto_accept.cpp" />
     <ClCompile Include="core\features\auto_stop.cpp" />
     <ClCompile Include="core\features\auto_switch.cpp" />
-    <ClCompile Include="core\features\auto_wall.cpp" />
+    <ClCompile Include="core\features\util\auto_shoot.cpp" />
+    <ClCompile Include="core\features\util\auto_wall.cpp" />
     <ClCompile Include="core\features\backtrack.cpp" />
     <ClCompile Include="core\features\bullet_tracers.cpp" />
     <ClCompile Include="core\features\chat_bot.cpp" />
@@ -164,11 +165,13 @@
     <ClCompile Include="core\features\dormant.cpp" />
     <ClCompile Include="core\features\esp.cpp" />
     <ClCompile Include="core\features\fake_lag.cpp" />
-    <ClCompile Include="core\features\force_item_update.cpp" />
+    <ClCompile Include="core\features\util\can_shoot.cpp" />
+    <ClCompile Include="core\features\util\cock_revolver.cpp" />
+    <ClCompile Include="core\features\util\force_item_update.cpp" />
     <ClCompile Include="core\features\fov.cpp" />
     <ClCompile Include="core\features\glow.cpp" />
-    <ClCompile Include="core\features\hitchance.cpp" />
-    <ClCompile Include="core\features\aimbot_legit.cpp" />
+    <ClCompile Include="core\features\util\hitchance.cpp" />
+    <ClCompile Include="core\features\aimbot\legit.cpp" />
     <ClCompile Include="core\features\bunny_hop.cpp" />
     <ClCompile Include="core\features\night_mode.cpp" />
     <ClCompile Include="core\features\no_duck_delay.cpp" />

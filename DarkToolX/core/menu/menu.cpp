@@ -437,15 +437,16 @@ void menu::render(bool& enabled, conf& conf)
 			}
 			if (ImGui::BeginTabItem("Misc"))
 			{
-				ImGui::Combo("Anti Aim", &conf.misc().anti_aim, "Disabled\0Rage\0Desync\0Rage Desync\0Custom\0");
+				ImGui::Combo("Anti Aim", &conf.misc().anti_aim, "Disabled\0Rage\0Custom\0");
 				ImGui::Checkbox("Smart Anti Aim", &conf.misc().smart_anti_aim);
-				if (conf.misc().anti_aim == 4)
+				if (conf.misc().anti_aim == 2)
 				{
 					ImGui::SliderInt("Pitch", &conf.misc().pitch, -89, 89);
 					ImGui::SliderInt("Yaw", &conf.misc().yaw, -180, 180);
-					ImGui::Combo("Desync", &conf.misc().desync, "Disabled\0Left\0Right\0");
 				}
 				ImGui::Separator();
+				ImGui::Combo("Desync", &conf.misc().desync, "Disabled\0Left\0Right\0");
+				ImGui::SliderInt("Max Desync Delta", &conf.misc().max_desync_delta, 0, 60);
 				ImGui::Checkbox("Fake Lag", &conf.misc().fake_lag);
 				ImGui::SliderInt("Fake Lag Ticks", &conf.misc().fake_lag_ticks, 1, 6);
 				ImGui::Checkbox("Bunny hop", &conf.misc().bhop);

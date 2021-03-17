@@ -1,4 +1,4 @@
-#include "features.hpp"
+#include "../features.hpp"
 
 void features::aimbot::run(c_usercmd* cmd)
 {
@@ -21,21 +21,15 @@ void features::aimbot::run(c_usercmd* cmd)
 	if (!csgo::local_player)
 		return;
 
-	if (csgo::local_player->next_attack() > interfaces::globals->cur_time)
-		return;
-
 	const auto weapon = csgo::local_player->active_weapon();
 	if (!weapon)
-		return;
-
-	if (weapon->clip1_count() < 1)
 		return;
 
 	const auto weapon_data = weapon->get_weapon_data();
 	if (!weapon_data)
 		return;
 
-	if (!weapon_data->weapon_full_auto && weapon->next_primary_attack() > interfaces::globals->cur_time)
+	if (!features::util::can_shoot(weapon, weapon_data))
 		return;
 
 	switch (csgo::conf->aimbot().mode)

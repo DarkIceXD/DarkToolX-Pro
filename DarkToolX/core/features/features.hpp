@@ -18,23 +18,18 @@ namespace features {
 	void animation_fix();
 	void anti_aim(c_usercmd* cmd, bool& send_packet);
 	void auto_accept();
-	void auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data);
 	void auto_stop(float& forwardmove, float& sidemove);
 	void auto_switch(c_usercmd* cmd);
-	auto_wall_data auto_wall(vec3_t direction, const weapon_info_t* weapon_data, const bool bangable);
 	void bullet_tracers();
-	void bunny_hop(c_usercmd* cmd);
-	bool can_force_item_update(weapon_t* item);
-	void clan_tag_changer(const c_usercmd* cmd);
+	void bunny_hop(c_usercmd* cmd, float& sidemove);
+	void clan_tag_changer();
 	void crosshair();
 	void damage_indicator();
 	void dormant();
 	void esp(ImDrawList* draw_list);
 	void fake_lag(bool& send_packet);
-	void force_item_update(weapon_t* item);
 	void fov(view_setup_t* view);
 	void glow();
-	bool hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const float range);
 	void legit_aimbot(c_usercmd* cmd);
 	void night_mode(i_material* mat, float& r, float& g, float& b);
 	void no_duck_delay(c_usercmd* cmd);
@@ -61,6 +56,15 @@ namespace features {
 		int restore_tick_count(const int player_index, const int record_index);
 		void update();
 		void run(c_usercmd* cmd);
+	}
+	namespace util {
+		void auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data);
+		auto_wall_data auto_wall(vec3_t direction, const weapon_info_t* weapon_data, const bool bangable);
+		bool can_shoot(weapon_t* weapon, const weapon_info_t* weapon_data);
+		bool cock_revolver(weapon_t* weapon);
+		bool can_force_item_update(weapon_t* item);
+		void force_item_update(weapon_t* item);
+		bool hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const float range);
 	}
 	namespace events {
 		void hit_sound(i_game_event* event);

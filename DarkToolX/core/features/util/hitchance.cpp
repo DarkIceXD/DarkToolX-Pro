@@ -1,4 +1,4 @@
-#include "features.hpp"
+#include "../features.hpp"
 
 /* old hitchance
 int features::hitbox_to_hitgroup(const int hitbox)
@@ -104,7 +104,7 @@ static void RandomSeed(unsigned int seed)
 	rand_seed(seed);
 }
 
-bool features::hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const float range)
+bool features::util::hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const float range)
 {
 	constexpr auto seeds = 256;
 	const int needed_hits = static_cast<int>(static_cast<float>(seeds) * needed_hitchance / 100.f);

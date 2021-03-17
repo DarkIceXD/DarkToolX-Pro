@@ -121,10 +121,10 @@ void features::skin_changer() {
 			if (found)
 			{
 				const auto animation = found->next_animation();
-				if (animation && features::can_force_item_update(weapon))
+				if (animation && features::util::can_force_item_update(weapon))
 				{
 					apply_skin(*weapon, *animation);
-					force_item_update(weapon);
+					features::util::force_item_update(weapon);
 					ticks_to_skip = found->delay_ticks;
 				}
 			}

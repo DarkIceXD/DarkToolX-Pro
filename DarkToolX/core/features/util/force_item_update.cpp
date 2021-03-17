@@ -1,4 +1,4 @@
-#include "features.hpp"
+#include "../features.hpp"
 
 static void clear_ref_counted_vector(utl_vector<i_ref_counted*>& vec) {
 	for (auto& e : vec) {
@@ -10,7 +10,7 @@ static void clear_ref_counted_vector(utl_vector<i_ref_counted*>& vec) {
 	vec.remove_all();
 }
 
-bool features::can_force_item_update(weapon_t* item)
+bool features::util::can_force_item_update(weapon_t* item)
 {
 	for (auto& e : item->m_CustomMaterials()) {
 		if (e) {
@@ -22,7 +22,7 @@ bool features::can_force_item_update(weapon_t* item)
 	return true;
 }
 
-void features::force_item_update(weapon_t* item) {
+void features::util::force_item_update(weapon_t* item) {
 	auto& view = item->m_Item();
 	item->m_bCustomMaterialInitialized() = (item->paint_kit() <= 0);
 	item->m_CustomMaterials().remove_all();

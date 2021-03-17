@@ -380,6 +380,8 @@ public:
 	NETVAR("DT_BaseAttributableItem", "m_szCustomName", custom_name, char[32])
 	NETVAR("DT_BaseCombatWeapon", "m_AttributeManager", m_AttributeManager, econ_view_item_t)
 	NETVAR("DT_BaseAttributableItem", "m_Item", m_Item, econ_item_t)
+	NETVAR("DT_BaseCSGrenade", "m_bPinPulled", is_pin_pulled, bool)
+	NETVAR("DT_BaseCSGrenade", "m_fThrowTime", throw_time, float)
 
 	float inaccuracy() {
 		using original_fn = float(__thiscall*)(void*);

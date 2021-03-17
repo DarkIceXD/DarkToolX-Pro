@@ -7,22 +7,21 @@ static bool updating_lby()
 	if (!anim_state)
 		return false;
 
-	const auto curtime = csgo::local_player->get_tick_base() * interfaces::globals->interval_per_tick;
 	if (anim_state->velocity > 0.1f || std::abs(anim_state->jump_fall_velocity) > 100.0f)
 	{
-		lby_time = curtime + 0.22f;
+		lby_time = interfaces::globals->cur_time + 0.22f;
 	}
-	else if (curtime > lby_time)
+	else if (interfaces::globals->cur_time > lby_time)
 	{
-		lby_time = curtime + 1.1f;
+		lby_time = interfaces::globals->cur_time + 1.1f;
 		return true;
 	}
 	return false;
 }
 
-static void apply_desync(c_usercmd* cmd, bool& send_packet, const bool desync_left)
+static void apply_desync(c_usercmd* cmd, bool& send_packet, const bool desync_left, const float max_desync_delta = FLT_MAX)
 {
-	const auto max_desync = std::abs(csgo::local_player->max_desync_angle());
+	const auto desync_delta = (std::min)(std::abs(csgo::local_player->max_desync_angle()), max_desync_delta);
 	if (updating_lby())
 	{
 		cmd->viewangles.y += desync_left ? -120 : 120;
@@ -30,7 +29,7 @@ static void apply_desync(c_usercmd* cmd, bool& send_packet, const bool desync_le
 	}
 	else if (!send_packet)
 	{
-		cmd->viewangles.y += desync_left ? max_desync : -max_desync;
+		cmd->viewangles.y += desync_left ? desync_delta : -desync_delta;
 	}
 }
 
@@ -67,9 +66,6 @@ static vec3_t get_best_angle(const vec3_t& view_angles)
 
 void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 {
-	if (!csgo::conf->misc().anti_aim)
-		return;
-
 	if (!csgo::local_player)
 		return;
 
@@ -79,50 +75,57 @@ void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 	if (csgo::local_player->flags() & fl_frozen)
 		return;
 
-	const int move_type = csgo::local_player->move_type();
-	if (move_type == movetype_ladder || move_type == movetype_noclip)
-		return;
-
-	if ((cmd->buttons & in_use) || csgo::want_to_shoot)
-		return;
-
-	auto weapon = csgo::local_player->active_weapon();
-	if (!weapon)
-		return;
-
-	const auto weapon_data = weapon->get_weapon_data();
-	if (!weapon_data)
-		return;
-
-	const auto type = weapon_data->weapon_type;
-	if (type == WEAPONTYPE_GRENADE)
-		return;
-
-	if (cmd->buttons & in_attack2 && type == WEAPONTYPE_KNIFE)
-		return;
-
-	if (csgo::conf->misc().smart_anti_aim)
-		cmd->viewangles = csgo::target.entity ? csgo::target.angle : get_best_angle(cmd->viewangles);
-
-	switch (csgo::conf->misc().anti_aim)
+	if (csgo::conf->misc().anti_aim)
 	{
-	default:
-		cmd->viewangles.x = 89;
-		cmd->viewangles.y += 180;
-		break;
-	case 2:
-		apply_desync(cmd, send_packet, cmd->sidemove < 0);
-		break;
-	case 3:
-		cmd->viewangles.x = 89;
-		cmd->viewangles.y += 180;
-		apply_desync(cmd, send_packet, cmd->sidemove < 0);
-		break;
-	case 4:
-		cmd->viewangles.x = csgo::conf->misc().pitch;
-		cmd->viewangles.y += csgo::conf->misc().yaw;
-		if (csgo::conf->misc().desync)
-			apply_desync(cmd, send_packet, csgo::conf->misc().desync == 1);
-		break;
+		const int move_type = csgo::local_player->move_type();
+		if (move_type == movetype_ladder || move_type == movetype_noclip)
+			return;
+
+		auto weapon = csgo::local_player->active_weapon();
+		if (!weapon)
+			return;
+
+		const auto weapon_data = weapon->get_weapon_data();
+		if (!weapon_data)
+			return;
+
+		if ((cmd->buttons & in_attack) && features::util::can_shoot(weapon, weapon_data))
+		{
+			const auto index = weapon->item_definition_index();
+			if (index != WEAPON_REVOLVER)
+				return;
+
+			if (!features::util::cock_revolver(weapon))
+				return;
+		}
+		const auto type = weapon_data->weapon_type;
+		if (type == WEAPONTYPE_GRENADE)
+		{
+			if ((!weapon->is_pin_pulled() || (cmd->buttons & (in_attack | in_attack2))) && weapon->throw_time() > 0.f)
+				return;
+		}
+		else if (type == WEAPONTYPE_KNIFE)
+		{
+			if (cmd->buttons & in_attack2)
+				return;
+		}
+
+		if (csgo::conf->misc().smart_anti_aim)
+			cmd->viewangles = csgo::target.entity ? csgo::target.angle : get_best_angle(cmd->viewangles);
+
+		switch (csgo::conf->misc().anti_aim)
+		{
+		default:
+			cmd->viewangles.x = 89;
+			cmd->viewangles.y += 180;
+			break;
+		case 2:
+			cmd->viewangles.x = static_cast<float>(csgo::conf->misc().pitch);
+			cmd->viewangles.y += csgo::conf->misc().yaw;
+			break;
+		}
 	}
+
+	if (csgo::conf->misc().desync)
+		apply_desync(cmd, send_packet, csgo::conf->misc().desync == 1, static_cast<float>(csgo::conf->misc().max_desync_delta));
 }
