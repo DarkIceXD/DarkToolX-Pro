@@ -18,10 +18,9 @@ namespace features {
 	void animation_fix();
 	void anti_aim(c_usercmd* cmd, bool& send_packet);
 	void auto_accept();
-	void auto_stop(float& forwardmove, float& sidemove);
 	void auto_switch(c_usercmd* cmd);
 	void bullet_tracers();
-	void bunny_hop(c_usercmd* cmd, float& sidemove);
+	void bunny_hop(c_usercmd* cmd);
 	void clan_tag_changer();
 	void crosshair();
 	void damage_indicator();
@@ -40,7 +39,7 @@ namespace features {
 	void sequence_remapping(c_recv_proxy_data* data, base_view_model_t* entity);
 	void skin_changer();
 	void sky_box_changer();
-	void slow_walk(c_usercmd* cmd, float& forwardmove, float& sidemove);
+	void slow_walk(c_usercmd* cmd);
 	void step_esp();
 	void thirdperson();
 	void trigger(c_usercmd* cmd);
@@ -59,6 +58,7 @@ namespace features {
 	}
 	namespace util {
 		void auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data);
+		void auto_stop(c_usercmd* cmd);
 		auto_wall_data auto_wall(vec3_t direction, const weapon_info_t* weapon_data, const bool bangable);
 		bool cock_revolver(weapon_t* weapon);
 		bool can_force_item_update(weapon_t* item);

@@ -213,7 +213,7 @@
     <ClCompile Include="core\features\aimbot\silent.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="core\features\auto_stop.cpp">
+    <ClCompile Include="core\features\util\auto_stop.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="core\features\util\auto_shoot.cpp">

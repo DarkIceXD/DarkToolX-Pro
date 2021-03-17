@@ -11,7 +11,10 @@ void features::util::auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_i
 
 	const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(weapon->item_definition_index());
 	if (!hitchance(cmd->viewangles, entity, weapon_setting.hitchance, weapon, weapon_data->weapon_range))
+	{
+		auto_stop(cmd);
 		return;
+	}
 
 	cmd->buttons |= in_attack;
 	csgo::want_to_shoot = true;

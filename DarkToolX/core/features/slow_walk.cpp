@@ -1,6 +1,6 @@
 #include "features.hpp"
 
-void features::slow_walk(c_usercmd* cmd, float& forwardmove, float& sidemove)
+void features::slow_walk(c_usercmd* cmd)
 {
 	if (!csgo::conf->misc().slow_walk)
 		return;
@@ -8,7 +8,7 @@ void features::slow_walk(c_usercmd* cmd, float& forwardmove, float& sidemove)
 	if (!(cmd->buttons & in_speed))
 		return;
 	
-	if (forwardmove == 0 && sidemove == 0)
+	if (cmd->forwardmove == 0 && cmd->sidemove == 0)
 		return;
 
 	if (!csgo::local_player)
@@ -26,7 +26,7 @@ void features::slow_walk(c_usercmd* cmd, float& forwardmove, float& sidemove)
 		return;
 	
 	const auto max_speed = (!csgo::local_player->is_scoped() ? weapon_data->weapon_max_speed : weapon_data->weapon_max_speed_alt) * 0.34f;
-	const auto scale = max_speed / sqrt(forwardmove * forwardmove + sidemove * sidemove);
-	forwardmove *= scale;
-	sidemove *= scale;
+	const auto scale = max_speed / sqrt(cmd->forwardmove * cmd->forwardmove + cmd->sidemove * cmd->sidemove);
+	cmd->forwardmove *= scale;
+	cmd->sidemove *= scale;
 }

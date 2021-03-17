@@ -164,14 +164,12 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	__asm mov frame_pointer, ebp;
 	bool& send_packet = *reinterpret_cast<bool*>(*frame_pointer - 0x1C);
 
-	auto old_viewangles = cmd->viewangles;
-	auto old_forwardmove = cmd->forwardmove;
-	auto old_sidemove = cmd->sidemove;
+	const auto old_yaw = cmd->viewangles.y;
 	csgo::want_to_shoot = cmd->buttons & in_attack;
 	csgo::manual_shoot = csgo::want_to_shoot;
 	csgo::target = {};
 
-	features::bunny_hop(cmd, old_sidemove);
+	features::bunny_hop(cmd);
 	features::no_duck_delay(cmd);
 	features::reveal_ranks(cmd);
 	prediction::start(cmd);
@@ -183,12 +181,12 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 		features::fake_lag(send_packet);
 		features::anti_aim(cmd, send_packet);
 		features::dormant();
-		features::auto_stop(old_forwardmove, old_sidemove);
-		features::slow_walk(cmd, old_forwardmove, old_sidemove);
+		features::slow_walk(cmd);
 	}
 	prediction::end();
 	features::auto_switch(cmd);
-	math::correct_movement(old_viewangles, cmd, old_forwardmove, old_sidemove);
+
+	math::correct_movement(cmd, old_yaw);
 
 	cmd->forwardmove = std::clamp(cmd->forwardmove, -450.0f, 450.0f);
 	cmd->sidemove = std::clamp(cmd->sidemove, -450.0f, 450.0f);

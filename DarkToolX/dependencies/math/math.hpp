@@ -12,7 +12,7 @@ namespace math {
 	{
 		return x * M_PI / 180.f;
 	}
-	void correct_movement(const vec3_t& old_angles, c_usercmd* cmd, const float old_forwardmove, const float old_sidemove);
+	void correct_movement(c_usercmd* cmd, const float old_yaw);
 	vec3_t calculate_angle(const vec3_t& a, const vec3_t& b);
 	vec3_t angle_vector(const vec3_t& angle);
 	vec3_t transform_vector(const vec3_t& a, const matrix_t& b);

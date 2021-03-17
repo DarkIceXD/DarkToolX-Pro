@@ -162,6 +162,10 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 			cmd->buttons |= in_attack;
 			csgo::want_to_shoot = true;
 		}
+		else
+		{
+			features::util::auto_stop(cmd);
+		}
 		if (csgo::target.best_record)
 			features::backtrack::restore_record(csgo::target.entity, 0);
 	}

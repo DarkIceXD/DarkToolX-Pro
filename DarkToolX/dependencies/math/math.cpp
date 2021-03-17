@@ -1,27 +1,12 @@
 #include "../utilities/csgo.hpp"
 
-//aimtux
-void math::correct_movement(const vec3_t& old_angles, c_usercmd* cmd, const float old_forwardmove, const float old_sidemove) {
-	float delta_view;
-	float f1;
-	float f2;
+void math::correct_movement(c_usercmd* cmd, const float old_yaw) {
+	const auto f1 = old_yaw < 0.f ? 360.0f + old_yaw : old_yaw;
+	const auto f2 = cmd->viewangles.y < 0.0f ? 360.0f + cmd->viewangles.y : cmd->viewangles.y;
+	const auto delta_view = 360.0f - ((f2 < f1) ? abs(f2 - f1) : (360.0f - abs(f1 - f2)));
 
-	if (old_angles.y < 0.f)
-		f1 = 360.0f + old_angles.y;
-	else
-		f1 = old_angles.y;
-
-	if (cmd->viewangles.y < 0.0f)
-		f2 = 360.0f + cmd->viewangles.y;
-	else
-		f2 = cmd->viewangles.y;
-
-	if (f2 < f1)
-		delta_view = abs(f2 - f1);
-	else
-		delta_view = 360.0f - abs(f1 - f2);
-
-	delta_view = 360.0f - delta_view;
+	const auto old_forwardmove = cmd->forwardmove;
+	const auto old_sidemove = cmd->sidemove;
 
 	cmd->forwardmove = cos(DEG2RAD(delta_view)) * old_forwardmove + cos(DEG2RAD(delta_view + 90.f)) * old_sidemove;
 	cmd->sidemove = sin(DEG2RAD(delta_view)) * old_forwardmove + sin(DEG2RAD(delta_view + 90.f)) * old_sidemove;

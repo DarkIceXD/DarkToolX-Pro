@@ -1,6 +1,6 @@
 #include "features.hpp"
 
-void features::bunny_hop(c_usercmd* cmd, float& sidemove)
+void features::bunny_hop(c_usercmd* cmd)
 {
 	if (!csgo::conf->misc().bhop)
 		return;
