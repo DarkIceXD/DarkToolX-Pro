@@ -589,4 +589,26 @@ public:
 		static auto recoil_scale = interfaces::console->get_convar("weapon_recoil_scale");
 		return aim_punch_angle() * recoil_scale->get_float();
 	}
+
+	bool can_shoot()
+	{
+		if (next_attack() > interfaces::globals->cur_time)
+			return false;
+
+		const auto weapon = active_weapon();
+		if (!weapon)
+			return false;
+
+		if (weapon->clip1_count() < 1)
+			return false;
+
+		const auto weapon_data = weapon->get_weapon_data();
+		if (!weapon_data)
+			return false;
+		
+		if (!weapon_data->weapon_full_auto && weapon->next_primary_attack() > interfaces::globals->cur_time)
+			return false;
+
+		return true;
+	}
 };

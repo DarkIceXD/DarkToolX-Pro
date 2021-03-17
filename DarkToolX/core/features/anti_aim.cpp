@@ -81,15 +81,11 @@ void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 		if (move_type == movetype_ladder || move_type == movetype_noclip)
 			return;
 
-		auto weapon = csgo::local_player->active_weapon();
+		const auto weapon = csgo::local_player->active_weapon();
 		if (!weapon)
 			return;
 
-		const auto weapon_data = weapon->get_weapon_data();
-		if (!weapon_data)
-			return;
-
-		if ((cmd->buttons & in_attack) && features::util::can_shoot(weapon, weapon_data))
+		if ((cmd->buttons & in_attack) && csgo::local_player->can_shoot())
 		{
 			const auto index = weapon->item_definition_index();
 			if (index != WEAPON_REVOLVER)
@@ -98,6 +94,11 @@ void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 			if (!features::util::cock_revolver(weapon))
 				return;
 		}
+		
+		const auto weapon_data = weapon->get_weapon_data();
+		if (!weapon_data)
+			return;
+
 		const auto type = weapon_data->weapon_type;
 		if (type == WEAPONTYPE_GRENADE)
 		{

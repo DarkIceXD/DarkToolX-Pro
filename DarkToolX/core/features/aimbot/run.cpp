@@ -21,15 +21,15 @@ void features::aimbot::run(c_usercmd* cmd)
 	if (!csgo::local_player)
 		return;
 
+	if (!csgo::local_player->can_shoot())
+		return;
+
 	const auto weapon = csgo::local_player->active_weapon();
 	if (!weapon)
 		return;
 
 	const auto weapon_data = weapon->get_weapon_data();
 	if (!weapon_data)
-		return;
-
-	if (!features::util::can_shoot(weapon, weapon_data))
 		return;
 
 	switch (csgo::conf->aimbot().mode)

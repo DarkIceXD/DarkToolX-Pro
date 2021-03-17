@@ -60,7 +60,6 @@ namespace features {
 	namespace util {
 		void auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data);
 		auto_wall_data auto_wall(vec3_t direction, const weapon_info_t* weapon_data, const bool bangable);
-		bool can_shoot(weapon_t* weapon, const weapon_info_t* weapon_data);
 		bool cock_revolver(weapon_t* weapon);
 		bool can_force_item_update(weapon_t* item);
 		void force_item_update(weapon_t* item);

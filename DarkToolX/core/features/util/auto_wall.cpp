@@ -134,6 +134,7 @@ auto_wall_data features::util::auto_wall(vec3_t direction, const weapon_info_t* 
 		if (trace.entity && csgo::local_player->is_enemy(trace.entity) && hitgroup_generic < trace.hitGroup && trace.hitGroup < hitgroup_gear) {
 			scale_damage(trace.entity, trace.hitGroup, weapon_data, data.damage);
 			data.entity = trace.entity;
+			data.damage--;
 			return data;
 		}
 		if (!bangable)

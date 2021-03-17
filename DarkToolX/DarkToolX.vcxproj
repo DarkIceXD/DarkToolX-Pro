@@ -165,7 +165,6 @@
     <ClCompile Include="core\features\dormant.cpp" />
     <ClCompile Include="core\features\esp.cpp" />
     <ClCompile Include="core\features\fake_lag.cpp" />
-    <ClCompile Include="core\features\util\can_shoot.cpp" />
     <ClCompile Include="core\features\util\cock_revolver.cpp" />
     <ClCompile Include="core\features\util\force_item_update.cpp" />
     <ClCompile Include="core\features\fov.cpp" />
