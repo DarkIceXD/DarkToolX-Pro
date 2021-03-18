@@ -64,6 +64,57 @@ static vec3_t get_best_angle(const vec3_t& view_angles)
 	return valid ? math::calculate_angle(local_head, best_eyes) : view_angles;
 }
 
+void apply_anti_aim(c_usercmd* cmd)
+{
+	if (cmd->buttons & in_use)
+		return;
+
+	const auto weapon = csgo::local_player->active_weapon();
+	if (!weapon)
+		return;
+
+	if ((cmd->buttons & in_attack) && csgo::local_player->can_shoot())
+	{
+		const auto index = weapon->item_definition_index();
+		if (index != WEAPON_REVOLVER)
+			return;
+
+		if (!features::util::cock_revolver(weapon))
+			return;
+	}
+
+	const auto weapon_data = weapon->get_weapon_data();
+	if (!weapon_data)
+		return;
+
+	const auto type = weapon_data->weapon_type;
+	if (type == WEAPONTYPE_GRENADE)
+	{
+		if ((!weapon->is_pin_pulled() || (cmd->buttons & (in_attack | in_attack2))) && weapon->throw_time() > 0.f)
+			return;
+	}
+	else if (type == WEAPONTYPE_KNIFE)
+	{
+		if (cmd->buttons & in_attack2)
+			return;
+	}
+
+	if (csgo::conf->misc().smart_anti_aim)
+		cmd->viewangles = csgo::target.entity ? csgo::target.angle : get_best_angle(cmd->viewangles);
+
+	switch (csgo::conf->misc().anti_aim)
+	{
+	default:
+		cmd->viewangles.x = 89;
+		cmd->viewangles.y += 180;
+		break;
+	case 2:
+		cmd->viewangles.x = static_cast<float>(csgo::conf->misc().pitch);
+		cmd->viewangles.y += csgo::conf->misc().yaw;
+		break;
+	}
+}
+
 void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 {
 	if (!csgo::local_player)
@@ -75,57 +126,12 @@ void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 	if (csgo::local_player->flags() & fl_frozen)
 		return;
 
+	const int move_type = csgo::local_player->move_type();
+	if (move_type == movetype_ladder || move_type == movetype_noclip)
+		return;
+	
 	if (csgo::conf->misc().anti_aim)
-	{
-		const int move_type = csgo::local_player->move_type();
-		if (move_type == movetype_ladder || move_type == movetype_noclip)
-			return;
-
-		const auto weapon = csgo::local_player->active_weapon();
-		if (!weapon)
-			return;
-
-		if ((cmd->buttons & in_attack) && csgo::local_player->can_shoot())
-		{
-			const auto index = weapon->item_definition_index();
-			if (index != WEAPON_REVOLVER)
-				return;
-
-			if (!features::util::cock_revolver(weapon))
-				return;
-		}
-		
-		const auto weapon_data = weapon->get_weapon_data();
-		if (!weapon_data)
-			return;
-
-		const auto type = weapon_data->weapon_type;
-		if (type == WEAPONTYPE_GRENADE)
-		{
-			if ((!weapon->is_pin_pulled() || (cmd->buttons & (in_attack | in_attack2))) && weapon->throw_time() > 0.f)
-				return;
-		}
-		else if (type == WEAPONTYPE_KNIFE)
-		{
-			if (cmd->buttons & in_attack2)
-				return;
-		}
-
-		if (csgo::conf->misc().smart_anti_aim)
-			cmd->viewangles = csgo::target.entity ? csgo::target.angle : get_best_angle(cmd->viewangles);
-
-		switch (csgo::conf->misc().anti_aim)
-		{
-		default:
-			cmd->viewangles.x = 89;
-			cmd->viewangles.y += 180;
-			break;
-		case 2:
-			cmd->viewangles.x = static_cast<float>(csgo::conf->misc().pitch);
-			cmd->viewangles.y += csgo::conf->misc().yaw;
-			break;
-		}
-	}
+		apply_anti_aim(cmd);
 
 	if (csgo::conf->misc().desync)
 		apply_desync(cmd, send_packet, csgo::conf->misc().desync == 1, static_cast<float>(csgo::conf->misc().max_desync_delta));
