@@ -21,7 +21,6 @@ static bool updating_lby()
 
 static void apply_desync(c_usercmd* cmd, bool& send_packet, const bool desync_left, const float max_desync_delta = FLT_MAX)
 {
-	const auto desync_delta = (std::min)(std::abs(csgo::local_player->max_desync_angle()), max_desync_delta);
 	if (updating_lby())
 	{
 		cmd->viewangles.y += desync_left ? -120 : 120;
@@ -29,6 +28,7 @@ static void apply_desync(c_usercmd* cmd, bool& send_packet, const bool desync_le
 	}
 	else if (!send_packet)
 	{
+		const auto desync_delta = (std::min)(std::abs(csgo::local_player->max_desync_angle()), max_desync_delta);
 		cmd->viewangles.y += desync_left ? desync_delta : -desync_delta;
 	}
 }
@@ -66,6 +66,34 @@ static vec3_t get_best_angle(const vec3_t& view_angles)
 
 void apply_anti_aim(c_usercmd* cmd)
 {
+	switch (csgo::conf->misc().anti_aim)
+	{
+	default:
+		cmd->viewangles.x = 89;
+		cmd->viewangles.y += 180;
+		break;
+	case 2:
+		cmd->viewangles.x = static_cast<float>(csgo::conf->misc().pitch);
+		cmd->viewangles.y += csgo::conf->misc().yaw;
+		break;
+	}
+}
+
+void features::anti_aim(c_usercmd* cmd, bool& send_packet)
+{
+	if (!csgo::local_player)
+		return;
+
+	if (!csgo::local_player->is_alive())
+		return;
+
+	if (csgo::local_player->flags() & fl_frozen)
+		return;
+
+	const int move_type = csgo::local_player->move_type();
+	if (move_type == movetype_ladder || move_type == movetype_noclip)
+		return;
+
 	if (cmd->buttons & in_use)
 		return;
 
@@ -102,34 +130,6 @@ void apply_anti_aim(c_usercmd* cmd)
 	if (csgo::conf->misc().smart_anti_aim)
 		cmd->viewangles = csgo::target.entity ? csgo::target.angle : get_best_angle(cmd->viewangles);
 
-	switch (csgo::conf->misc().anti_aim)
-	{
-	default:
-		cmd->viewangles.x = 89;
-		cmd->viewangles.y += 180;
-		break;
-	case 2:
-		cmd->viewangles.x = static_cast<float>(csgo::conf->misc().pitch);
-		cmd->viewangles.y += csgo::conf->misc().yaw;
-		break;
-	}
-}
-
-void features::anti_aim(c_usercmd* cmd, bool& send_packet)
-{
-	if (!csgo::local_player)
-		return;
-
-	if (!csgo::local_player->is_alive())
-		return;
-
-	if (csgo::local_player->flags() & fl_frozen)
-		return;
-
-	const int move_type = csgo::local_player->move_type();
-	if (move_type == movetype_ladder || move_type == movetype_noclip)
-		return;
-	
 	if (csgo::conf->misc().anti_aim)
 		apply_anti_aim(cmd);
 
