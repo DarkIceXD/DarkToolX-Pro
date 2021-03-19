@@ -96,7 +96,7 @@ void features::backtrack::run(c_usercmd* cmd)
 	if (!csgo::local_player)
 		return;
 
-	if (!csgo::manual_shoot)
+	if (!csgo::want_to_shoot)
 		return;
 
 	int best_target = 0;
