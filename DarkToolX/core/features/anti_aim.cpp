@@ -64,7 +64,7 @@ static vec3_t get_best_angle(const vec3_t& view_angles)
 	return valid ? math::calculate_angle(local_head, best_eyes) : view_angles;
 }
 
-void apply_anti_aim(c_usercmd* cmd)
+static void apply_anti_aim(c_usercmd* cmd)
 {
 	switch (csgo::conf->misc().anti_aim)
 	{
@@ -76,6 +76,21 @@ void apply_anti_aim(c_usercmd* cmd)
 		cmd->viewangles.x = static_cast<float>(csgo::conf->misc().pitch);
 		cmd->viewangles.y += csgo::conf->misc().yaw;
 		break;
+	}
+}
+
+static bool desync_left(const int mode)
+{
+	static bool flip = false;
+	switch (mode)
+	{
+	default:
+		return true;
+	case 2:
+		return false;
+	case 3:
+		flip = !flip;
+		return flip;
 	}
 }
 
@@ -134,5 +149,5 @@ void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 		apply_anti_aim(cmd);
 
 	if (csgo::conf->misc().desync)
-		apply_desync(cmd, send_packet, csgo::conf->misc().desync == 1, static_cast<float>(csgo::conf->misc().max_desync_delta));
+		apply_desync(cmd, send_packet, desync_left(csgo::conf->misc().desync), static_cast<float>(csgo::conf->misc().max_desync_delta));
 }

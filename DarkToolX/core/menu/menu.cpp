@@ -447,7 +447,7 @@ void menu::render(bool& enabled, conf& conf)
 					ImGui::SliderInt("Yaw", &conf.misc().yaw, -180, 180);
 				}
 				ImGui::Separator();
-				ImGui::Combo("Desync", &conf.misc().desync, "Disabled\0Left\0Right\0");
+				ImGui::Combo("Desync", &conf.misc().desync, "Disabled\0Left\0Right\0Jitter\0");
 				ImGui::SliderInt("Max Desync Delta", &conf.misc().max_desync_delta, 0, 60);
 				ImGui::Checkbox("Fake Lag", &conf.misc().fake_lag);
 				ImGui::SliderInt("Fake Lag Ticks", &conf.misc().fake_lag_ticks, 1, 6);
