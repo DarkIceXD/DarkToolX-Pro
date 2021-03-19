@@ -366,7 +366,20 @@ void __stdcall hooks::lock_cursor::hook()
 void __fastcall hooks::get_color_modulation::hook(i_material* mat, void* edx, float* r, float* g, float* b)
 {
 	get_color_modulation_original(mat, r, g, b);
-	features::night_mode(mat, *r, *g, *b);
+	switch (fnv::hash(mat->get_texture_group_name()))
+	{
+	case fnv::hash("StaticProp textures"):
+		features::color_modulation::night_mode::static_prop(*r, *g, *b);
+		break;
+	case fnv::hash("SkyBox textures"):
+
+		features::color_modulation::night_mode::sky_box(*r, *g, *b);
+		break;
+	case fnv::hash("World textures"):
+		features::color_modulation::night_mode::world(*r, *g, *b);
+		features::color_modulation::asus_walls::world(mat);
+		break;
+	}
 }
 
 bool __stdcall hooks::is_using_static_prop_debug_modes::hook()

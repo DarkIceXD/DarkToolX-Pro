@@ -208,6 +208,8 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::Combo("Skybox", &conf.view().sky_box, sky_list.data(), sky_list.size());
 				ImGui::Checkbox("Make skybox darker", &conf.view().dark_skybox);
 				ImGui::Checkbox("Night mode", &conf.view().night_mode);
+				ImGui::Checkbox("ASUS Walls", &conf.view().asus_walls);
+				ImGui::SliderFloat("ASUS Walls Alpha", &conf.view().asus_walls_alpha, 0, 1);
 				ImGui::Checkbox("No Fog", &conf.view().no_fog);
 				ImGui::Checkbox("No Flash", &conf.view().no_flash);
 				ImGui::SliderFloat("View Fov", &conf.view().view_fov, 0, 60);

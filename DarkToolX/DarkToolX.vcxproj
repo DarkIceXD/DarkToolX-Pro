@@ -152,6 +152,7 @@
     <ClCompile Include="core\features\animation_fix.cpp" />
     <ClCompile Include="core\features\anti_aim.cpp" />
     <ClCompile Include="core\features\auto_accept.cpp" />
+    <ClCompile Include="core\features\color_modulation\asus_walls.cpp" />
     <ClCompile Include="core\features\util\auto_stop.cpp" />
     <ClCompile Include="core\features\auto_switch.cpp" />
     <ClCompile Include="core\features\util\auto_shoot.cpp" />
@@ -172,7 +173,7 @@
     <ClCompile Include="core\features\util\hitchance.cpp" />
     <ClCompile Include="core\features\aimbot\legit.cpp" />
     <ClCompile Include="core\features\bunny_hop.cpp" />
-    <ClCompile Include="core\features\night_mode.cpp" />
+    <ClCompile Include="core\features\color_modulation\night_mode.cpp" />
     <ClCompile Include="core\features\no_duck_delay.cpp" />
     <ClCompile Include="core\features\engine_prediction.cpp" />
     <ClCompile Include="core\features\hitsound.cpp" />

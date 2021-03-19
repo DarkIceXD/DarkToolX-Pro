@@ -180,7 +180,7 @@
     <ClCompile Include="core\features\clan_tag_changer.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="core\features\night_mode.cpp">
+    <ClCompile Include="core\features\color_modulation\night_mode.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="core\features\sky_box_changer.cpp">
@@ -220,6 +220,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="core\features\util\cock_revolver.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="core\features\color_modulation\asus_walls.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
