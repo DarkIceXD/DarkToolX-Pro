@@ -14,7 +14,7 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 		const auto fov = math::fov(viewangles, new_viewangles);
 		if (fov > csgo::conf->aimbot().fov)
 			continue;
-		const auto data = features::util::auto_wall(hitbox_position - local_head, weapon_data, false);
+		const auto data = features::util::auto_wall(hitbox_position - local_head, weapon_data, csgo::conf->aimbot().auto_wall);
 		if (data.entity && target.fov > fov)
 		{
 			target.damage = static_cast<int>(data.damage);
@@ -103,14 +103,12 @@ void features::aimbot::legit(c_usercmd* cmd, weapon_t* weapon, const weapon_info
 	}
 	else if (csgo::conf->aimbot().auto_shoot)
 	{
+		if (csgo::conf->aimbot().auto_scope && weapon_data->weapon_type == WEAPONTYPE_SNIPER_RIFLE && !csgo::local_player->is_scoped())
+			cmd->buttons |= in_attack2;
 		if (csgo::target.best_record)
 			features::backtrack::restore_record(csgo::target.entity, csgo::target.best_record);
 		features::util::auto_shoot(cmd, weapon, weapon_data);
 		if (csgo::target.best_record)
-		{
-			/*if (cmd->buttons & in_attack)
-				cmd->tick_count = features::backtrack::restore_tick_count(csgo::target.entity->index(), csgo::target.best_record);*/
 			features::backtrack::restore_record(csgo::target.entity, 0);
-		}
 	}
 }

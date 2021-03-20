@@ -31,9 +31,10 @@ namespace config {
 		bool legs{ true };
 		bool arms{ false };
 		bool auto_shoot{ false };
-		bool dmg_indicator{ false };
+		bool auto_wall{ false };
 		bool auto_cock_revolver{ true };
 		bool auto_scope{ true };
+		bool dmg_indicator{ false };
 		int weapon_selection{ 0 };
 		std::vector<weapon_settings> weapons{ {20, 1, 1}, {75, 20, 1}, {55, 1, 1}, {60, 10, 1}, {40, 1, 1}, {40, 1, 1}, {50, 1, 1}, {50, 15, 1}, {40, 1, 1}, {55, 1, 1}, {70, 1, 1}, {70, 1, 1}, {90, 100, 1}, {60, 1, 1}, {85, 1, 1}, {60, 1, 1}, {60, 1, 1}, {60, 1, 1}, {85, 1, 1}, {1, 1, 1}, {80, 70, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1} };
 		bool backtrack{ false };
@@ -83,6 +84,6 @@ namespace config {
 				return false;
 			}
 		}
-		JSON_SERIALIZE(aimbot, conf_name, mode, enabled, key_bind_type, key_bind, min_dmg_override_active, min_dmg_override_key_bind_type, min_dmg_override_key_bind, smoothness, fov, head, chest, stomach, legs, arms, auto_shoot, dmg_indicator, auto_cock_revolver, auto_scope, weapons, backtrack, backtrack_time_limit)
+		JSON_SERIALIZE(aimbot, conf_name, mode, enabled, key_bind_type, key_bind, min_dmg_override_active, min_dmg_override_key_bind_type, min_dmg_override_key_bind, smoothness, fov, head, chest, stomach, legs, arms, auto_shoot, auto_wall, dmg_indicator, auto_cock_revolver, auto_scope, weapons, backtrack, backtrack_time_limit)
 	};
 };

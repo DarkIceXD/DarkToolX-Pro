@@ -12,10 +12,7 @@ static weapon_t* make_glove(int entry, int serial)
 {
 	static auto create_wearable_fn = get_wearable_create_fn();
 	create_wearable_fn(entry, serial);
-	const auto glove = static_cast<weapon_t*>(interfaces::entity_list->get_client_entity(entry));
-	/*static const auto set_abs_origin_fn = reinterpret_cast<void(__thiscall*)(void*, const vec3_t&)>(utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F8 51 53 56 57 8B F1"));
-	set_abs_origin_fn(glove, { 10000.f, 10000.f, 10000.f });*/
-	return glove;
+	return static_cast<weapon_t*>(interfaces::entity_list->get_client_entity(entry));
 }
 
 constexpr const char* get_model_name(const short item_index)

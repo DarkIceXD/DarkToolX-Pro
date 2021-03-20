@@ -11,7 +11,7 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 		const auto new_viewangles = math::calculate_angle(local_head, hitbox_position).normalized_angles();
 		if (math::fov(viewangles, new_viewangles) > csgo::conf->aimbot().fov)
 			continue;
-		const auto data = features::util::auto_wall(hitbox_position - local_head, weapon_data, true);
+		const auto data = features::util::auto_wall(hitbox_position - local_head, weapon_data, csgo::conf->aimbot().auto_wall);
 		if (data.damage > target.damage)
 		{
 			target.entity = data.entity;
@@ -123,13 +123,6 @@ static bool is_visible(player_t* entity, vec3_t vStart, vec3_t vEnd)
 
 void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data)
 {
-	const auto index = weapon->item_definition_index();
-	if (csgo::conf->aimbot().auto_cock_revolver && index == WEAPON_REVOLVER && features::util::cock_revolver(weapon))
-	{
-		cmd->buttons |= in_attack;
-		return;
-	}
-
 	csgo::target = get_best_target(cmd->viewangles, weapon_data);
 	if (csgo::target.damage < 1)
 		return;
@@ -144,7 +137,7 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 	}
 	else if (csgo::conf->aimbot().auto_shoot)
 	{
-		const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(index);
+		const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(weapon->item_definition_index());
 		if (!(csgo::target.lethal || csgo::target.damage >= (csgo::conf->aimbot().min_dmg_override_active ? weapon_setting.min_dmg_override : weapon_setting.min_dmg)))
 			return;
 
@@ -156,8 +149,6 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 
 		if (features::util::hitchance(recoil_compensated_angle, csgo::target.entity, weapon_setting.hitchance, weapon, weapon_data->weapon_range))
 		{
-			/*if (csgo::target.best_record)
-				cmd->tick_count = features::backtrack::restore_tick_count(csgo::target.entity->index(), csgo::target.best_record);*/
 			cmd->viewangles = recoil_compensated_angle;
 			cmd->buttons |= in_attack;
 			csgo::want_to_shoot = true;

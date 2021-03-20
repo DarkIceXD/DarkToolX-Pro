@@ -122,12 +122,10 @@ void menu::render(bool& enabled, conf& conf)
 					ImGui::Checkbox("Arms", &conf.aimbot().arms);
 					ImGui::Separator();
 					ImGui::Checkbox("Auto Shoot", &conf.aimbot().auto_shoot);
+					ImGui::Checkbox("Auto Wall", &conf.aimbot().auto_wall);
+					ImGui::Checkbox("Auto Cock Revolver", &conf.aimbot().auto_cock_revolver);
+					ImGui::Checkbox("Auto Scope", &conf.aimbot().auto_scope);
 					ImGui::Checkbox("Damage Indicator", &conf.aimbot().dmg_indicator);
-					if (conf.aimbot().mode == 1)
-					{
-						ImGui::Checkbox("Auto Cock Revolver", &conf.aimbot().auto_cock_revolver);
-						ImGui::Checkbox("Auto Scope", &conf.aimbot().auto_scope);
-					}
 					ImGui::Combo("Weapon", &conf.aimbot().weapon_selection, config::weapon_list);
 					ImGui::SliderInt("Hitchance", &conf.aimbot().get_selected().hitchance, 1, 100);
 					if (conf.aimbot().mode == 1)
@@ -150,6 +148,7 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::Checkbox("Enabled", &conf.trigger().enabled);
 				static auto key_found = true;
 				ImGui::KeyBind("Key Bind", &conf.trigger().key_bind_type, &conf.trigger().key_bind, &key_found);
+				ImGui::Checkbox("Auto Wall", &conf.aimbot().auto_wall);
 				ImGui::Combo("Weapon", &conf.aimbot().weapon_selection, config::weapon_list);
 				ImGui::SliderInt("Hitchance", &conf.aimbot().get_selected().hitchance, 1, 100);
 				ImGui::EndTabItem();

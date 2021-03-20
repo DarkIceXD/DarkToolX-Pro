@@ -14,7 +14,7 @@ bool features::util::can_force_item_update(weapon_t* item)
 {
 	for (auto& e : item->m_CustomMaterials()) {
 		if (e) {
-			const auto& is_valid = *(bool*)(e + 4 + 20+4);
+			const auto& is_valid = *(bool*)(e + 4 + 20 + 4);
 			if (!is_valid)
 				return false;
 		}
