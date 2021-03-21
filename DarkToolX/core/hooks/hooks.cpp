@@ -225,26 +225,25 @@ void __stdcall hooks::override_view::hook(view_setup_t* view)
 
 int __stdcall hooks::do_post_screen_effects::hook(int a1)
 {
-	if (interfaces::engine->is_in_game())
-	{
-		features::glow();
-		features::no_flash();
-	}
+	features::glow();
+	features::no_flash();
 	return do_post_screen_effects_original(interfaces::clientmode, a1);
 }
 
 void __stdcall hooks::frame_stage_notify::hook(int stage)
 {
+	csgo::local_player = static_cast<player_t*>(interfaces::entity_list->get_client_entity(interfaces::engine->get_local_player()));
 	if (interfaces::engine->is_in_game())
 	{
-		csgo::local_player = static_cast<player_t*>(interfaces::entity_list->get_client_entity(interfaces::engine->get_local_player()));
 		switch (stage)
 		{
 		case FRAME_START:
+			features::esp::update();
 			break;
 		case FRAME_NET_UPDATE_START:
 			break;
 		case FRAME_NET_UPDATE_POSTDATAUPDATE_START:
+			// features::resolver::run();
 			features::skin_changer();
 			break;
 		case FRAME_NET_UPDATE_POSTDATAUPDATE_END:
@@ -262,10 +261,6 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 		case FRAME_RENDER_END:
 			break;
 		}
-	}
-	else
-	{
-		csgo::local_player = nullptr;
 	}
 	frame_stage_notify_original(interfaces::client, stage);
 }
@@ -335,7 +330,7 @@ long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 	ImGui::NewFrame();
 	auto draw_list = ImGui::GetBackgroundDrawList();
 	draw_list->AddText({ 5, 5 }, IM_COL32_WHITE, water_mark.c_str());
-	features::esp(draw_list);
+	features::esp::draw(draw_list);
 	menu::render(csgo::menu::enabled, *csgo::conf);
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
@@ -372,7 +367,6 @@ void __fastcall hooks::get_color_modulation::hook(i_material* mat, void* edx, fl
 		features::color_modulation::night_mode::static_prop(*r, *g, *b);
 		break;
 	case fnv::hash("SkyBox textures"):
-
 		features::color_modulation::night_mode::sky_box(*r, *g, *b);
 		break;
 	case fnv::hash("World textures"):

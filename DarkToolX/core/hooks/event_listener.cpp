@@ -9,6 +9,7 @@ event_listener::event_listener()
 	interfaces::event_manager->add_listener(this, "player_death", false);
 	interfaces::event_manager->add_listener(this, "player_footstep", false);
 	interfaces::event_manager->add_listener(this, "bullet_impact", false);
+	// interfaces::event_manager->add_listener(this, "weapon_fire", false);
 }
 
 event_listener::~event_listener()
@@ -20,6 +21,7 @@ void event_listener::fire_game_event(i_game_event* event)
 {
 	switch (fnv::hash(event->get_name())) {
 	case fnv::hash("player_hurt"):
+		// features::resolver::player_hurt(event);
 		features::events::hit_sound(event);
 		break;
 	case fnv::hash("player_death"):
@@ -31,6 +33,9 @@ void event_listener::fire_game_event(i_game_event* event)
 		break;
 	case fnv::hash("bullet_impact"):
 		features::events::bullet_tracers(event);
+		break;
+	case fnv::hash("weapon_fire"):
+		// features::resolver::weapon_fire(event);
 		break;
 	}
 }

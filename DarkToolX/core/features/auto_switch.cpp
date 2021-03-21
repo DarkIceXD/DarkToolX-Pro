@@ -75,8 +75,7 @@ void features::auto_switch(c_usercmd* cmd) {
 	}
 	else if (switch_phase == 3)
 	{
-		const auto time = interfaces::globals->interval_per_tick * cmd->tick_count;
-		if (weapon->next_primary_attack() <= time)
+		if (weapon->next_primary_attack() <= interfaces::globals->cur_time)
 		{
 			cmd->buttons |= in_attack2;
 			switch_phase = 0;

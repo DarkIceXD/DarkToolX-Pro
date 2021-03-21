@@ -153,6 +153,7 @@
     <ClCompile Include="core\features\anti_aim.cpp" />
     <ClCompile Include="core\features\auto_accept.cpp" />
     <ClCompile Include="core\features\color_modulation\asus_walls.cpp" />
+    <ClCompile Include="core\features\resolver.cpp" />
     <ClCompile Include="core\features\util\auto_stop.cpp" />
     <ClCompile Include="core\features\auto_switch.cpp" />
     <ClCompile Include="core\features\util\auto_shoot.cpp" />

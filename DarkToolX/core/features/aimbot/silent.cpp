@@ -149,6 +149,8 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 
 		if (features::util::hitchance(recoil_compensated_angle, csgo::target.entity, weapon_setting.hitchance, weapon, weapon_data->weapon_range))
 		{
+			if (csgo::target.best_record)
+				cmd->tick_count = features::backtrack::restore_tick_count(csgo::target.entity->index(), csgo::target.best_record);
 			cmd->viewangles = recoil_compensated_angle;
 			cmd->buttons |= in_attack;
 			csgo::want_to_shoot = true;

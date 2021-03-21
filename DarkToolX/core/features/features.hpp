@@ -25,7 +25,6 @@ namespace features {
 	void crosshair();
 	void damage_indicator();
 	void dormant();
-	void esp(ImDrawList* draw_list);
 	void fake_lag(bool& send_packet);
 	void fov(view_setup_t* view);
 	void glow();
@@ -54,6 +53,15 @@ namespace features {
 		int restore_tick_count(const int player_index, const int record_index);
 		void update();
 		void run(c_usercmd* cmd);
+	}
+	namespace esp {
+		void update();
+		void draw(ImDrawList* draw_list);
+	}
+	namespace resolver {
+		void run();
+		void weapon_fire(i_game_event* event);
+		void player_hurt(i_game_event* event);
 	}
 	namespace util {
 		void auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data);
