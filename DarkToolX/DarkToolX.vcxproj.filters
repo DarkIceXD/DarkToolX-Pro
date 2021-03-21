@@ -21,7 +21,7 @@
     <ClCompile Include="core\features\anti_aim.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="core\features\auto_switch.cpp">
+    <ClCompile Include="core\features\quick_switch.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="core\features\crosshair.cpp">

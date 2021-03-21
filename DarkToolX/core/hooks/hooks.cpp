@@ -184,7 +184,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 		features::slow_walk(cmd);
 	}
 	prediction::end();
-	features::auto_switch(cmd);
+	features::quick_switch(cmd);
 
 	math::correct_movement(cmd, old_yaw);
 

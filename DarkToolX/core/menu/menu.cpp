@@ -455,7 +455,7 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::Checkbox("Slow walk", &conf.misc().slow_walk);
 				ImGui::Checkbox("Auto Stop", &conf.misc().auto_stop);
 				ImGui::Checkbox("Hitsound", &conf.misc().hitsound);
-				ImGui::Checkbox("Auto Switch", &conf.misc().auto_switch);
+				ImGui::Checkbox("Quick Switch", &conf.misc().quick_switch);
 				ImGui::Checkbox("Auto Accept", &conf.misc().auto_accept);
 				ImGui::Checkbox("Reveal Ranks", &conf.misc().reveal_ranks);
 				ImGui::EndTabItem();

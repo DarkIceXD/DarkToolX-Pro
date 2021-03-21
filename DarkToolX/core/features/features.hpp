@@ -18,7 +18,7 @@ namespace features {
 	void animation_fix();
 	void anti_aim(c_usercmd* cmd, bool& send_packet);
 	void auto_accept();
-	void auto_switch(c_usercmd* cmd);
+	void quick_switch(c_usercmd* cmd);
 	void bullet_tracers();
 	void bunny_hop(c_usercmd* cmd);
 	void clan_tag_changer();
