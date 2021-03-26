@@ -120,7 +120,7 @@ void menu::render(bool& enabled, conf& conf)
 						ImGui::SliderFloat("Smoothness", &conf.aimbot().smoothness, 1, 10);
 					ImGui::SliderFloat("Fov", &conf.aimbot().fov, 0, 180);
 					ImGui::Separator();
-					if (ImGui::BeginTable("tags", 3, ImGuiTableFlags_SizingStretchSame))
+					if (ImGui::BeginTable("hitbox", 3, ImGuiTableFlags_SizingStretchSame))
 					{
 						ImGui::TableSetupColumn("Hitbox");
 						ImGui::TableSetupColumn("Normal");
