@@ -99,7 +99,9 @@ void menu::render(bool& enabled, conf& conf)
 	ImGui::GetIO().MouseDrawCursor = enabled;
 	if (enabled)
 	{
+		ImGui::ShowDemoWindow();
 		ImGui::Begin("DarkToolX", &enabled);
+		ImGui::PushItemWidth(-200);
 		if (ImGui::BeginTabBar("tabs"))
 		{
 			if (ImGui::BeginTabItem("Aimbot"))
@@ -289,84 +291,85 @@ void menu::render(bool& enabled, conf& conf)
 						conf.skin_changer().get_selected().animation.push_back({ conf.skin_changer().get_selected().paint_kit, conf.skin_changer().get_selected().stat_trak, conf.skin_changer().get_selected().seed, conf.skin_changer().get_selected().wear, conf.skin_changer().get_selected().nametag.c_str() });
 					ImGui::Checkbox("Reverse Animation", &conf.skin_changer().get_selected().reverse);
 					ImGui::SliderInt("Delay (Ticks)", &conf.skin_changer().get_selected().delay_ticks, 0, 10);
-					ImGui::Columns(4, "generator", false);
-					static float start = FLT_MIN;
-					ImGui::SliderFloat("Wear start", &start, FLT_MIN, 1, "%.5f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat);
-					ImGui::NextColumn();
-					static float end = 1;
-					ImGui::SliderFloat("Wear end", &end, FLT_MIN, 1, "%.5f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat);
-					ImGui::NextColumn();
-					static float step = 0.01f;
-					ImGui::SliderFloat("Wear step", &step, 0.01f, 0.1f, "%.5f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat);
-					ImGui::NextColumn();
-					if (ImGui::Button("Generate Wear Animation"))
+					if (ImGui::BeginTable("gen", 4, ImGuiTableFlags_SizingStretchSame))
 					{
-						if (start < end)
+						ImGui::TableSetupColumn("Start Wear");
+						ImGui::TableSetupColumn("End Wear");
+						ImGui::TableSetupColumn("Wear Step");
+						ImGui::TableHeadersRow();
+						ImGui::TableNextRow();
+						ImGui::TableNextColumn();
+						static float start = FLT_MIN;
+						ImGui::SliderFloat("##start", &start, FLT_MIN, 1, "%.5f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat);
+						ImGui::TableNextColumn();
+						static float end = 1;
+						ImGui::SliderFloat("##end", &end, FLT_MIN, 1, "%.5f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat);
+						ImGui::TableNextColumn();
+						static float step = 0.05f;
+						ImGui::SliderFloat("##step", &step, 0.05f, 0.1f, "%.5f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Generate Wear Animation"))
 						{
-							for (float wear = start; wear <= end; wear += step)
-								conf.skin_changer().get_selected().animation.push_back({ conf.skin_changer().get_selected().paint_kit, conf.skin_changer().get_selected().stat_trak, conf.skin_changer().get_selected().seed, std::clamp(wear, FLT_MIN, 1.f), conf.skin_changer().get_selected().nametag.c_str() });
-						}
-						else
-						{
-							for (float wear = start; wear >= end; wear -= step)
-								conf.skin_changer().get_selected().animation.push_back({ conf.skin_changer().get_selected().paint_kit, conf.skin_changer().get_selected().stat_trak, conf.skin_changer().get_selected().seed, std::clamp(wear, FLT_MIN, 1.f), conf.skin_changer().get_selected().nametag.c_str() });
-						}
-					}
-					ImGui::NextColumn();
-					ImGui::Columns(1);
-					ImGui::Columns(6, "animation");
-					ImGui::Separator();
-					ImGui::Text("Paint Kit");
-					ImGui::NextColumn();
-					ImGui::Text("Stat Trak");
-					ImGui::NextColumn();
-					ImGui::Text("Seed");
-					ImGui::NextColumn();
-					ImGui::Text("Wear");
-					ImGui::NextColumn();
-					ImGui::Text("Nametag");
-					ImGui::NextColumn();
-					ImGui::Text("Delete");
-					ImGui::NextColumn();
-					ImGui::Separator();
-					int del = -1;
-					for (size_t i = 0; i < conf.skin_changer().get_selected().animation.size(); i++)
-					{
-						auto& e = conf.skin_changer().get_selected().animation.at(i);
-						ImGui::PushID(i);
-						const int ci = kit_parser::find(kit_list, e.paint_kit);
-						if (ImGui::BeginCombo("##paintkit", kit_list.at(ci).name.c_str()))
-						{
-							for (size_t i = 0; i < kit_list.size(); i++)
+							if (start < end)
 							{
-								const auto& kit = kit_list.at(i);
-								const bool is_selected = (ci == i);
-								if (ImGui::Selectable(kit.name.c_str(), is_selected))
-								{
-									e.paint_kit = kit.id;
-								}
-								if (is_selected)
-									ImGui::SetItemDefaultFocus();
+								for (float wear = start; wear <= end; wear += step)
+									conf.skin_changer().get_selected().animation.push_back({ conf.skin_changer().get_selected().paint_kit, conf.skin_changer().get_selected().stat_trak, conf.skin_changer().get_selected().seed, std::clamp(wear, FLT_MIN, 1.f), conf.skin_changer().get_selected().nametag.c_str() });
 							}
-							ImGui::EndCombo();
+							else
+							{
+								for (float wear = start; wear >= end; wear -= step)
+									conf.skin_changer().get_selected().animation.push_back({ conf.skin_changer().get_selected().paint_kit, conf.skin_changer().get_selected().stat_trak, conf.skin_changer().get_selected().seed, std::clamp(wear, FLT_MIN, 1.f), conf.skin_changer().get_selected().nametag.c_str() });
+							}
 						}
-						ImGui::NextColumn();
-						ImGui::InputInt("##stat", &e.stat_trak);
-						ImGui::NextColumn();
-						ImGui::InputInt("##seed", &e.seed);
-						ImGui::NextColumn();
-						ImGui::SliderFloat("##wear", &e.wear, FLT_MIN, 1, "%.5f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat);
-						ImGui::NextColumn();
-						ImGui::InputText("##nametag", &e.nametag);
-						ImGui::NextColumn();
-						if (ImGui::Button("-"))
-							del = i;
-						ImGui::NextColumn();
-						ImGui::PopID();
+						ImGui::EndTable();
 					}
-					if (del >= 0)
-						conf.skin_changer().get_selected().animation.erase(conf.skin_changer().get_selected().animation.begin() + del);
-					ImGui::Columns(1);
+					if (ImGui::BeginTable("anim", 6, ImGuiTableFlags_SizingStretchSame))
+					{
+						ImGui::TableSetupColumn("Paint Kit");
+						ImGui::TableSetupColumn("Stat Trak");
+						ImGui::TableSetupColumn("Seed");
+						ImGui::TableSetupColumn("Wear");
+						ImGui::TableSetupColumn("Nametag");
+						ImGui::TableSetupColumn("Delete");
+						ImGui::TableHeadersRow();
+						int del = -1;
+						for (size_t i = 0; i < conf.skin_changer().get_selected().animation.size(); i++)
+						{
+							ImGui::TableNextRow();
+							ImGui::PushID(i);
+							auto& e = conf.skin_changer().get_selected().animation.at(i);
+							const int ci = kit_parser::find(kit_list, e.paint_kit);
+							ImGui::TableNextColumn();
+							if (ImGui::BeginCombo("##paintkit", kit_list.at(ci).name.c_str()))
+							{
+								for (size_t i = 0; i < kit_list.size(); i++)
+								{
+									const auto& kit = kit_list.at(i);
+									const bool is_selected = (ci == i);
+									if (ImGui::Selectable(kit.name.c_str(), is_selected))
+									{
+										e.paint_kit = kit.id;
+									}
+									if (is_selected)
+										ImGui::SetItemDefaultFocus();
+								}
+								ImGui::EndCombo();
+							}
+							ImGui::TableNextColumn();
+							ImGui::InputInt("##stat", &e.stat_trak);
+							ImGui::TableNextColumn();
+							ImGui::InputInt("##seed", &e.seed);
+							ImGui::TableNextColumn();
+							ImGui::SliderFloat("##wear", &e.wear, FLT_MIN, 1, "%.5f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat);
+							ImGui::TableNextColumn();
+							ImGui::InputText("##nametag", &e.nametag);
+							ImGui::TableNextColumn();
+							if (ImGui::Button("-"))
+								del = i;
+							ImGui::PopID();
+						}
+						ImGui::EndTable();
+					}
 				}
 				ImGui::EndTabItem();
 			}
@@ -397,27 +400,27 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::SliderInt("Delay", &conf.clan_tag_changer().get_selected().delay, 1, 5000, "%d", ImGuiSliderFlags_AlwaysClamp);
 				if (ImGui::Button("Add Tag"))
 					conf.clan_tag_changer().get_selected().tags.push_back({});
-				ImGui::Columns(2, "tags");
-				ImGui::Separator();
-				ImGui::Text("Clan Tag");
-				ImGui::NextColumn();
-				ImGui::Text("Delete");
-				ImGui::NextColumn();
-				ImGui::Separator();
-				int del = -1;
-				for (size_t i = 0; i < conf.clan_tag_changer().get_selected().tags.size(); i++)
+				if (ImGui::BeginTable("tags", 2, ImGuiTableFlags_SizingStretchSame))
 				{
-					ImGui::PushID(i);
-					ImGui::InputText("##tag", &conf.clan_tag_changer().get_selected().tags.at(i));
-					ImGui::NextColumn();
-					if (ImGui::Button("-"))
-						del = i;
-					ImGui::NextColumn();
-					ImGui::PopID();
+					ImGui::TableSetupColumn("Clan Tag");
+					ImGui::TableSetupColumn("Delete");
+					ImGui::TableHeadersRow();
+					int del = -1;
+					for (size_t i = 0; i < conf.clan_tag_changer().get_selected().tags.size(); i++)
+					{
+						ImGui::TableNextRow();
+						ImGui::PushID(i);
+						ImGui::TableNextColumn();
+						ImGui::InputText("##tag", &conf.clan_tag_changer().get_selected().tags.at(i));
+						ImGui::TableNextColumn();
+						if (ImGui::Button("-"))
+							del = i;
+						ImGui::PopID();
+					}
+					if (del >= 0)
+						conf.clan_tag_changer().get_selected().tags.erase(conf.clan_tag_changer().get_selected().tags.begin() + del);
+					ImGui::EndTable();
 				}
-				if (del >= 0)
-					conf.clan_tag_changer().get_selected().tags.erase(conf.clan_tag_changer().get_selected().tags.begin() + del);
-				ImGui::Columns(1);
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Chat Bot"))
@@ -426,27 +429,27 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::SameLine();
 				if (ImGui::Button("+"))
 					conf.chat_bot().msgs.push_back({});
-				ImGui::Columns(2, "messages");
-				ImGui::Separator();
-				ImGui::Text("Message");
-				ImGui::NextColumn();
-				ImGui::Text("Delete");
-				ImGui::NextColumn();
-				ImGui::Separator();
-				int del = -1;
-				for (size_t i = 0; i < conf.chat_bot().msgs.size(); i++)
+				if (ImGui::BeginTable("tags", 2, ImGuiTableFlags_SizingStretchSame))
 				{
-					ImGui::PushID(i);
-					ImGui::InputText("##msg", &conf.chat_bot().msgs.at(i).msg);
-					ImGui::NextColumn();
-					if (ImGui::Button("-"))
-						del = i;
-					ImGui::NextColumn();
-					ImGui::PopID();
+					ImGui::TableSetupColumn("Message");
+					ImGui::TableSetupColumn("Delete");
+					ImGui::TableHeadersRow();
+					int del = -1;
+					for (size_t i = 0; i < conf.clan_tag_changer().get_selected().tags.size(); i++)
+					{
+						ImGui::TableNextRow();
+						ImGui::PushID(i);
+						ImGui::TableNextColumn();
+						ImGui::InputText("##msg", &conf.chat_bot().msgs.at(i).msg);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("-"))
+							del = i;
+						ImGui::PopID();
+					}
+					if (del >= 0)
+						conf.chat_bot().msgs.erase(conf.chat_bot().msgs.begin() + del);
+					ImGui::EndTable();
 				}
-				if (del >= 0)
-					conf.chat_bot().msgs.erase(conf.chat_bot().msgs.begin() + del);
-				ImGui::Columns(1);
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Misc"))
@@ -724,6 +727,7 @@ void menu::render(bool& enabled, conf& conf)
 			}
 			ImGui::EndTabBar();
 		}
+		ImGui::PopItemWidth();
 		ImGui::End();
 	}
 }
