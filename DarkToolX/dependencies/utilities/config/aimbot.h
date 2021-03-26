@@ -9,6 +9,15 @@ namespace config {
 		JSON_SERIALIZE(weapon_settings, hitchance, min_dmg, min_dmg_override)
 	};
 
+	struct hitboxes {
+		bool head{ true };
+		bool chest{ true };
+		bool stomach{ true };
+		bool legs{ true };
+		bool arms{ false };
+		JSON_SERIALIZE(hitboxes, head, chest, stomach, legs, arms)
+	};
+
 	struct aimbot
 	{
 		aimbot()
@@ -23,13 +32,13 @@ namespace config {
 		bool min_dmg_override_active{ false };
 		int min_dmg_override_key_bind_type{ 0 };
 		int min_dmg_override_key_bind{ 0 };
+		bool hitbox_override_active{ false };
+		int hitbox_override_key_bind_type{ 0 };
+		int hitbox_override_key_bind{ 0 };
 		float smoothness{ 3.f };
 		float fov{ 0.f };
-		bool head{ true };
-		bool chest{ true };
-		bool stomach{ true };
-		bool legs{ true };
-		bool arms{ false };
+		hitboxes hitbox{};
+		hitboxes hitbox_override{};
 		bool auto_shoot{ false };
 		bool auto_wall{ false };
 		bool auto_cock_revolver{ true };
@@ -54,36 +63,37 @@ namespace config {
 		}
 		constexpr bool is_hitbox_enabled(const int hitbox) const noexcept
 		{
+			const auto& h = hitbox_override_active ? hitbox_override : this->hitbox;
 			switch (hitbox)
 			{
 			case hitbox_head:
 			case hitbox_neck:
-				return head;
+				return h.head;
 			case hitbox_pelvis:
 			case hitbox_stomach:
-				return stomach;
+				return h.stomach;
 			case hitbox_lower_chest:
 			case hitbox_chest:
 			case hitbox_upper_chest:
-				return chest;
+				return h.chest;
 			case hitbox_right_thigh:
 			case hitbox_left_thigh:
 			case hitbox_right_calf:
 			case hitbox_left_calf:
 			case hitbox_right_foot:
 			case hitbox_left_foot:
-				return legs;
+				return h.legs;
 			case hitbox_right_hand:
 			case hitbox_left_hand:
 			case hitbox_right_upper_arm:
 			case hitbox_right_forearm:
 			case hitbox_left_upper_arm:
 			case hitbox_left_forearm:
-				return arms;
+				return h.arms;
 			default:
 				return false;
 			}
 		}
-		JSON_SERIALIZE(aimbot, conf_name, mode, enabled, key_bind_type, key_bind, min_dmg_override_active, min_dmg_override_key_bind_type, min_dmg_override_key_bind, smoothness, fov, head, chest, stomach, legs, arms, auto_shoot, auto_wall, dmg_indicator, auto_cock_revolver, auto_scope, weapons, backtrack, backtrack_time_limit)
+		JSON_SERIALIZE(aimbot, conf_name, mode, enabled, key_bind_type, key_bind, min_dmg_override_active, min_dmg_override_key_bind_type, min_dmg_override_key_bind, hitbox_override_active, hitbox_override_key_bind_type, hitbox_override_key_bind, smoothness, fov, hitbox, hitbox_override, auto_shoot, auto_wall, dmg_indicator, auto_cock_revolver, auto_scope, weapons, backtrack, backtrack_time_limit)
 	};
 };

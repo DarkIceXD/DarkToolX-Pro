@@ -15,6 +15,11 @@ void features::aimbot::run(c_usercmd* cmd)
 	else if (csgo::conf->aimbot().min_dmg_override_key_bind_type == 2)
 		csgo::conf->aimbot().min_dmg_override_active = GetAsyncKeyState(csgo::conf->aimbot().min_dmg_override_key_bind);
 
+	if (csgo::conf->aimbot().hitbox_override_key_bind_type == 1 && GetAsyncKeyState(csgo::conf->aimbot().hitbox_override_key_bind) & 1)
+		csgo::conf->aimbot().hitbox_override_active = !csgo::conf->aimbot().hitbox_override_active;
+	else if (csgo::conf->aimbot().hitbox_override_key_bind_type == 2)
+		csgo::conf->aimbot().hitbox_override_active = GetAsyncKeyState(csgo::conf->aimbot().hitbox_override_key_bind);
+
 	if (!csgo::conf->aimbot().enabled)
 		return;
 
