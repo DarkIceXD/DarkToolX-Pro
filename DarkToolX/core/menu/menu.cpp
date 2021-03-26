@@ -87,9 +87,13 @@ void menu::init(HWND window, IDirect3DDevice9* device)
 	style.Colors[ImGuiCol_Separator] = ImVec4(0.61f, 0.00f, 1.00f, 0.47f);
 	style.Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
 	style.Colors[ImGuiCol_SeparatorActive] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_ResizeGrip] = ImVec4(0.61f, 0.00f, 1.00f, 0.24f);
+	style.Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.61f, 0.00f, 1.00f, 0.39f);
+	style.Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.61f, 0.00f, 1.00f, 0.39f);
 	style.Colors[ImGuiCol_Tab] = ImVec4(0.61f, 0.00f, 1.00f, 0.24f);
 	style.Colors[ImGuiCol_TabHovered] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
 	style.Colors[ImGuiCol_TabActive] = ImVec4(0.61f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_TableHeaderBg] = ImVec4(0.61f, 0.00f, 1.00f, 0.24f);
 	style.GrabRounding = style.FrameRounding = 6;
 	style.ItemSpacing = ImVec2(8, 6);
 }
@@ -99,7 +103,6 @@ void menu::render(bool& enabled, conf& conf)
 	ImGui::GetIO().MouseDrawCursor = enabled;
 	if (enabled)
 	{
-		ImGui::ShowDemoWindow();
 		ImGui::Begin("DarkToolX", &enabled);
 		ImGui::PushItemWidth(-200);
 		if (ImGui::BeginTabBar("tabs"))
@@ -478,245 +481,322 @@ void menu::render(bool& enabled, conf& conf)
 			}
 			if (ImGui::BeginTabItem("Config"))
 			{
-				if (ImGui::BeginCombo("Aimbot##1", conf.aimbot().conf_name.c_str()))
+				if (ImGui::BeginTable("configs", 7, ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_RowBg))
 				{
-					for (size_t i = 0; i < conf._aimbot.size(); i++)
+					ImGui::TableSetupColumn("Config", ImGuiTableColumnFlags_WidthFixed);
+					ImGui::TableSetupColumn("Selected");
+					ImGui::TableSetupColumn("Name");
+					ImGui::TableSetupColumn("Add", ImGuiTableColumnFlags_WidthFixed);
+					ImGui::TableSetupColumn("Delete", ImGuiTableColumnFlags_WidthFixed);
+					ImGui::TableSetupColumn("Duplicate", ImGuiTableColumnFlags_WidthFixed);
+					ImGui::TableSetupColumn("Share", ImGuiTableColumnFlags_WidthFixed);
+					ImGui::TableHeadersRow();
+					ImGui::TableNextRow();
+					ImGui::PushID(0);
 					{
-						ImGui::PushID(i);
-						const auto& current = conf._aimbot.at(i);
-						const bool is_selected = (conf.s_aimbot == i);
-						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
-							conf.s_aimbot = i;
+						ImGui::TableNextColumn();
+						ImGui::TextUnformatted("Aimbot");
+						ImGui::TableNextColumn();
+						if (ImGui::BeginCombo("##select", conf.aimbot().conf_name.c_str()))
+						{
+							for (size_t i = 0; i < conf._aimbot.size(); i++)
+							{
+								ImGui::PushID(i);
+								const auto& current = conf._aimbot.at(i);
+								const bool is_selected = (conf.s_aimbot == i);
+								if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
+									conf.s_aimbot = i;
 
-						if (is_selected)
-							ImGui::SetItemDefaultFocus();
-						ImGui::PopID();
+								if (is_selected)
+									ImGui::SetItemDefaultFocus();
+								ImGui::PopID();
+							}
+							ImGui::EndCombo();
+						}
+						ImGui::TableNextColumn();
+						ImGui::InputText("##name", &conf.aimbot().conf_name);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("+"))
+							conf._aimbot.push_back({});
+						ImGui::TableNextColumn();
+						if (ImGui::Button("-") && conf._aimbot.size() > 1)
+							conf._aimbot.erase(conf._aimbot.begin() + conf.s_aimbot);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Dupe"))
+							conf._aimbot.push_back(conf.aimbot());
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Share to Clipboard"))
+							ImGui::SetClipboardText(conf.export_config(0).c_str());
 					}
-					ImGui::EndCombo();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("+##0"))
-					conf._aimbot.push_back({});
-				ImGui::SameLine();
-				if (ImGui::Button("-##0") && conf._aimbot.size() > 1)
-					conf._aimbot.erase(conf._aimbot.begin() + conf.s_aimbot);
-				ImGui::SameLine();
-				if (ImGui::Button("Dupe##0"))
-					conf._aimbot.push_back(conf.aimbot());
-				ImGui::SameLine();
-				if (ImGui::Button("Share to Clipboard##0"))
-					ImGui::SetClipboardText(conf.export_config(0).c_str());
-				ImGui::InputText("Aimbot Config Name", &conf.aimbot().conf_name);
-				ImGui::Separator();
-				if (ImGui::BeginCombo("Trigger##1", conf.trigger().conf_name.c_str()))
-				{
-					for (size_t i = 0; i < conf._trigger.size(); i++)
+					ImGui::PopID();
+					ImGui::TableNextRow();
+					ImGui::PushID(1);
 					{
-						ImGui::PushID(i);
-						const auto& current = conf._trigger.at(i);
-						const bool is_selected = (conf.s_trigger == i);
-						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
-							conf.s_trigger = i;
+						ImGui::TableNextColumn();
+						ImGui::TextUnformatted("Trigger");
+						ImGui::TableNextColumn();
+						if (ImGui::BeginCombo("##select", conf.trigger().conf_name.c_str()))
+						{
+							for (size_t i = 0; i < conf._trigger.size(); i++)
+							{
+								ImGui::PushID(i);
+								const auto& current = conf._trigger.at(i);
+								const bool is_selected = (conf.s_trigger == i);
+								if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
+									conf.s_trigger = i;
 
-						if (is_selected)
-							ImGui::SetItemDefaultFocus();
-						ImGui::PopID();
+								if (is_selected)
+									ImGui::SetItemDefaultFocus();
+								ImGui::PopID();
+							}
+							ImGui::EndCombo();
+						}
+						ImGui::TableNextColumn();
+						ImGui::InputText("##name", &conf.trigger().conf_name);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("+"))
+							conf._trigger.push_back({});
+						ImGui::TableNextColumn();
+						if (ImGui::Button("-") && conf._trigger.size() > 1)
+							conf._trigger.erase(conf._trigger.begin() + conf.s_trigger);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Dupe"))
+							conf._trigger.push_back(conf.trigger());
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Share to Clipboard"))
+							ImGui::SetClipboardText(conf.export_config(1).c_str());
 					}
-					ImGui::EndCombo();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("+##1"))
-					conf._trigger.push_back({});
-				ImGui::SameLine();
-				if (ImGui::Button("-##1") && conf._trigger.size() > 1)
-					conf._trigger.erase(conf._trigger.begin() + conf.s_trigger);
-				ImGui::SameLine();
-				if (ImGui::Button("Dupe##1"))
-					conf._trigger.push_back(conf.trigger());
-				ImGui::SameLine();
-				if (ImGui::Button("Share to Clipboard##1"))
-					ImGui::SetClipboardText(conf.export_config(1).c_str());
-				ImGui::InputText("Trigger Config Name", &conf.trigger().conf_name);
-				ImGui::Separator();
-				if (ImGui::BeginCombo("Visuals##1", conf.visuals().conf_name.c_str()))
-				{
-					for (size_t i = 0; i < conf._visuals.size(); i++)
+					ImGui::PopID();
+					ImGui::TableNextRow();
+					ImGui::PushID(2);
 					{
-						ImGui::PushID(i);
-						const auto& current = conf._visuals.at(i);
-						const bool is_selected = (conf.s_visuals == i);
-						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
-							conf.s_visuals = i;
+						ImGui::TableNextColumn();
+						ImGui::TextUnformatted("Visuals");
+						ImGui::TableNextColumn();
+						if (ImGui::BeginCombo("##select", conf.visuals().conf_name.c_str()))
+						{
+							for (size_t i = 0; i < conf._visuals.size(); i++)
+							{
+								ImGui::PushID(i);
+								const auto& current = conf._visuals.at(i);
+								const bool is_selected = (conf.s_visuals == i);
+								if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
+									conf.s_visuals = i;
 
-						if (is_selected)
-							ImGui::SetItemDefaultFocus();
-						ImGui::PopID();
+								if (is_selected)
+									ImGui::SetItemDefaultFocus();
+								ImGui::PopID();
+							}
+							ImGui::EndCombo();
+						}
+						ImGui::TableNextColumn();
+						ImGui::InputText("##name", &conf.visuals().conf_name);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("+"))
+							conf._visuals.push_back({});
+						ImGui::TableNextColumn();
+						if (ImGui::Button("-") && conf._visuals.size() > 1)
+							conf._visuals.erase(conf._visuals.begin() + conf.s_visuals);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Dupe"))
+							conf._visuals.push_back(conf.visuals());
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Share to Clipboard"))
+							ImGui::SetClipboardText(conf.export_config(2).c_str());
 					}
-					ImGui::EndCombo();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("+##2"))
-					conf._visuals.push_back({});
-				ImGui::SameLine();
-				if (ImGui::Button("-##2") && conf._visuals.size() > 1)
-					conf._visuals.erase(conf._visuals.begin() + conf.s_visuals);
-				ImGui::SameLine();
-				if (ImGui::Button("Dupe##2"))
-					conf._visuals.push_back(conf.visuals());
-				ImGui::SameLine();
-				if (ImGui::Button("Share to Clipboard##2"))
-					ImGui::SetClipboardText(conf.export_config(2).c_str());
-				ImGui::InputText("Visuals Config Name", &conf.visuals().conf_name);
-				ImGui::Separator();
-				if (ImGui::BeginCombo("View##1", conf.view().conf_name.c_str()))
-				{
-					for (size_t i = 0; i < conf._view.size(); i++)
+					ImGui::PopID();
+					ImGui::TableNextRow();
+					ImGui::PushID(3);
 					{
-						ImGui::PushID(i);
-						const auto& current = conf._view.at(i);
-						const bool is_selected = (conf.s_view == i);
-						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
-							conf.s_view = i;
+						ImGui::TableNextColumn();
+						ImGui::TextUnformatted("View");
+						ImGui::TableNextColumn();
+						if (ImGui::BeginCombo("##select", conf.view().conf_name.c_str()))
+						{
+							for (size_t i = 0; i < conf._view.size(); i++)
+							{
+								ImGui::PushID(i);
+								const auto& current = conf._view.at(i);
+								const bool is_selected = (conf.s_view == i);
+								if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
+									conf.s_view = i;
 
-						if (is_selected)
-							ImGui::SetItemDefaultFocus();
-						ImGui::PopID();
+								if (is_selected)
+									ImGui::SetItemDefaultFocus();
+								ImGui::PopID();
+							}
+							ImGui::EndCombo();
+						}
+						ImGui::TableNextColumn();
+						ImGui::InputText("##name", &conf.view().conf_name);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("+"))
+							conf._view.push_back({});
+						ImGui::TableNextColumn();
+						if (ImGui::Button("-") && conf._view.size() > 1)
+							conf._view.erase(conf._view.begin() + conf.s_view);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Dupe"))
+							conf._view.push_back(conf.view());
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Share to Clipboard"))
+							ImGui::SetClipboardText(conf.export_config(3).c_str());
 					}
-					ImGui::EndCombo();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("+##3"))
-					conf._view.push_back({});
-				ImGui::SameLine();
-				if (ImGui::Button("-##3") && conf._view.size() > 1)
-					conf._view.erase(conf._view.begin() + conf.s_view);
-				ImGui::SameLine();
-				if (ImGui::Button("Dupe##3"))
-					conf._view.push_back(conf.view());
-				ImGui::SameLine();
-				if (ImGui::Button("Share to Clipboard##3"))
-					ImGui::SetClipboardText(conf.export_config(3).c_str());
-				ImGui::InputText("View Config Name", &conf.view().conf_name);
-				ImGui::Separator();
-				if (ImGui::BeginCombo("Skin Changer##1", conf.skin_changer().conf_name.c_str()))
-				{
-					for (size_t i = 0; i < conf._skin_changer.size(); i++)
+					ImGui::PopID();
+					ImGui::TableNextRow();
+					ImGui::PushID(4);
 					{
-						ImGui::PushID(i);
-						const auto& current = conf._skin_changer.at(i);
-						const bool is_selected = (conf.s_skin_changer == i);
-						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
-							conf.s_skin_changer = i;
+						ImGui::TableNextColumn();
+						ImGui::TextUnformatted("Skin Changer");
+						ImGui::TableNextColumn();
+						if (ImGui::BeginCombo("##select", conf.skin_changer().conf_name.c_str()))
+						{
+							for (size_t i = 0; i < conf._skin_changer.size(); i++)
+							{
+								ImGui::PushID(i);
+								const auto& current = conf._skin_changer.at(i);
+								const bool is_selected = (conf.s_skin_changer == i);
+								if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
+									conf.s_skin_changer = i;
 
-						if (is_selected)
-							ImGui::SetItemDefaultFocus();
-						ImGui::PopID();
+								if (is_selected)
+									ImGui::SetItemDefaultFocus();
+								ImGui::PopID();
+							}
+							ImGui::EndCombo();
+						}
+						ImGui::TableNextColumn();
+						ImGui::InputText("##name", &conf.skin_changer().conf_name);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("+"))
+							conf._skin_changer.push_back({});
+						ImGui::TableNextColumn();
+						if (ImGui::Button("-") && conf._skin_changer.size() > 1)
+							conf._skin_changer.erase(conf._skin_changer.begin() + conf.s_skin_changer);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Dupe"))
+							conf._skin_changer.push_back(conf.skin_changer());
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Share to Clipboard"))
+							ImGui::SetClipboardText(conf.export_config(4).c_str());
 					}
-					ImGui::EndCombo();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("+##4"))
-					conf._skin_changer.push_back({});
-				ImGui::SameLine();
-				if (ImGui::Button("-##4") && conf._skin_changer.size() > 1)
-					conf._skin_changer.erase(conf._skin_changer.begin() + conf.s_skin_changer);
-				ImGui::SameLine();
-				if (ImGui::Button("Dupe##4"))
-					conf._skin_changer.push_back(conf.skin_changer());
-				ImGui::SameLine();
-				if (ImGui::Button("Share to Clipboard##4"))
-					ImGui::SetClipboardText(conf.export_config(4).c_str());
-				ImGui::InputText("Skin Changer Config Name", &conf.skin_changer().conf_name);
-				ImGui::Separator();
-				if (ImGui::BeginCombo("Clan Tag Changer##1", conf.clan_tag_changer().conf_name.c_str()))
-				{
-					for (size_t i = 0; i < conf._clan_tag_changer.size(); i++)
+					ImGui::PopID();
+					ImGui::TableNextRow();
+					ImGui::PushID(5);
 					{
-						ImGui::PushID(i);
-						const auto& current = conf._clan_tag_changer.at(i);
-						const bool is_selected = (conf.s_clan_tag_changer == i);
-						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
-							conf.s_clan_tag_changer = i;
+						ImGui::TableNextColumn();
+						ImGui::TextUnformatted("Clan Tag Changer");
+						ImGui::TableNextColumn();
+						if (ImGui::BeginCombo("##select", conf.clan_tag_changer().conf_name.c_str()))
+						{
+							for (size_t i = 0; i < conf._clan_tag_changer.size(); i++)
+							{
+								ImGui::PushID(i);
+								const auto& current = conf._clan_tag_changer.at(i);
+								const bool is_selected = (conf.s_clan_tag_changer == i);
+								if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
+									conf.s_clan_tag_changer = i;
 
-						if (is_selected)
-							ImGui::SetItemDefaultFocus();
-						ImGui::PopID();
+								if (is_selected)
+									ImGui::SetItemDefaultFocus();
+								ImGui::PopID();
+							}
+							ImGui::EndCombo();
+						}
+						ImGui::TableNextColumn();
+						ImGui::InputText("##name", &conf.clan_tag_changer().conf_name);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("+"))
+							conf._clan_tag_changer.push_back({});
+						ImGui::TableNextColumn();
+						if (ImGui::Button("-") && conf._clan_tag_changer.size() > 1)
+							conf._clan_tag_changer.erase(conf._clan_tag_changer.begin() + conf.s_clan_tag_changer);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Dupe"))
+							conf._clan_tag_changer.push_back(conf.clan_tag_changer());
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Share to Clipboard"))
+							ImGui::SetClipboardText(conf.export_config(5).c_str());
 					}
-					ImGui::EndCombo();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("+##5"))
-					conf._clan_tag_changer.push_back({});
-				ImGui::SameLine();
-				if (ImGui::Button("-##5") && conf._clan_tag_changer.size() > 1)
-					conf._clan_tag_changer.erase(conf._clan_tag_changer.begin() + conf.s_clan_tag_changer);
-				ImGui::SameLine();
-				if (ImGui::Button("Dupe##5"))
-					conf._clan_tag_changer.push_back(conf.clan_tag_changer());
-				ImGui::SameLine();
-				if (ImGui::Button("Share to Clipboard##5"))
-					ImGui::SetClipboardText(conf.export_config(5).c_str());
-				ImGui::InputText("Clan Tag Changer Config Name", &conf.clan_tag_changer().conf_name);
-				ImGui::Separator();
-				if (ImGui::BeginCombo("Chat Bot##1", conf.chat_bot().conf_name.c_str()))
-				{
-					for (size_t i = 0; i < conf._chat_bot.size(); i++)
+					ImGui::PopID();
+					ImGui::TableNextRow();
+					ImGui::PushID(6);
 					{
-						ImGui::PushID(i);
-						const auto& current = conf._chat_bot.at(i);
-						const bool is_selected = (conf.s_chat_bot == i);
-						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
-							conf.s_chat_bot = i;
+						ImGui::TableNextColumn();
+						ImGui::TextUnformatted("Chat Bot");
+						ImGui::TableNextColumn();
+						if (ImGui::BeginCombo("##select", conf.chat_bot().conf_name.c_str()))
+						{
+							for (size_t i = 0; i < conf._chat_bot.size(); i++)
+							{
+								ImGui::PushID(i);
+								const auto& current = conf._chat_bot.at(i);
+								const bool is_selected = (conf.s_chat_bot == i);
+								if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
+									conf.s_chat_bot = i;
 
-						if (is_selected)
-							ImGui::SetItemDefaultFocus();
-						ImGui::PopID();
+								if (is_selected)
+									ImGui::SetItemDefaultFocus();
+								ImGui::PopID();
+							}
+							ImGui::EndCombo();
+						}
+						ImGui::TableNextColumn();
+						ImGui::InputText("##name", &conf.chat_bot().conf_name);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("+"))
+							conf._chat_bot.push_back({});
+						ImGui::TableNextColumn();
+						if (ImGui::Button("-") && conf._chat_bot.size() > 1)
+							conf._chat_bot.erase(conf._chat_bot.begin() + conf.s_chat_bot);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Dupe"))
+							conf._chat_bot.push_back(conf.chat_bot());
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Share to Clipboard"))
+							ImGui::SetClipboardText(conf.export_config(6).c_str());
 					}
-					ImGui::EndCombo();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("+##"))
-					conf._chat_bot.push_back({});
-				ImGui::SameLine();
-				if (ImGui::Button("-##6") && conf._chat_bot.size() > 1)
-					conf._chat_bot.erase(conf._chat_bot.begin() + conf.s_chat_bot);
-				ImGui::SameLine();
-				if (ImGui::Button("Dupe##6"))
-					conf._chat_bot.push_back(conf.chat_bot());
-				ImGui::SameLine();
-				if (ImGui::Button("Share to Clipboard##6"))
-					ImGui::SetClipboardText(conf.export_config(6).c_str());
-				ImGui::InputText("Chat Bot Config Name", &conf.chat_bot().conf_name);
-				ImGui::Separator();
-				if (ImGui::BeginCombo("Misc##1", conf.misc().conf_name.c_str()))
-				{
-					for (size_t i = 0; i < conf._misc.size(); i++)
+					ImGui::PopID();
+					ImGui::TableNextRow();
+					ImGui::PushID(7);
 					{
-						ImGui::PushID(i);
-						const auto& current = conf._misc.at(i);
-						const bool is_selected = (conf.s_misc == i);
-						if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
-							conf.s_misc = i;
+						ImGui::TableNextColumn();
+						ImGui::TextUnformatted("Misc");
+						ImGui::TableNextColumn();
+						if (ImGui::BeginCombo("##select", conf.misc().conf_name.c_str()))
+						{
+							for (size_t i = 0; i < conf._misc.size(); i++)
+							{
+								ImGui::PushID(i);
+								const auto& current = conf._misc.at(i);
+								const bool is_selected = (conf.s_misc == i);
+								if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
+									conf.s_misc = i;
 
-						if (is_selected)
-							ImGui::SetItemDefaultFocus();
-						ImGui::PopID();
+								if (is_selected)
+									ImGui::SetItemDefaultFocus();
+								ImGui::PopID();
+							}
+							ImGui::EndCombo();
+						}
+						ImGui::TableNextColumn();
+						ImGui::InputText("##name", &conf.misc().conf_name);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("+"))
+							conf._misc.push_back({});
+						ImGui::TableNextColumn();
+						if (ImGui::Button("-") && conf._misc.size() > 1)
+							conf._misc.erase(conf._misc.begin() + conf.s_misc);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Dupe"))
+							conf._misc.push_back(conf.misc());
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Share to Clipboard"))
+							ImGui::SetClipboardText(conf.export_config(7).c_str());
 					}
-					ImGui::EndCombo();
+					ImGui::PopID();
+					ImGui::EndTable();
 				}
-				ImGui::SameLine();
-				if (ImGui::Button("+##7"))
-					conf._misc.push_back({});
-				ImGui::SameLine();
-				if (ImGui::Button("-##7") && conf._misc.size() > 1)
-					conf._misc.erase(conf._misc.begin() + conf.s_misc);
-				ImGui::SameLine();
-				if (ImGui::Button("Dupe##7"))
-					conf._misc.push_back(conf.misc());
-				ImGui::SameLine();
-				if (ImGui::Button("Share to Clipboard##7"))
-					ImGui::SetClipboardText(conf.export_config(7).c_str());
-				ImGui::InputText("Misc Config Name", &conf.misc().conf_name);
 				ImGui::Separator();
 				if (ImGui::Button("Save"))
 					conf.save();
