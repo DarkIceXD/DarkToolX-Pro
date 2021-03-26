@@ -472,7 +472,7 @@ void menu::render(bool& enabled, conf& conf)
 					ImGui::TableSetupColumn("Delete");
 					ImGui::TableHeadersRow();
 					int del = -1;
-					for (size_t i = 0; i < conf.clan_tag_changer().get_selected().tags.size(); i++)
+					for (size_t i = 0; i < conf.chat_bot().msgs.size(); i++)
 					{
 						ImGui::TableNextRow();
 						ImGui::PushID(i);
