@@ -171,6 +171,7 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 
 	features::bunny_hop(cmd);
 	features::no_duck_delay(cmd);
+	features::walkbot(cmd);
 	features::reveal_ranks(cmd);
 	prediction::start(cmd);
 	{

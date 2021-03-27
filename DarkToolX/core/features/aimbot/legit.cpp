@@ -103,8 +103,6 @@ void features::aimbot::legit(c_usercmd* cmd, weapon_t* weapon, const weapon_info
 	}
 	else if (csgo::conf->aimbot().auto_shoot)
 	{
-		if (csgo::conf->aimbot().auto_scope && weapon_data->weapon_type == WEAPONTYPE_SNIPER_RIFLE && !csgo::local_player->is_scoped())
-			cmd->buttons |= in_attack2;
 		if (csgo::target.best_record)
 			features::backtrack::restore_record(csgo::target.entity, csgo::target.best_record);
 		features::util::auto_shoot(cmd, weapon, weapon_data);

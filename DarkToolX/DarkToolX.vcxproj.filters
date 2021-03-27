@@ -228,6 +228,24 @@
     <ClCompile Include="core\features\resolver.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="core\features\walkbot.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\utilities\navmesh-parser\micropather.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\utilities\navmesh-parser\nav_area.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\utilities\navmesh-parser\nav_buffer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\utilities\navmesh-parser\nav_file.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\utilities\navmesh-parser\nav_hiding_spot.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\features\features.hpp">
@@ -525,6 +543,24 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\utilities\config\chat_bot.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\utilities\navmesh-parser\micropather.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\utilities\navmesh-parser\nav_area.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\utilities\navmesh-parser\nav_buffer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\utilities\navmesh-parser\nav_file.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\utilities\navmesh-parser\nav_hiding_spot.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\utilities\navmesh-parser\nav_structs.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

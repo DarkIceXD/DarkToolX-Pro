@@ -41,6 +41,7 @@ namespace features {
 	void step_esp();
 	void thirdperson();
 	void trigger(c_usercmd* cmd);
+	void walkbot(c_usercmd* cmd);
 	namespace aimbot {
 		void run(c_usercmd* cmd);
 		void silent(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data);

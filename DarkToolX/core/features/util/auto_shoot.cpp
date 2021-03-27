@@ -12,11 +12,12 @@ void features::util::auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_i
 	const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(weapon->item_definition_index());
 	if (!hitchance(cmd->viewangles, entity, weapon_setting.hitchance, weapon, weapon_data->weapon_range))
 	{
+		if (csgo::conf->aimbot().auto_scope && weapon_data->weapon_type == WEAPONTYPE_SNIPER_RIFLE && !csgo::local_player->is_scoped())
+			cmd->buttons |= in_attack2;
 		auto_stop(cmd);
 		return;
 	}
 
 	cmd->buttons |= in_attack;
 	csgo::want_to_shoot = true;
-	return;
 }

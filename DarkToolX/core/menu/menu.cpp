@@ -507,6 +507,7 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::Checkbox("Remove Duck delay", &conf.misc().no_duck_delay);
 				ImGui::Checkbox("Slow walk", &conf.misc().slow_walk);
 				ImGui::Checkbox("Auto Stop", &conf.misc().auto_stop);
+				ImGui::Checkbox("Walk Bot", &conf.misc().walk_bot);
 				ImGui::Checkbox("Hitsound", &conf.misc().hitsound);
 				ImGui::Checkbox("Quick Switch", &conf.misc().quick_switch);
 				ImGui::Checkbox("Auto Accept", &conf.misc().auto_accept);
