@@ -536,7 +536,7 @@ public:
 	}
 
 	bool& use_new_animation_state() {
-		static auto offset = *reinterpret_cast<uintptr_t*>(utilities::pattern_scan("client.dll", "88 87 ? ? ? ? 75") + 0x2);
+		static auto offset = 0x3AC8; // *reinterpret_cast<uintptr_t*>(utilities::pattern_scan("client.dll", "88 87 ? ? ? ? 75") + 0x2);
 		return *reinterpret_cast<bool*>(uintptr_t(this) + offset);
 	}
 
