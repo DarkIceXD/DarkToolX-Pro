@@ -19,6 +19,7 @@ bool features::util::hitchance(const vec3_t& view_angles, player_t* player, cons
 	constexpr auto seeds = 256;
 	const int needed_hits = static_cast<int>(static_cast<float>(seeds) * needed_hitchance / 100.f);
 	const auto start = csgo::local_player->get_eye_pos();
+	weapon->update_accuracy_penalty();
 	const auto inaccuracy = weapon->inaccuracy();
 	const auto spread = weapon->get_spread();
 	int hits = 0;

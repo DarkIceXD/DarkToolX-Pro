@@ -54,7 +54,7 @@ vec3_t math::vector_angles(const vec3_t& forward) {
 
 vec3_t math::vector_angles(const vec3_t& forward, const vec3_t& up)
 {
-	auto left = vec3_t::crossproduct(up, forward).normalized();
+	const auto left = vec3_t::cross_product(up, forward).normalized();
 
 	const auto xy_dist = forward.length_2d();
 	vec3_t angles;

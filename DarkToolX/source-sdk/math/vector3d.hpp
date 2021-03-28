@@ -114,15 +114,15 @@ public:
 		vec.normalize();
 		return vec;
 	}
-	static constexpr vec3_t crossproduct(const vec3_t v1, const vec3_t v2) noexcept
+	static constexpr vec3_t cross_product(const vec3_t& v1, const vec3_t& v2) noexcept
 	{
-		return { (v1.y * v2.z) - (v1.z * v2.y), -((v1.x * v2.z) - (v1.z * v2.x)), (v1.x * v2.y) - (v1.y * v2.x) };
+		return { (v1.y * v2.z) - (v1.z * v2.y), (v1.z * v2.x) - (v1.x * v2.z), (v1.x * v2.y) - (v1.y * v2.x) };
 	}
-	constexpr vec3_t cross(const vec3_t& other) const noexcept
+	constexpr vec3_t cross_product(const vec3_t& other) const noexcept
 	{
-		return crossproduct(*this, other);
+		return cross_product(*this, other);
 	}
-	constexpr float dot(const vec3_t other) const noexcept
+	constexpr float dot(const vec3_t& other) const noexcept
 	{
 		return (x * other.x + y * other.y + z * other.z);
 	}

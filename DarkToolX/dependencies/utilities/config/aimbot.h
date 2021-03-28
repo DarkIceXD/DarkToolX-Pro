@@ -6,6 +6,10 @@ namespace config {
 		int hitchance{ 1 };
 		int min_dmg{ 1 };
 		int min_dmg_override{ 1 };
+		constexpr int get_min_dmg(const bool min_dmg_override_active) const noexcept
+		{
+			return min_dmg_override_active ? min_dmg_override : min_dmg;
+		}
 		JSON_SERIALIZE(weapon_settings, hitchance, min_dmg, min_dmg_override)
 	};
 

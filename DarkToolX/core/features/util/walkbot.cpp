@@ -1,5 +1,5 @@
-#include "features.hpp"
-#include "../../dependencies/utilities/navmesh-parser/nav_file.h"
+#include "../features.hpp"
+#include "../../../dependencies/utilities/navmesh-parser/nav_file.h"
 
 player_t* get_nearest_player()
 {
@@ -9,7 +9,7 @@ player_t* get_nearest_player()
 	for (auto i = 1; i <= interfaces::globals->max_clients; i++)
 	{
 		auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
-		if (!entity || !entity->is_player() || entity == csgo::local_player)
+		if (!entity || entity->dormant() || !entity->is_player() || entity == csgo::local_player)
 			continue;
 
 		if (!entity->is_alive())
@@ -35,7 +35,7 @@ static nav_mesh::nav_file nav;
 static player_t* target = nullptr;
 static bool valid = false;
 
-void features::walkbot(c_usercmd* cmd)
+void features::util::walkbot(c_usercmd* cmd)
 {
 	if (!csgo::conf->misc().walk_bot)
 	{
@@ -79,10 +79,16 @@ void features::walkbot(c_usercmd* cmd)
 	else
 	{
 		cmd->viewangles.x = 0;
-		cmd->viewangles.y = math::calculate_angle(csgo::local_player->get_eye_pos(), path.at(i)).normalized_angles().y;
+		cmd->viewangles.y += std::clamp((math::calculate_angle(csgo::local_player->get_eye_pos(), path.at(i)) - cmd->viewangles).normalized_angles().y, -2.f, 2.f);
 		interfaces::engine->set_view_angles(cmd->viewangles);
-		cmd->forwardmove = 450;
-		if ((csgo::local_player->abs_origin() - path.at(i)).length() < 20)
+		const auto velocity = csgo::local_player->get_eye_pos() - path.at(i);
+		auto direction = math::vector_angles(velocity);
+		direction.y = cmd->viewangles.y - direction.y;
+		const auto negated_direction = math::angle_vector(direction) * 1000;
+		cmd->forwardmove = negated_direction.x;
+		cmd->sidemove = negated_direction.y;
+
+		if ((csgo::local_player->abs_origin() - path.at(i)).length_2d() < 10)
 			i++;
 	}
 }

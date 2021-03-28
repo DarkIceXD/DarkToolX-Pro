@@ -138,8 +138,11 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 	else if (csgo::conf->aimbot().auto_shoot)
 	{
 		const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(weapon->item_definition_index());
-		if (!(csgo::target.lethal || csgo::target.damage >= (csgo::conf->aimbot().min_dmg_override_active ? weapon_setting.min_dmg_override : weapon_setting.min_dmg)))
+		if (!(csgo::target.lethal || csgo::target.damage >= weapon_setting.get_min_dmg(csgo::conf->aimbot().min_dmg_override_active)))
+		{
+			features::util::walkbot(cmd);
 			return;
+		}
 
 		if (csgo::conf->aimbot().auto_scope && weapon_data->weapon_type == WEAPONTYPE_SNIPER_RIFLE && !csgo::local_player->is_scoped())
 			cmd->buttons |= in_attack2;

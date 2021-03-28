@@ -25,9 +25,7 @@ namespace nav_mesh {
 
 	struct nav_connect_t {
 		nav_connect_t() { }
-		nav_connect_t(std::uint32_t connect_id) {
-			id = connect_id;
-		}
+		nav_connect_t(const std::uint32_t connect_id) : id(connect_id) { }
 
 		union {
 			std::uint32_t id;
@@ -37,9 +35,7 @@ namespace nav_mesh {
 
 	struct nav_ladder_connect_t {
 		nav_ladder_connect_t() { }
-		nav_ladder_connect_t(std::uint32_t connect_id) {
-			id = connect_id;
-		}
+		nav_ladder_connect_t(std::uint32_t connect_id) : id(connect_id) { }
 
 		union {
 			std::uint32_t id;

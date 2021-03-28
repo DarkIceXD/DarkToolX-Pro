@@ -41,7 +41,6 @@ namespace features {
 	void step_esp();
 	void thirdperson();
 	void trigger(c_usercmd* cmd);
-	void walkbot(c_usercmd* cmd);
 	namespace aimbot {
 		void run(c_usercmd* cmd);
 		void silent(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data);
@@ -72,6 +71,7 @@ namespace features {
 		bool can_force_item_update(weapon_t* item);
 		void force_item_update(weapon_t* item);
 		bool hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const float range);
+		void walkbot(c_usercmd* cmd);
 	}
 	namespace color_modulation {
 		namespace night_mode {

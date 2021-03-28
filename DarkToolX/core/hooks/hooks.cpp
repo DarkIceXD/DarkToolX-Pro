@@ -134,14 +134,14 @@ bool hooks::initialize() {
 	if (MH_CreateHook(update_client_side_animation_target, &update_client_side_animation::hook, reinterpret_cast<void**>(&update_client_side_animation_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize modify_eye_position");
 
-	if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
-		throw std::runtime_error("failed to enable hooks");
-
 	D3DDEVICE_CREATION_PARAMETERS params;
 	interfaces::directx->GetCreationParameters(&params);
 	window = params.hFocusWindow;
 	menu::init(window, interfaces::directx);
 	original_wndproc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(window, GWL_WNDPROC, reinterpret_cast<LONG>(wndproc::hook)));
+
+	if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK)
+		throw std::runtime_error("failed to enable hooks");
 	console::log("[setup] hooks initialized!\n");
 	listener = new event_listener();
 	return true;
@@ -171,7 +171,6 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 
 	features::bunny_hop(cmd);
 	features::no_duck_delay(cmd);
-	features::walkbot(cmd);
 	features::reveal_ranks(cmd);
 	prediction::start(cmd);
 	{
@@ -299,7 +298,7 @@ void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel
 
 long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 {
-	static auto water_mark = std::string("DarkToolX Pro - beta v9.4 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX Pro - beta v10.8 - UID: ") + std::to_string(csgo::user.uid);
 	IDirect3DStateBlock9* pixel_state = NULL;
 	device->CreateStateBlock(D3DSBT_ALL, &pixel_state);
 	pixel_state->Capture();

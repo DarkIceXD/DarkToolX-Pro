@@ -95,6 +95,10 @@ void features::aimbot::legit(c_usercmd* cmd, weapon_t* weapon, const weapon_info
 		cmd->viewangles = recoil_compensated_angle;
 		interfaces::engine->set_view_angles(recoil_compensated_angle);
 	}
+	else
+	{
+		features::util::walkbot(cmd);
+	}
 	const bool is_shooting_manually = cmd->buttons & in_attack;
 	if (is_shooting_manually)
 	{

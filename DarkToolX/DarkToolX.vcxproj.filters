@@ -228,7 +228,7 @@
     <ClCompile Include="core\features\resolver.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="core\features\walkbot.cpp">
+    <ClCompile Include="core\features\util\walkbot.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="dependencies\utilities\navmesh-parser\micropather.cpp">

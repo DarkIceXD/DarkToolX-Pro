@@ -190,7 +190,7 @@
     <ClCompile Include="core\features\sequence_remapping.cpp" />
     <ClCompile Include="core\features\skin_changer.cpp" />
     <ClCompile Include="core\features\thirdperson.cpp" />
-    <ClCompile Include="core\features\walkbot.cpp" />
+    <ClCompile Include="core\features\util\walkbot.cpp" />
     <ClCompile Include="core\hooks\event_listener.cpp" />
     <ClCompile Include="core\hooks\hooks.cpp" />
     <ClCompile Include="core\main.cpp" />
