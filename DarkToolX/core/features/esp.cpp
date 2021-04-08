@@ -3,11 +3,12 @@
 struct entity_data {
 	ImVec2 min, max;
 	float health;
-	bool enemy;
 	char name[128];
+	bool enemy;
+	bool draw;
 };
 
-static std::vector<entity_data> entities;
+static std::array<entity_data, 65> entities;
 
 bool bounding_box(entity_t* entity, ImVec2& p_min, ImVec2& p_max)
 {
@@ -52,8 +53,6 @@ bool bounding_box(entity_t* entity, ImVec2& p_min, ImVec2& p_max)
 
 void features::esp::update()
 {
-	entities.clear();
-	
 	if (!csgo::local_player)
 		return;
 
@@ -61,6 +60,9 @@ void features::esp::update()
 	{
 		for (auto i = 1; i <= interfaces::globals->max_clients; i++)
 		{
+			auto& data = entities[i];
+			data.draw = false;
+
 			auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
 			if (!entity || !entity->is_player() || entity == csgo::local_player)
 				continue;
@@ -72,7 +74,6 @@ void features::esp::update()
 			if (hp < 1)
 				continue;
 
-			entity_data data;
 			if (!bounding_box(entity, data.min, data.max))
 				continue;
 
@@ -81,7 +82,7 @@ void features::esp::update()
 			player_info_t info;
 			interfaces::engine->get_player_info(entity->index(), &info);
 			strcpy_s(data.name, info.name);
-			entities.push_back(data);
+			data.draw = true;
 		}
 	}
 }
@@ -95,6 +96,9 @@ void features::esp::draw(ImDrawList* draw_list)
 	const auto enemy_color = csgo::conf->visuals().box_enemy.to_u32();
 	for (const auto& entity : entities)
 	{
+		if (!entity.draw)
+			continue;
+
 		draw_list->AddRect(entity.min, entity.max, entity.enemy ? enemy_color : team_color);
 		ImVec2 hp_min, hp_max;
 		hp_min.x = entity.max.x + 3;

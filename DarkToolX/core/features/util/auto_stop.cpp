@@ -8,8 +8,7 @@ void features::util::auto_stop(c_usercmd* cmd)
 	if (!csgo::local_player)
 		return;
 
-	const int move_type = csgo::local_player->move_type();
-	if (move_type == movetype_ladder || move_type == movetype_noclip || move_type == movetype_observer)
+	if (csgo::local_player->move_type() != movetype_walk)
 		return;
 
 	if (!(csgo::local_player->flags() & fl_onground))

@@ -13,30 +13,25 @@ void features::resolver::run()
 		if (!entity->is_alive())
 			continue;
 
-		if (entity->has_gun_game_immunity())
-			continue;
-
 		if (!csgo::local_player->is_enemy(entity))
 			continue;
 
-		/*shots.entity = entity;
-		shots.eye_angles = entity->eye_angles();*/
 		const auto max_delta = entity->max_desync_angle();
 		switch (missed_shots[i] % 5)
 		{
 		default:
 			break;
 		case 1:
-			entity->eye_angles().y -= max_delta;
+			entity->lower_body_yaw() -= max_delta;
 			break;
 		case 2:
-			entity->eye_angles().y += max_delta;
+			entity->lower_body_yaw() += max_delta;
 			break;
 		case 3:
-			entity->eye_angles().y -= max_delta / 2;
+			entity->lower_body_yaw() -= max_delta / 2;
 			break;
 		case 4:
-			entity->eye_angles().y += max_delta / 2;
+			entity->lower_body_yaw() += max_delta / 2;
 			break;
 		}
 	}
