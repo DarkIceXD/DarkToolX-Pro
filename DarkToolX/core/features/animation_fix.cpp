@@ -1,6 +1,6 @@
 #include "features.hpp"
 
-static vec3_t rotation;
+static float feet_yaw;
 static anim_layer layers[13];
 static float poses[24];
 
@@ -13,23 +13,17 @@ void features::animation_fix()
 	if (!animation_state)
 		return;
 
-	if (csgo::should_animate) {
-		// get real layers
+	if (csgo::should_animate)
+	{
 		csgo::local_player->get_anim_layers(layers);
-
-		// update animations
 		csgo::local_player->update_client_side_animations();
-
-		// the choke cycle has reset
 		if (!interfaces::clientstate->choked_commands) {
-			rotation.y = animation_state->goal_feet_yaw;
+			feet_yaw = animation_state->goal_feet_yaw;
 			csgo::local_player->get_pose_parameters(poses);
 		}
 		csgo::should_animate = false;
 	}
-
-	// update layers, poses, and rotation
 	csgo::local_player->set_anim_layers(layers);
 	csgo::local_player->set_pose_parameters(poses);
-	csgo::local_player->set_angles(rotation);
+	csgo::local_player->set_angles({ 0, feet_yaw, 0 });
 }

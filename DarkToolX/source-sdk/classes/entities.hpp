@@ -460,7 +460,7 @@ public:
 	NETVAR_OFFSET("DT_CSPlayer", "m_hLightingOrigin", -0x18, is_jiggle_bones_enabled, bool)
 	NETVAR("DT_BaseEntity", "m_fEffects", get_effects, int)
 	NETVAR_OFFSET("DT_BaseEntity", "m_nRenderMode", 1, move_type, int)
-
+	NETVAR_OFFSET("DT_BaseAnimating", "m_hLightingOrigin", 0x3c, anim_layers, utl_vector<anim_layer>)
 	weapon_t* active_weapon() {
 		auto active_weapon = read<uintptr_t>(netvar_manager::get_net_var(fnv::hash("DT_CSPlayer"), fnv::hash("m_hActiveWeapon"))) & 0xFFF;
 		return reinterpret_cast<weapon_t*>(interfaces::entity_list->get_client_entity(active_weapon));
@@ -532,12 +532,8 @@ public:
 	}
 
 	bool& use_new_animation_state() {
-		static auto offset = 0x3AC8; // *reinterpret_cast<uintptr_t*>(utilities::pattern_scan("client.dll", "88 87 ? ? ? ? 75") + 0x2);
+		static auto offset = *reinterpret_cast<uintptr_t*>(utilities::pattern_scan("client.dll", "88 87 ? ? ? ? 75") + 0x2);
 		return *reinterpret_cast<bool*>(uintptr_t(this) + offset);
-	}
-
-	anim_layer* get_animation_overlay() {
-		return *reinterpret_cast<anim_layer**>(this + 0x298C);
 	}
 
 	float* get_pose_parameter() {
@@ -545,15 +541,15 @@ public:
 	}
 
 	void get_anim_layers(anim_layer* layers) {
-		const auto overlay = get_animation_overlay();
-		if(overlay)
-			std::memcpy(layers, overlay, sizeof(anim_layer) * 13);
+		auto& overlay = anim_layers();
+		if(overlay.base())
+			std::memcpy(layers, overlay.base(), sizeof(anim_layer) * overlay.count());
 	}
 
 	void set_anim_layers(anim_layer* layers) {
-		const auto overlay = get_animation_overlay();
-		if (overlay)
-			std::memcpy(overlay, layers, sizeof(anim_layer) * 13);
+		auto& overlay = anim_layers();
+		if (overlay.base())
+			std::memcpy(overlay.base(), layers, sizeof(anim_layer) * overlay.count());
 	}
 
 	void get_pose_parameters(float* poses) {

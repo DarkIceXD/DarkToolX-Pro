@@ -31,7 +31,7 @@ namespace csgo {
 	inline bool want_to_shoot = false;
 	inline bool manual_shoot = false;
 	inline License::User user;
-	inline bool should_animate = false;
+	inline bool should_animate = true;
 	inline vec3_t real = {};
 	inline best_target target = {};
 	namespace menu {
