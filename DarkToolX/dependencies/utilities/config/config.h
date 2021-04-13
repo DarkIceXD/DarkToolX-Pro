@@ -7,6 +7,7 @@
 #include "clan_tag_changer.h"
 #include "chat_bot.h"
 #include "misc.h"
+#include "logs.h"
 #include <fstream>
 #include <sstream>
 
@@ -44,6 +45,9 @@ struct conf
 
 				s_misc = json.value("s_misc", 0);
 				_misc = json.value<std::vector<config::misc>>("_misc", { {} });
+
+				s_logs = json.value("s_logs", 0);
+				_logs = json.value<std::vector<config::logs>>("_logs", { {} });
 			}
 		}
 	}
@@ -78,6 +82,9 @@ struct conf
 			break;
 		case 7:
 			json = misc();
+			break;
+		case 8:
+			json = logs();
 			break;
 		default:
 			json = aimbot();
@@ -117,13 +124,16 @@ struct conf
 			case 7:
 				_misc.push_back(json);
 				break;
+			case 8:
+				_logs.push_back(json);
+				break;
 			default:
 				_aimbot.push_back(json);
 				break;
 			}
 		}
 	}
-	size_t s_aimbot{ 0 }, s_trigger{ 0 }, s_visuals{ 0 }, s_view{ 0 }, s_skin_changer{ 0 }, s_clan_tag_changer{ 0 }, s_chat_bot{ 0 }, s_misc{ 0 };
+	size_t s_aimbot{ 0 }, s_trigger{ 0 }, s_visuals{ 0 }, s_view{ 0 }, s_skin_changer{ 0 }, s_clan_tag_changer{ 0 }, s_chat_bot{ 0 }, s_misc{ 0 }, s_logs{ 0 };
 	std::vector<config::aimbot> _aimbot{ {} };
 	std::vector<config::trigger> _trigger{ {} };
 	std::vector<config::visuals> _visuals{ {} };
@@ -132,6 +142,7 @@ struct conf
 	std::vector<config::clan_tag_changer> _clan_tag_changer{ {} };
 	std::vector<config::chat_bot> _chat_bot{ {} };
 	std::vector<config::misc> _misc{ {} };
+	std::vector<config::logs> _logs{ {} };
 	config::aimbot& aimbot()
 	{
 		if (_aimbot.size() == 0)
@@ -188,5 +199,12 @@ struct conf
 		s_misc = std::clamp(s_misc, 0U, _misc.size() - 1);
 		return _misc.at(s_misc);
 	}
-	JSON_SERIALIZE(conf, s_aimbot, _aimbot, s_trigger, _trigger, s_visuals, _visuals, s_view, _view, s_skin_changer, _skin_changer, s_clan_tag_changer, _clan_tag_changer, s_chat_bot, _chat_bot, s_misc, _misc)
+	config::logs& logs()
+	{
+		if (_logs.size() == 0)
+			_logs.push_back({});
+		s_logs = std::clamp(s_logs, 0U, _logs.size() - 1);
+		return _logs.at(s_logs);
+	}
+	JSON_SERIALIZE(conf, s_aimbot, _aimbot, s_trigger, _trigger, s_visuals, _visuals, s_view, _view, s_skin_changer, _skin_changer, s_clan_tag_changer, _clan_tag_changer, s_chat_bot, _chat_bot, s_misc, _misc, s_logs, _logs)
 };

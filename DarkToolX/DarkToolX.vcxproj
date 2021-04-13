@@ -153,6 +153,7 @@
     <ClCompile Include="core\features\anti_aim.cpp" />
     <ClCompile Include="core\features\auto_accept.cpp" />
     <ClCompile Include="core\features\color_modulation\asus_walls.cpp" />
+    <ClCompile Include="core\features\logs.cpp" />
     <ClCompile Include="core\features\resolver.cpp" />
     <ClCompile Include="core\features\util\auto_stop.cpp" />
     <ClCompile Include="core\features\quick_switch.cpp" />
@@ -284,6 +285,7 @@
     <ClInclude Include="dependencies\utilities\config\clan_tag_changer.h" />
     <ClInclude Include="dependencies\utilities\config\common.h" />
     <ClInclude Include="dependencies\utilities\config\config.h" />
+    <ClInclude Include="dependencies\utilities\config\logs.h" />
     <ClInclude Include="dependencies\utilities\config\trigger.h" />
     <ClInclude Include="dependencies\utilities\config\visuals.h" />
     <ClInclude Include="dependencies\utilities\config\misc.h" />

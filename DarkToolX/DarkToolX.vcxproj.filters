@@ -246,6 +246,9 @@
     <ClCompile Include="dependencies\utilities\navmesh-parser\nav_hiding_spot.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="core\features\logs.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\features\features.hpp">
@@ -561,6 +564,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\utilities\navmesh-parser\nav_structs.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\utilities\config\logs.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

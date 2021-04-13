@@ -4,6 +4,12 @@ static std::array<int, 65> missed_shots;
 
 void features::resolver::run()
 {
+	if (!csgo::conf->misc().resolver)
+	{
+		missed_shots = {};
+		return;
+	}
+
 	for (auto i = 1; i <= interfaces::globals->max_clients; i++)
 	{
 		auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
@@ -51,8 +57,6 @@ void features::resolver::weapon_fire(i_game_event* event)
 		return;
 
 	missed_shots[csgo::target.entity->index()]++;
-	console::log("==============\n");
-	console::log("shot fired: %d\n", csgo::target.entity->index());
 }
 
 void features::resolver::player_hurt(i_game_event* event)
@@ -69,6 +73,4 @@ void features::resolver::player_hurt(i_game_event* event)
 		return;
 
 	missed_shots[interfaces::engine->get_player_for_user_id(event->get_int("userid"))]--;
-	console::log("shot hit: %d\n", interfaces::engine->get_player_for_user_id(event->get_int("userid")));
-	console::log("==============\n");
 }

@@ -28,7 +28,6 @@ namespace features {
 	void fake_lag(bool& send_packet);
 	void fov(view_setup_t* view);
 	void glow();
-	void legit_aimbot(c_usercmd* cmd);
 	void no_duck_delay(c_usercmd* cmd);
 	void no_flash();
 	void ragdolls();
@@ -57,6 +56,10 @@ namespace features {
 	namespace esp {
 		void update();
 		void draw(ImDrawList* draw_list);
+	}
+	namespace logs {
+		void player_hurt(i_game_event* event);
+		void player_death(i_game_event* event);
 	}
 	namespace resolver {
 		void run();
@@ -91,4 +94,5 @@ namespace features {
 		void chat_listener(i_game_event* event);
 		void bullet_tracers(i_game_event* event);
 	}
+	void asus_walls(const int stage);
 }

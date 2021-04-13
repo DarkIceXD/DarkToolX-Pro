@@ -513,6 +513,30 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::Checkbox("Quick Switch", &conf.misc().quick_switch);
 				ImGui::Checkbox("Auto Accept", &conf.misc().auto_accept);
 				ImGui::Checkbox("Reveal Ranks", &conf.misc().reveal_ranks);
+				ImGui::Checkbox("Resolver", &conf.misc().resolver);
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Logs"))
+			{
+				ImGui::PushID(0);
+				ImGui::Checkbox("Deaths", &conf.logs().deaths.enabled);
+				ImGui::Checkbox("Local Player", &conf.logs().deaths.local_player);
+				ImGui::SameLine();
+				ImGui::Checkbox("Team", &conf.logs().deaths.team);
+				ImGui::SameLine();
+				ImGui::Checkbox("Enemy", &conf.logs().deaths.enemy);
+				ImGui::PopID();
+				ImGui::Separator();
+				ImGui::PushID(1);
+				ImGui::Checkbox("Damage", &conf.logs().damage.enabled);
+				ImGui::Checkbox("Local Player", &conf.logs().damage.local_player);
+				ImGui::SameLine();
+				ImGui::Checkbox("Team", &conf.logs().damage.team);
+				ImGui::SameLine();
+				ImGui::Checkbox("Enemy", &conf.logs().damage.enemy);
+				ImGui::PopID();
+				ImGui::Separator();
+				// ImGui::Checkbox("Votes", &conf.logs().votes);
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Config"))
@@ -829,6 +853,44 @@ void menu::render(bool& enabled, conf& conf)
 						ImGui::TableNextColumn();
 						if (ImGui::Button("Share to Clipboard"))
 							ImGui::SetClipboardText(conf.export_config(7).c_str());
+					}
+					ImGui::PopID();
+					ImGui::TableNextRow();
+					ImGui::PushID(8);
+					{
+						ImGui::TableNextColumn();
+						ImGui::TextUnformatted("Logs");
+						ImGui::TableNextColumn();
+						if (ImGui::BeginCombo("##select", conf.logs().conf_name.c_str()))
+						{
+							for (size_t i = 0; i < conf._logs.size(); i++)
+							{
+								ImGui::PushID(i);
+								const auto& current = conf._logs.at(i);
+								const bool is_selected = (conf.s_logs == i);
+								if (ImGui::Selectable(current.conf_name.c_str(), is_selected))
+									conf.s_logs = i;
+
+								if (is_selected)
+									ImGui::SetItemDefaultFocus();
+								ImGui::PopID();
+							}
+							ImGui::EndCombo();
+						}
+						ImGui::TableNextColumn();
+						ImGui::InputText("##name", &conf.logs().conf_name);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("+"))
+							conf._logs.push_back({});
+						ImGui::TableNextColumn();
+						if (ImGui::Button("-") && conf._logs.size() > 1)
+							conf._logs.erase(conf._logs.begin() + conf.s_logs);
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Dupe"))
+							conf._logs.push_back(conf.logs());
+						ImGui::TableNextColumn();
+						if (ImGui::Button("Share to Clipboard"))
+							ImGui::SetClipboardText(conf.export_config(8).c_str());
 					}
 					ImGui::PopID();
 					ImGui::EndTable();

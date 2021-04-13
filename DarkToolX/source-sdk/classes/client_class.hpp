@@ -1,9 +1,26 @@
 #pragma once
+#include <cstdint>
 #include "recv_props.hpp"
 
 class client_class;
 class i_client_networkable;
-class i_client_mode;
+
+class hud_chat {
+public:
+	template <typename... Args>
+	void printf(int filter, const char* fmt, Args... args)
+	{
+		(*reinterpret_cast<void(__cdecl***)(void*, int, const char*, ...)>(this))[26](this, filter, fmt, args...);
+	}
+};
+
+class i_client_mode {
+public:
+	hud_chat* get_hud_chat()
+	{
+		return *reinterpret_cast<hud_chat**>(uintptr_t(this) + 28);
+	}
+};
 
 typedef i_client_networkable* (*create_client_class_fn)(int ent_number, int serial_number);
 typedef i_client_networkable* (*create_event_fn)();
