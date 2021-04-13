@@ -1,6 +1,31 @@
 #include "features.hpp"
 
 static std::array<int, 65> missed_shots;
+static bool accept_shot = true;
+static bool hit_player = false;
+
+constexpr float get_delta(const float max_delta, const int misses)
+{
+	switch (misses % 5)
+	{
+	default:
+		return 0;
+	case 1:
+		return -max_delta;
+	case 2:
+		return max_delta;
+	case 3:
+		return -max_delta / 2;
+	case 4:
+		return max_delta / 2;
+	}
+}
+
+void features::resolver::new_tick()
+{
+	accept_shot = true;
+	hit_player = false;
+}
 
 void features::resolver::run()
 {
@@ -22,24 +47,8 @@ void features::resolver::run()
 		if (!csgo::local_player->is_enemy(entity))
 			continue;
 
-		const auto max_delta = entity->max_desync_angle();
-		switch (missed_shots[i] % 5)
-		{
-		default:
-			break;
-		case 1:
-			entity->lower_body_yaw() -= max_delta;
-			break;
-		case 2:
-			entity->lower_body_yaw() += max_delta;
-			break;
-		case 3:
-			entity->lower_body_yaw() -= max_delta / 2;
-			break;
-		case 4:
-			entity->lower_body_yaw() += max_delta / 2;
-			break;
-		}
+		const auto new_lby = entity->lower_body_yaw() + get_delta(entity->max_desync_angle(), missed_shots[i]);
+		entity->lower_body_yaw() = std::isfinite(new_lby) ? std::remainder(new_lby, 360.0f) : 0.0f;
 	}
 }
 
@@ -69,8 +78,10 @@ void features::resolver::player_hurt(i_game_event* event)
 
 	player_info_t info;
 	interfaces::engine->get_player_info(csgo::local_player->index(), &info);
-	if (event->get_int("attacker") != info.userid || event->get_int("userid") == info.userid)
+	const auto victim = event->get_int("userid");
+	if (event->get_int("attacker") != info.userid || victim == info.userid)
 		return;
 
-	missed_shots[interfaces::engine->get_player_for_user_id(event->get_int("userid"))]--;
+	missed_shots[interfaces::engine->get_player_for_user_id(victim)]--;
+	hit_player = true;
 }

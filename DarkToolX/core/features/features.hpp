@@ -60,8 +60,11 @@ namespace features {
 	namespace logs {
 		void player_hurt(i_game_event* event);
 		void player_death(i_game_event* event);
+		void start_vote(i_game_event* event);
+		void vote_cast(i_game_event* event);
 	}
 	namespace resolver {
+		void new_tick();
 		void run();
 		void weapon_fire(i_game_event* event);
 		void player_hurt(i_game_event* event);

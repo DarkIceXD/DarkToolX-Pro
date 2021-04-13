@@ -536,7 +536,7 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::Checkbox("Enemy", &conf.logs().damage.enemy);
 				ImGui::PopID();
 				ImGui::Separator();
-				// ImGui::Checkbox("Votes", &conf.logs().votes);
+				ImGui::Checkbox("Votes", &conf.logs().votes);
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Config"))
