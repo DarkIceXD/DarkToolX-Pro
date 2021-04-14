@@ -37,8 +37,8 @@ static vec3_t get_best_angle(const vec3_t& view_angles)
 {
 	const auto local_head = csgo::local_player->get_eye_pos();
 	auto valid = false;
-	auto length = FLT_MAX;
-	vec3_t best_eyes;
+	auto best_fov = FLT_MAX;
+	vec3_t best_angle;
 	for (auto i = 1; i <= interfaces::globals->max_clients; i++)
 	{
 		auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
@@ -52,16 +52,16 @@ static vec3_t get_best_angle(const vec3_t& view_angles)
 		if (!csgo::local_player->is_enemy(entity))
 			continue;
 
-		const auto& entity_eyes = entity->get_eye_pos();
-		const auto new_length = (local_head - entity_eyes).length();
-		if (new_length < length)
+		const auto new_viewangles = math::calculate_angle(local_head, entity->get_eye_pos()).normalized_angles();
+		const auto fov = math::fov(view_angles, new_viewangles);
+		if (best_fov > fov)
 		{
-			length = new_length;
-			best_eyes = entity_eyes;
+			best_angle = new_viewangles;
+			best_fov = fov;
 			valid = true;
 		}
 	}
-	return valid ? math::calculate_angle(local_head, best_eyes) : view_angles;
+	return valid ? best_angle : view_angles;
 }
 
 static void apply_anti_aim(c_usercmd* cmd)
