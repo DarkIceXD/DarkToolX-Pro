@@ -88,6 +88,7 @@ void features::logs::start_vote(i_game_event* event)
 	{
 		interfaces::clientmode->get_hud_chat()->printf(0, "%s%c%s\x01 started a vote to surrender", darktoolx, team(is_vote_starter_team), vote_starter_info.name);
 	}
+	interfaces::clientmode->get_hud_chat()->printf(0, "%sType: %d", darktoolx, type);
 }
 
 void features::logs::vote_cast(i_game_event* event)
@@ -98,7 +99,7 @@ void features::logs::vote_cast(i_game_event* event)
 	if (!interfaces::clientmode->get_hud_chat())
 		return;
 
-	const auto voter_id = interfaces::engine->get_player_for_user_id(event->get_int("entityid"));
+	const auto voter_id = event->get_int("entityid");
 	const auto voter = static_cast<player_t*>(interfaces::entity_list->get_client_entity(voter_id));
 	const auto is_voter_team = !csgo::local_player->is_enemy(voter);
 	player_info_t voter_info;
