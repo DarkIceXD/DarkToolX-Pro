@@ -30,15 +30,9 @@ namespace config {
 		}
 		std::string conf_name{ "New Config" };
 		int mode{ 0 };
-		bool enabled{ true };
-		int key_bind_type{ 0 };
-		int key_bind{ 0x12 };
-		bool min_dmg_override_active{ false };
-		int min_dmg_override_key_bind_type{ 0 };
-		int min_dmg_override_key_bind{ 0 };
-		bool hitbox_override_active{ false };
-		int hitbox_override_key_bind_type{ 0 };
-		int hitbox_override_key_bind{ 0 };
+		keybind aim{ true, 0, 0x12 };
+		keybind min_dmg_override{};
+		keybind hitbox_override_bind{};
 		float smoothness{ 3.f };
 		float fov{ 0.f };
 		hitboxes hitbox{};
@@ -67,7 +61,7 @@ namespace config {
 		}
 		constexpr bool is_hitbox_enabled(const int hitbox) const noexcept
 		{
-			const auto& h = hitbox_override_active ? hitbox_override : this->hitbox;
+			const auto& h = hitbox_override_bind.enabled ? hitbox_override : this->hitbox;
 			switch (hitbox)
 			{
 			case hitbox_head:
@@ -98,6 +92,6 @@ namespace config {
 				return false;
 			}
 		}
-		JSON_SERIALIZE(aimbot, conf_name, mode, enabled, key_bind_type, key_bind, min_dmg_override_active, min_dmg_override_key_bind_type, min_dmg_override_key_bind, hitbox_override_active, hitbox_override_key_bind_type, hitbox_override_key_bind, smoothness, fov, hitbox, hitbox_override, auto_shoot, auto_wall, dmg_indicator, auto_cock_revolver, auto_scope, weapons, backtrack, backtrack_time_limit)
+		JSON_SERIALIZE(aimbot, conf_name, mode, aim, min_dmg_override, hitbox_override_bind, smoothness, fov, hitbox, hitbox_override, auto_shoot, auto_wall, dmg_indicator, auto_cock_revolver, auto_scope, weapons, backtrack, backtrack_time_limit)
 	};
 };

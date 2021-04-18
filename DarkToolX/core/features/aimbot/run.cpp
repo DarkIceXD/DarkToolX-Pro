@@ -5,22 +5,22 @@ void features::aimbot::run(c_usercmd* cmd)
 	if (!csgo::conf->aimbot().mode)
 		return;
 
-	if (csgo::conf->aimbot().key_bind_type == 1 && GetAsyncKeyState(csgo::conf->aimbot().key_bind) & 1)
-		csgo::conf->aimbot().enabled = !csgo::conf->aimbot().enabled;
-	else if (csgo::conf->aimbot().key_bind_type == 2 && !GetAsyncKeyState(csgo::conf->aimbot().key_bind))
-		return;
+	if (csgo::conf->aimbot().aim.type == 1 && GetAsyncKeyState(csgo::conf->aimbot().aim.key_bind) & 1)
+		csgo::conf->aimbot().aim.enabled = !csgo::conf->aimbot().aim.enabled;
+	else if (csgo::conf->aimbot().aim.type == 2)
+		csgo::conf->aimbot().aim.enabled = GetAsyncKeyState(csgo::conf->aimbot().aim.key_bind);
 
-	if (csgo::conf->aimbot().min_dmg_override_key_bind_type == 1 && GetAsyncKeyState(csgo::conf->aimbot().min_dmg_override_key_bind) & 1)
-		csgo::conf->aimbot().min_dmg_override_active = !csgo::conf->aimbot().min_dmg_override_active;
-	else if (csgo::conf->aimbot().min_dmg_override_key_bind_type == 2)
-		csgo::conf->aimbot().min_dmg_override_active = GetAsyncKeyState(csgo::conf->aimbot().min_dmg_override_key_bind);
+	if (csgo::conf->aimbot().min_dmg_override.type == 1 && GetAsyncKeyState(csgo::conf->aimbot().min_dmg_override.key_bind) & 1)
+		csgo::conf->aimbot().min_dmg_override.enabled = !csgo::conf->aimbot().min_dmg_override.enabled;
+	else if (csgo::conf->aimbot().min_dmg_override.type == 2)
+		csgo::conf->aimbot().min_dmg_override.enabled = GetAsyncKeyState(csgo::conf->aimbot().min_dmg_override.key_bind);
 
-	if (csgo::conf->aimbot().hitbox_override_key_bind_type == 1 && GetAsyncKeyState(csgo::conf->aimbot().hitbox_override_key_bind) & 1)
-		csgo::conf->aimbot().hitbox_override_active = !csgo::conf->aimbot().hitbox_override_active;
-	else if (csgo::conf->aimbot().hitbox_override_key_bind_type == 2)
-		csgo::conf->aimbot().hitbox_override_active = GetAsyncKeyState(csgo::conf->aimbot().hitbox_override_key_bind);
+	if (csgo::conf->aimbot().hitbox_override_bind.type == 1 && GetAsyncKeyState(csgo::conf->aimbot().hitbox_override_bind.key_bind) & 1)
+		csgo::conf->aimbot().hitbox_override_bind.enabled = !csgo::conf->aimbot().hitbox_override_bind.enabled;
+	else if (csgo::conf->aimbot().hitbox_override_bind.type == 2)
+		csgo::conf->aimbot().hitbox_override_bind.enabled = GetAsyncKeyState(csgo::conf->aimbot().hitbox_override_bind.key_bind);
 
-	if (!csgo::conf->aimbot().enabled)
+	if (!csgo::conf->aimbot().aim.enabled)
 		return;
 
 	if (!csgo::local_player)

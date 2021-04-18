@@ -138,7 +138,7 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 	else if (csgo::conf->aimbot().auto_shoot)
 	{
 		const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(weapon->item_definition_index());
-		if (!(csgo::target.lethal || csgo::target.damage >= weapon_setting.get_min_dmg(csgo::conf->aimbot().min_dmg_override_active)))
+		if (!(csgo::target.lethal || csgo::target.damage >= weapon_setting.get_min_dmg(csgo::conf->aimbot().min_dmg_override.enabled)))
 		{
 			features::util::walkbot(cmd);
 			return;

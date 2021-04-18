@@ -2,12 +2,12 @@
 
 void features::trigger(c_usercmd* cmd)
 {
-	if (csgo::conf->trigger().key_bind_type == 1 && GetAsyncKeyState(csgo::conf->trigger().key_bind) & 1)
-		csgo::conf->trigger().enabled = !csgo::conf->trigger().enabled;
-	else if (csgo::conf->trigger().key_bind_type == 2 && !GetAsyncKeyState(csgo::conf->trigger().key_bind))
-		return;
+	if (csgo::conf->trigger().bind.type == 1 && GetAsyncKeyState(csgo::conf->trigger().bind.key_bind) & 1)
+		csgo::conf->trigger().bind.enabled = !csgo::conf->trigger().bind.enabled;
+	else if (csgo::conf->trigger().bind.type == 2)
+		csgo::conf->trigger().bind.enabled = GetAsyncKeyState(csgo::conf->trigger().bind.key_bind);
 
-	if (!csgo::conf->trigger().enabled)
+	if (!csgo::conf->trigger().bind.enabled)
 		return;
 
 	if (!csgo::local_player->can_shoot())

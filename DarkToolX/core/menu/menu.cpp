@@ -113,9 +113,9 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::Separator();
 				if (conf.aimbot().mode != 0)
 				{
-					ImGui::Checkbox("Enabled", &conf.aimbot().enabled);
+					ImGui::Checkbox("Enabled", &conf.aimbot().aim.enabled);
 					static auto key_found = true;
-					ImGui::KeyBind("Key Bind", &conf.aimbot().key_bind_type, &conf.aimbot().key_bind, &key_found);
+					ImGui::KeyBind("Key Bind", &conf.aimbot().aim.type, &conf.aimbot().aim.key_bind, &key_found);
 					if (conf.aimbot().mode == 2)
 						ImGui::SliderFloat("Smoothness", &conf.aimbot().smoothness, 1, 10);
 					ImGui::SliderFloat("Fov", &conf.aimbot().fov, 0, 180);
@@ -170,8 +170,8 @@ void menu::render(bool& enabled, conf& conf)
 						ImGui::EndTable();
 					}
 					static auto hitbox_override = true;
-					ImGui::KeyBind("Hitbox Override Key Bind", &conf.aimbot().hitbox_override_key_bind_type, &conf.aimbot().hitbox_override_key_bind, &hitbox_override);
-					ImGui::Checkbox("Hitbox Override Active", &conf.aimbot().hitbox_override_active);
+					ImGui::KeyBind("Hitbox Override Key Bind", &conf.aimbot().hitbox_override_bind.type, &conf.aimbot().hitbox_override_bind.key_bind, &hitbox_override);
+					ImGui::Checkbox("Hitbox Override Active", &conf.aimbot().hitbox_override_bind.enabled);
 					ImGui::Separator();
 					ImGui::Checkbox("Auto Shoot", &conf.aimbot().auto_shoot);
 					ImGui::Checkbox("Auto Wall", &conf.aimbot().auto_wall);
@@ -186,8 +186,8 @@ void menu::render(bool& enabled, conf& conf)
 						ImGui::SliderInt("Min Damage Override", &conf.aimbot().get_selected().min_dmg_override, 1, 100);
 						ImGui::Separator();
 						static auto min_dmg_override = true;
-						ImGui::KeyBind("Min Damage Override Key Bind", &conf.aimbot().min_dmg_override_key_bind_type, &conf.aimbot().min_dmg_override_key_bind, &min_dmg_override);
-						ImGui::Checkbox("Min Damage Override Active", &conf.aimbot().min_dmg_override_active);
+						ImGui::KeyBind("Min Damage Override Key Bind", &conf.aimbot().min_dmg_override.type, &conf.aimbot().min_dmg_override.key_bind, &min_dmg_override);
+						ImGui::Checkbox("Min Damage Override Active", &conf.aimbot().min_dmg_override.enabled);
 					}
 				}
 				ImGui::Separator();
@@ -197,9 +197,9 @@ void menu::render(bool& enabled, conf& conf)
 			}
 			if (ImGui::BeginTabItem("Trigger"))
 			{
-				ImGui::Checkbox("Enabled", &conf.trigger().enabled);
+				ImGui::Checkbox("Enabled", &conf.trigger().bind.enabled);
 				static auto key_found = true;
-				ImGui::KeyBind("Key Bind", &conf.trigger().key_bind_type, &conf.trigger().key_bind, &key_found);
+				ImGui::KeyBind("Key Bind", &conf.trigger().bind.type, &conf.trigger().bind.key_bind, &key_found);
 				ImGui::Checkbox("Auto Wall", &conf.aimbot().auto_wall);
 				ImGui::Combo("Weapon", &conf.aimbot().weapon_selection, config::weapon_list);
 				ImGui::SliderInt("Hitchance", &conf.aimbot().get_selected().hitchance, 1, 100);
@@ -246,9 +246,9 @@ void menu::render(bool& enabled, conf& conf)
 			}
 			if (ImGui::BeginTabItem("View"))
 			{
-				ImGui::Checkbox("Thirdperson", &conf.view().thirdperson);
+				ImGui::Checkbox("Thirdperson", &conf.view().thirdperson.enabled);
 				static auto key_found = true;
-				ImGui::KeyBind("Key Bind", &conf.view().key_bind_type, &conf.view().key_bind, &key_found);
+				ImGui::KeyBind("Key Bind", &conf.view().thirdperson.type, &conf.view().thirdperson.key_bind, &key_found);
 				ImGui::SliderFloat("Range", &conf.view().range, 100, 500);
 				ImGui::Checkbox("Spectator Thirdperson", &conf.view().spectator_thirdperson);
 				ImGui::Separator();
@@ -508,6 +508,9 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::Checkbox("Remove Duck delay", &conf.misc().no_duck_delay);
 				ImGui::Checkbox("Slow walk", &conf.misc().slow_walk);
 				ImGui::Checkbox("Auto Stop", &conf.misc().auto_stop);
+				ImGui::Checkbox("Fake Duck", &conf.misc().fake_duck.enabled);
+				static bool fake_duck = true;
+				ImGui::KeyBind("Fake Duck Key Bind", &conf.misc().fake_duck.type, &conf.misc().fake_duck.key_bind, &fake_duck);
 				ImGui::Checkbox("Walk Bot", &conf.misc().walk_bot);
 				ImGui::Checkbox("Hitsound", &conf.misc().hitsound);
 				ImGui::Checkbox("Quick Switch", &conf.misc().quick_switch);
