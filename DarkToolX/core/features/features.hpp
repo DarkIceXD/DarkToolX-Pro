@@ -64,9 +64,10 @@ namespace features {
 		void vote_cast(i_game_event* event);
 	}
 	namespace resolver {
-		void new_tick();
+		void new_tick(c_usercmd* cmd);
 		void run();
 		void weapon_fire(i_game_event* event);
+		void bullet_impact(i_game_event* event);
 		void player_hurt(i_game_event* event);
 	}
 	namespace util {
@@ -98,4 +99,5 @@ namespace features {
 		void bullet_tracers(i_game_event* event);
 	}
 	void asus_walls(const int stage);
+	void fake_duck(c_usercmd* cmd, bool& send_packet);
 }
