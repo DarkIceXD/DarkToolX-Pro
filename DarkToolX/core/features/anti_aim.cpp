@@ -33,20 +33,18 @@ static void apply_desync(c_usercmd* cmd, bool& send_packet, const bool desync_le
 	}
 }
 
-static vec3_t get_best_angle(const vec3_t& view_angles)
+static void apply_smart_anti_aim(vec3_t& view_angles)
 {
 	const auto local_head = csgo::local_player->get_eye_pos();
-	auto valid = false;
 	auto best_fov = FLT_MAX;
-	vec3_t best_angle;
+	vec3_t best_angle = view_angles;
 	for (auto i = 1; i <= interfaces::globals->max_clients; i++)
 	{
 		auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
 		if (!entity || entity->dormant() || !entity->is_player() || entity == csgo::local_player)
 			continue;
 
-		const auto hp = entity->health();
-		if (hp < 1)
+		if (!entity->is_alive())
 			continue;
 
 		if (!csgo::local_player->is_enemy(entity))
@@ -58,10 +56,9 @@ static vec3_t get_best_angle(const vec3_t& view_angles)
 		{
 			best_angle = new_viewangles;
 			best_fov = fov;
-			valid = true;
 		}
 	}
-	return valid ? best_angle : view_angles;
+	view_angles = best_angle;
 }
 
 static void apply_anti_aim(c_usercmd* cmd)
@@ -69,6 +66,8 @@ static void apply_anti_aim(c_usercmd* cmd)
 	switch (csgo::conf->misc().anti_aim)
 	{
 	default:
+		break;
+	case 1:
 		cmd->viewangles.x = 89;
 		cmd->viewangles.y += 180;
 		break;
@@ -138,12 +137,12 @@ void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 	}
 	else if (type == WEAPONTYPE_KNIFE)
 	{
-		if (cmd->buttons & in_attack2)
+		if (cmd->buttons & (in_attack | in_attack2))
 			return;
 	}
 
 	if (csgo::conf->misc().smart_anti_aim)
-		cmd->viewangles = csgo::target.entity ? csgo::target.angle : get_best_angle(cmd->viewangles);
+		apply_smart_anti_aim(cmd->viewangles);
 
 	if (csgo::conf->misc().anti_aim)
 		apply_anti_aim(cmd);

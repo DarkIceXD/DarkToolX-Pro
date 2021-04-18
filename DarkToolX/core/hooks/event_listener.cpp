@@ -4,13 +4,12 @@
 
 event_listener::event_listener()
 {
-	debug_id = 42;
+	debug_id = EVENT_DEBUG_ID_INIT;
 	interfaces::event_manager->add_listener(this, "player_hurt", false);
 	interfaces::event_manager->add_listener(this, "player_death", false);
 	interfaces::event_manager->add_listener(this, "player_footstep", false);
 	interfaces::event_manager->add_listener(this, "bullet_impact", false);
 	interfaces::event_manager->add_listener(this, "weapon_fire", false);
-	interfaces::event_manager->add_listener(this, "start_vote", false);
 	interfaces::event_manager->add_listener(this, "vote_cast", false);
 }
 

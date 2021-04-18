@@ -1,8 +1,8 @@
 #include "features.hpp"
 
 static std::array<int, 65> missed_shots;
-static bool accept_shot = true;
-static bool hit_player = false;
+static std::list<int> last_shots;
+static bool new_shot = true;
 
 constexpr float get_delta(const float max_delta, const int misses)
 {
@@ -21,40 +21,38 @@ constexpr float get_delta(const float max_delta, const int misses)
 	}
 }
 
-void features::resolver::new_tick()
+void features::resolver::new_tick(c_usercmd* cmd)
 {
-	accept_shot = true;
-	hit_player = false;
+	new_shot = true;
+	if (csgo::target.entity && (cmd->buttons & in_attack))
+		last_shots.push_back(csgo::target.entity->index());
 }
 
 void features::resolver::run()
 {
 	if (!csgo::conf->misc().resolver)
-	{
-		missed_shots = {};
 		return;
-	}
 
 	for (auto i = 1; i <= interfaces::globals->max_clients; i++)
 	{
 		auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
-		if (!entity || entity->dormant() || !entity->is_player() || entity == csgo::local_player)
-			continue;
-
-		if (!entity->is_alive())
+		if (!entity || entity->dormant() || !entity->is_player() || entity == csgo::local_player || !entity->is_alive())
 			continue;
 
 		if (!csgo::local_player->is_enemy(entity))
 			continue;
 
-		const auto new_lby = entity->lower_body_yaw() + get_delta(entity->max_desync_angle(), missed_shots[i]);
-		entity->lower_body_yaw() = std::isfinite(new_lby) ? std::remainder(new_lby, 360.0f) : 0.0f;
+		const auto anim_state = entity->get_anim_state();
+		if (!anim_state)
+			continue;
+
+		anim_state->goal_feet_yaw = entity->eye_angles().y + get_delta(entity->max_desync_angle(), missed_shots[i]);
 	}
 }
 
 void features::resolver::weapon_fire(i_game_event* event)
 {
-	if (!csgo::target.entity)
+	if (last_shots.empty())
 		return;
 
 	if (!csgo::local_player)
@@ -65,14 +63,32 @@ void features::resolver::weapon_fire(i_game_event* event)
 	if (event->get_int("userid") != info.userid)
 		return;
 
-	missed_shots[csgo::target.entity->index()]++;
+	missed_shots[last_shots.front()]++;
+	last_shots.pop_front();
 }
 
-void features::resolver::player_hurt(i_game_event* event)
+void features::resolver::bullet_impact(i_game_event* event)
 {
 	if (!csgo::target.entity)
 		return;
 
+	if (!csgo::local_player)
+		return;
+
+	if (!new_shot)
+		return;
+
+	player_info_t info;
+	interfaces::engine->get_player_info(csgo::local_player->index(), &info);
+	if (event->get_int("userid") != info.userid)
+		return;
+
+
+	new_shot = false;
+}
+
+void features::resolver::player_hurt(i_game_event* event)
+{
 	if (!csgo::local_player)
 		return;
 
@@ -83,5 +99,4 @@ void features::resolver::player_hurt(i_game_event* event)
 		return;
 
 	missed_shots[interfaces::engine->get_player_for_user_id(victim)]--;
-	hit_player = true;
 }

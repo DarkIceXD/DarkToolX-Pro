@@ -34,8 +34,7 @@ bool features::util::hitchance(const vec3_t& view_angles, player_t* player, cons
 		const auto rand_angle_2 = RandomFloat(0.f, (math::M_PI * 2));
 		const auto spread_offset_x = cos(rand_angle_1) * rand_inaccuracy + cos(rand_angle_2) * rand_spread;
 		const auto spread_offset_y = sin(rand_angle_1) * rand_inaccuracy + sin(rand_angle_2) * rand_spread;
-		auto spread_forward = forward + right * spread_offset_x + up * spread_offset_y;
-
+		const auto spread_forward = forward + right * spread_offset_x + up * spread_offset_y;
 		const auto spread_view_angles = math::vector_angles(spread_forward, up).normalized_angles();
 		
 		const auto end_pos = start + math::angle_vector(spread_view_angles) * range;
