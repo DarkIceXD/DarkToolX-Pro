@@ -46,7 +46,8 @@ void features::resolver::run()
 		if (!anim_state)
 			continue;
 
-		anim_state->goal_feet_yaw = entity->eye_angles().y + get_delta(entity->max_desync_angle(), missed_shots[i]);
+		const auto new_goal_feet_yaw = entity->eye_angles().y + get_delta(entity->max_desync_angle(), missed_shots[i]);
+		anim_state->goal_feet_yaw = std::isfinite(new_goal_feet_yaw) ? std::remainder(new_goal_feet_yaw, 360.0f) : 0.0f;
 	}
 }
 
