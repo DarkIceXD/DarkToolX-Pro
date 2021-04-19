@@ -2,10 +2,7 @@
 
 void features::fake_duck(c_usercmd* cmd, bool& send_packet)
 {
-	if (csgo::conf->misc().fake_duck.type == 1 && GetAsyncKeyState(csgo::conf->misc().fake_duck.key_bind) & 1)
-		csgo::conf->misc().fake_duck.enabled = !csgo::conf->misc().fake_duck.enabled;
-	else if (csgo::conf->misc().fake_duck.type == 2)
-		csgo::conf->misc().fake_duck.enabled = GetAsyncKeyState(csgo::conf->misc().fake_duck.key_bind);
+	csgo::conf->misc().fake_duck.run();
 
 	if (!csgo::conf->misc().fake_duck.enabled)
 		return;

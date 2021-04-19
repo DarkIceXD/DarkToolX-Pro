@@ -31,6 +31,11 @@ namespace hooks {
 		void __stdcall hook(int stage);
 	};
 
+	namespace dispatch_user_message {
+		using fn = bool(__thiscall*)(i_base_client_dll*, int, unsigned int, unsigned int, const void*);
+		void __stdcall hook(int type, unsigned int a3, unsigned int length, const void* msg_data);
+	};
+
 	namespace sv_teamid_overhead_get_int {
 		using fn = int(__fastcall*)(uintptr_t, uintptr_t);
 		int __fastcall hook(uintptr_t ecx, uintptr_t edx);

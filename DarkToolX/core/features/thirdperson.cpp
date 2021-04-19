@@ -5,10 +5,7 @@ void features::thirdperson() {
 		return;
 
 	if (csgo::local_player->health() > 0) {
-		if (csgo::conf->view().thirdperson.type == 1 && GetAsyncKeyState(csgo::conf->view().thirdperson.key_bind) & 1)
-			csgo::conf->view().thirdperson.enabled = !csgo::conf->view().thirdperson.enabled;
-		else if (csgo::conf->view().thirdperson.type == 2)
-			csgo::conf->view().thirdperson.enabled = GetAsyncKeyState(csgo::conf->view().thirdperson.key_bind);
+		csgo::conf->view().thirdperson.run();
 
 		if (csgo::conf->view().thirdperson.enabled) {
 			if (interfaces::input->camera_in_third_person)

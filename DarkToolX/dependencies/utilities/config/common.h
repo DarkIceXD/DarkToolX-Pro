@@ -15,6 +15,13 @@ namespace config {
 		bool enabled{ false };
 		int type{ 0 };
 		int key_bind{ 0 };
+		void run()
+		{
+			if (type == 1 && GetAsyncKeyState(key_bind) & 1)
+				enabled = !enabled;
+			else if (type == 2)
+				enabled = GetAsyncKeyState(key_bind);
+		}
 		JSON_SERIALIZE(keybind, enabled, type, key_bind)
 	};
 	constexpr const char* weapon_list_all = "Gloves\0Knife\0CZ75-Auto\0Desert Eagle\0Dual Berettas\0Five-SeveN\0Glock-18\0P2000\0P250\0R8 Revolver\0Tec-9\0USP-S\0AK-47\0AUG\0AWP\0FAMAS\0G3SG1\0Galil AR\0M4A1-S\0M4A4\0SCAR-20\0SG 553\0SSG 08\0MAC-10\0MP5-SD\0MP7\0MP9\0PP-Bizon\0P90\0UMP-45\0Nova\0MAG-7\0Sawed-Off\0XM1014\0M249\0Negev\0";
