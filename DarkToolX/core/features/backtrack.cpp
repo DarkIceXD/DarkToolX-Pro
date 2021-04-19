@@ -31,6 +31,7 @@ void features::backtrack::restore_record(player_t* entity, const int record_inde
 	auto& bone_cache = entity->get_cached_bones();
 	std::memcpy(bone_cache.base(), record.matrix, bone_cache.count() * sizeof(matrix_t));
 	entity->set_position(record.origin);
+	entity->set_angles(record.eye);
 	entity->collideable()->set_collision_bounds(record.mins, record.maxs);
 }
 
@@ -73,6 +74,7 @@ void features::backtrack::update()
 
 		record rec{ };
 		rec.origin = entity->abs_origin();
+		rec.eye = entity->abs_angles();
 		rec.mins = entity->collideable()->mins();
 		rec.maxs = entity->collideable()->maxs();
 		rec.simulation_time = entity->simulation_time();

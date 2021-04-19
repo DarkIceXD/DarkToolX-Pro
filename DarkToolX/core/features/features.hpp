@@ -9,7 +9,7 @@ struct auto_wall_data {
 };
 
 struct record {
-	vec3_t origin, mins, maxs;
+	vec3_t origin, mins, maxs, eye;
 	float simulation_time;
 	matrix_t matrix[256];
 };
@@ -25,6 +25,7 @@ namespace features {
 	void crosshair();
 	void damage_indicator();
 	void dormant();
+	void fake_duck(c_usercmd* cmd, bool& send_packet);
 	void fake_lag(bool& send_packet);
 	void fov(view_setup_t* view);
 	void glow();
@@ -98,6 +99,4 @@ namespace features {
 		void chat_listener(i_game_event* event);
 		void bullet_tracers(i_game_event* event);
 	}
-	void asus_walls(const int stage);
-	void fake_duck(c_usercmd* cmd, bool& send_packet);
 }
