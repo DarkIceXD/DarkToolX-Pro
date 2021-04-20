@@ -466,12 +466,12 @@ void __fastcall hooks::do_procedural_foot_plant::hook(void* this_pointer, void* 
 void __fastcall hooks::build_transformations::hook(player_t* this_pointer, void* edx, void* hdr, void* pos, void* q, const void* camera_transform, int bone_mask, void* bone_computed)
 {
 	this_pointer->is_jiggle_bones_enabled() = false;
-	return build_transformations_original(this_pointer, edx, hdr, pos, q, camera_transform, bone_mask, bone_computed);
+	return build_transformations_original(this_pointer, hdr, pos, q, camera_transform, bone_mask, bone_computed);
 }
 
 void __fastcall hooks::check_for_sequence_change::hook(void* this_pointer, void* edx, void* hdr, int cur_sequence, bool force_new_sequence, bool interpolate)
 {
-	return check_for_sequence_change_original(this_pointer, edx, hdr, cur_sequence, force_new_sequence, false);
+	return check_for_sequence_change_original(this_pointer, hdr, cur_sequence, force_new_sequence, false);
 }
 
 bool __fastcall hooks::is_hltv::hook(void* this_pointer, void* edx)
@@ -485,7 +485,7 @@ bool __fastcall hooks::is_hltv::hook(void* this_pointer, void* edx)
 	if (ret_addr == accumulate_layers)
 		return true;
 
-	return is_hltv_original(this_pointer, edx);
+	return is_hltv_original(this_pointer);
 }
 
 void __fastcall hooks::standard_blending_rules::hook(player_t* this_pointer, void* edx, void* hdr, void* pos, void* q, float current_time, int bone_mask)
@@ -493,7 +493,7 @@ void __fastcall hooks::standard_blending_rules::hook(player_t* this_pointer, voi
 	if (!(this_pointer->get_effects() & 8))
 		this_pointer->get_effects() |= 8;
 
-	standard_blending_rules_original(this_pointer, edx, hdr, pos, q, current_time, bone_mask);
+	standard_blending_rules_original(this_pointer, hdr, pos, q, current_time, bone_mask);
 
 	this_pointer->get_effects() &= ~8;
 }
@@ -501,18 +501,18 @@ void __fastcall hooks::standard_blending_rules::hook(player_t* this_pointer, voi
 void __fastcall hooks::calculate_view::hook(player_t* this_pointer, void* edx, vec3_t& eye_origin, vec3_t& eye_angles, float& z_near, float& z_far, float& fov)
 {
 	if (this_pointer != csgo::local_player)
-		return calculate_view_original(this_pointer, edx, eye_origin, eye_angles, z_near, z_far, fov);
+		return calculate_view_original(this_pointer, eye_origin, eye_angles, z_near, z_far, fov);
 
 	const auto old = this_pointer->use_new_animation_state();
 	this_pointer->use_new_animation_state() = false;
-	calculate_view_original(this_pointer, edx, eye_origin, eye_angles, z_near, z_far, fov);
+	calculate_view_original(this_pointer, eye_origin, eye_angles, z_near, z_far, fov);
 	this_pointer->use_new_animation_state() = old;
 }
 
 void __fastcall hooks::modify_eye_position::hook(anim_state* this_pointer, void* edx, vec3_t& input_eye_position)
 {
 	this_pointer->smooth_height_valid = false;
-	return modify_eye_position_original(this_pointer, edx, input_eye_position);
+	return modify_eye_position_original(this_pointer, input_eye_position);
 }
 
 void __vectorcall hooks::update_animation_state::hook(anim_state* this_pointer, void* unknown, float z, float y, float x, void* unknown1)
@@ -528,10 +528,10 @@ void __vectorcall hooks::update_animation_state::hook(anim_state* this_pointer, 
 void __fastcall hooks::update_client_side_animation::hook(player_t* this_pointer, void* edx)
 {
 	if (this_pointer != csgo::local_player)
-		return update_client_side_animation_original(this_pointer, edx);
+		return update_client_side_animation_original(this_pointer);
 
 	if (csgo::should_animate)
-		update_client_side_animation_original(this_pointer, edx);
+		update_client_side_animation_original(this_pointer);
 }
 
 void __cdecl hooks::sequence_proxy::hook(const c_recv_proxy_data* proxy_data_const, void* entity, void* output)

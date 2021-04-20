@@ -19,7 +19,11 @@ void features::logs::player_hurt(i_game_event* event)
 	if (!log.enabled)
 		return;
 
-	if (!interfaces::clientmode->get_hud_chat())
+	if (!csgo::local_player)
+		return;
+
+	const auto chat = interfaces::clientmode->get_hud_chat();
+	if (!chat)
 		return;
 
 	const auto attacker_id = interfaces::engine->get_player_for_user_id(event->get_int("attacker"));
@@ -34,7 +38,7 @@ void features::logs::player_hurt(i_game_event* event)
 	player_info_t attacker_info, victim_info;
 	interfaces::engine->get_player_info(attacker_id, &attacker_info);
 	interfaces::engine->get_player_info(victim_id, &victim_info);
-	interfaces::clientmode->get_hud_chat()->printf(0, "%s%c%s\x01 hit %c%s\x01 for %d", darktoolx, team(is_attacker_team), attacker_id ? attacker_info.name : "\x06World", team(is_victim_team), victim_info.name, event->get_int("dmg_health"));
+	chat->printf(0, "%s%c%s\x01 hit %c%s\x01 for %d", darktoolx, team(is_attacker_team), attacker_id ? attacker_info.name : "\x06World", team(is_victim_team), victim_info.name, event->get_int("dmg_health"));
 }
 
 void features::logs::player_death(i_game_event* event)
@@ -43,7 +47,11 @@ void features::logs::player_death(i_game_event* event)
 	if (!log.enabled)
 		return;
 
-	if (!interfaces::clientmode->get_hud_chat())
+	if (!csgo::local_player)
+		return;
+
+	const auto chat = interfaces::clientmode->get_hud_chat();
+	if (!chat)
 		return;
 
 	const auto attacker_id = interfaces::engine->get_player_for_user_id(event->get_int("attacker"));
@@ -58,7 +66,7 @@ void features::logs::player_death(i_game_event* event)
 	player_info_t attacker_info, victim_info;
 	interfaces::engine->get_player_info(attacker_id, &attacker_info);
 	interfaces::engine->get_player_info(victim_id, &victim_info);
-	interfaces::clientmode->get_hud_chat()->printf(0, "%s%c%s\x01 killed %c%s", darktoolx, team(is_attacker_team), attacker_id ? attacker_info.name : "\x06World", team(is_victim_team), victim_info.name);
+	chat->printf(0, "%s%c%s\x01 killed %c%s", darktoolx, team(is_attacker_team), attacker_id ? attacker_info.name : "\x06World", team(is_victim_team), victim_info.name);
 }
 
 void features::logs::start_vote(i_game_event* event)
@@ -66,7 +74,11 @@ void features::logs::start_vote(i_game_event* event)
 	if (!csgo::conf->logs().votes)
 		return;
 
-	if (!interfaces::clientmode->get_hud_chat())
+	if (!csgo::local_player)
+		return;
+
+	const auto chat = interfaces::clientmode->get_hud_chat();
+	if (!chat)
 		return;
 
 	const auto vote_starter_id = interfaces::engine->get_player_for_user_id(event->get_int("userid"));
@@ -82,11 +94,11 @@ void features::logs::start_vote(i_game_event* event)
 		const auto is_victim_team = !csgo::local_player->is_enemy(victim);
 		player_info_t victim_info;
 		interfaces::engine->get_player_info(victim_id, &victim_info);
-		interfaces::clientmode->get_hud_chat()->printf(0, "%s%c%s\x01 started a votekick against %c%s", darktoolx, team(is_vote_starter_team), vote_starter_info.name, team(is_victim_team), victim_info.name);
+		chat->printf(0, "%s%c%s\x01 started a votekick against %c%s", darktoolx, team(is_vote_starter_team), vote_starter_info.name, team(is_victim_team), victim_info.name);
 	}
 	else
 	{
-		interfaces::clientmode->get_hud_chat()->printf(0, "%s%c%s\x01 started a vote to surrender", darktoolx, team(is_vote_starter_team), vote_starter_info.name);
+		chat->printf(0, "%s%c%s\x01 started a vote to surrender", darktoolx, team(is_vote_starter_team), vote_starter_info.name);
 	}
 	interfaces::clientmode->get_hud_chat()->printf(0, "%sType: %d", darktoolx, type);
 }
@@ -96,7 +108,8 @@ void features::logs::vote_cast(i_game_event* event)
 	if (!csgo::conf->logs().votes)
 		return;
 
-	if (!interfaces::clientmode->get_hud_chat())
+	const auto chat = interfaces::clientmode->get_hud_chat();
+	if (!chat)
 		return;
 
 	const auto voter_id = event->get_int("entityid");
@@ -105,5 +118,5 @@ void features::logs::vote_cast(i_game_event* event)
 	player_info_t voter_info;
 	interfaces::engine->get_player_info(voter_id, &voter_info);
 	const auto voted_yes = event->get_int("vote_option") == 0;
-	interfaces::clientmode->get_hud_chat()->printf(0, "%s%c%s\x01 voted %s", darktoolx, team(is_voter_team), voter_info.name, voted_yes ? "\x04yes" : "\x02no");
+	chat->printf(0, "%s%c%s\x01 voted %s", darktoolx, team(is_voter_team), voter_info.name, voted_yes ? "\x04yes" : "\x02no");
 }

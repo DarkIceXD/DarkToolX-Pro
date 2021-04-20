@@ -87,32 +87,32 @@ namespace hooks {
 	};
 
 	namespace build_transformations {
-		using fn = void(__fastcall*)(player_t*, void*, void*, void*, void*, const void*, int, void*);
+		using fn = void(__thiscall*)(player_t*, void*, void*, void*, const void*, int, void*);
 		void __fastcall hook(player_t* this_pointer, void* edx, void* hdr, void* pos, void* q, const void* camera_transform, int bone_mask, void* bone_computed);
 	};
 
 	namespace check_for_sequence_change {
-		using fn = void(__fastcall*)(void*, void*, void*, int, bool, bool);
+		using fn = void(__thiscall*)(void*, void*, int, bool, bool);
 		void __fastcall hook(void* this_pointer, void* edx, void* hdr, int cur_sequence, bool force_new_sequence, bool interpolate);
 	};
 
 	namespace is_hltv {
-		using fn = bool(__fastcall*)(void*, void*);
+		using fn = bool(__thiscall*)(void*);
 		bool __fastcall hook(void* this_pointer, void* edx);
 	};
 
 	namespace standard_blending_rules {
-		using fn = void(__fastcall*)(player_t*, void*, void*, void*, void*, float, int);
+		using fn = void(__thiscall*)(player_t*, void*, void*, void*, float, int);
 		void __fastcall hook(player_t* this_pointer, void* edx, void* hdr, void* pos, void* q, float current_time, int bone_mask);
 	};
 
 	namespace calculate_view {
-		using fn = void(__fastcall*)(player_t*, void*, vec3_t&, vec3_t&, float&, float&, float&);
+		using fn = void(__thiscall*)(player_t*, vec3_t&, vec3_t&, float&, float&, float&);
 		void __fastcall hook(player_t* this_pointer, void* edx, vec3_t& eye_origin, vec3_t& eye_angles, float& z_near, float& z_far, float& fov);
 	};
 
 	namespace modify_eye_position {
-		using fn = void(__fastcall*)(anim_state*, void*, vec3_t&);
+		using fn = void(__thiscall*)(anim_state*, vec3_t&);
 		void __fastcall hook(anim_state* this_pointer, void* edx, vec3_t& input_eye_position);
 	};
 
@@ -122,7 +122,7 @@ namespace hooks {
 	};
 
 	namespace update_client_side_animation {
-		using fn = void(__fastcall*)(player_t*, void*);
+		using fn = void(__thiscall*)(player_t*);
 		void __fastcall hook(player_t* this_pointer, void* edx);
 	};
 
