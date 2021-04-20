@@ -19,6 +19,13 @@ namespace config {
 		JSON_SERIALIZE(skin_animation_frame, paint_kit, stat_trak, seed, wear, nametag)
 	};
 
+	struct sticker
+	{
+		int paint_kit{ 0 };
+		float wear{ FLT_MIN }, scale{ 1.f }, rotation{ 0.f };
+		JSON_SERIALIZE(sticker, paint_kit, wear, scale, rotation)
+	};
+
 	struct skin {
 		skin()
 		{
@@ -27,6 +34,8 @@ namespace config {
 		int paint_kit{ 0 }, stat_trak{ 0 }, seed{ 0 }, quality{ 0 };
 		float wear{ FLT_MIN };
 		std::string nametag;
+		int selected_sticker{ 0 };
+		std::array<sticker, 5> stickers{};
 		size_t frame{ 0 };
 		std::vector<skin_animation_frame> animation;
 		bool count_kills{ true };
@@ -56,7 +65,11 @@ namespace config {
 				frame = 0;
 			return &animation.at(frame);
 		}
-		JSON_SERIALIZE(skin, paint_kit, stat_trak, seed, quality, wear, nametag, animation, count_kills, animated_skins, reverse, delay_ticks)
+		constexpr sticker& get_selected_sticker()
+		{
+			return stickers.at(selected_sticker);
+		}
+		JSON_SERIALIZE(skin, paint_kit, stat_trak, seed, quality, wear, nametag, stickers, animation, count_kills, animated_skins, reverse, delay_ticks)
 	};
 
 	struct skin_changer
@@ -78,7 +91,7 @@ namespace config {
 			if (i < 0)
 				return nullptr;
 			return &skins.at(i);
-		};
+		}
 		constexpr skin& get_selected() noexcept
 		{
 			return skins.at(selection);
@@ -108,7 +121,7 @@ namespace config {
 			case 19: return WEAPON_KNIFE_SKELETON;
 			default: return 0;
 			}
-		};
+		}
 		constexpr short get_glove_index() const noexcept
 		{
 			switch (glove_selection)
@@ -123,7 +136,7 @@ namespace config {
 			case 8: return GLOVE_BROKEN_FANG;
 			default: return 0;
 			}
-		};
+		}
 		JSON_SERIALIZE(skin_changer, conf_name, enabled, auto_save, skins, knife_selection, glove_selection)
 	};
 };

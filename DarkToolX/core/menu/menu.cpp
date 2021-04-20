@@ -318,8 +318,39 @@ void menu::render(bool& enabled, conf& conf)
 					need_to_update = true;
 				if (ImGui::Checkbox("Count Kills", &conf.skin_changer().get_selected().count_kills))
 					need_to_update = true;
+				ImGui::Separator();
+				ImGui::Combo("Sticker Slot", &conf.skin_changer().get_selected().selected_sticker, "Slot 1\0Slot 2\0Slot 3\0Slot 4\0Slot 5\0");
+				const int sticker_index = kit_parser::find(kit_parser::sticker_kits, conf.skin_changer().get_selected().get_selected_sticker().paint_kit);
+				static ImGuiTextFilter sticker_filter;
+				sticker_filter.Draw("Search Sticker");
+				if (ImGui::BeginCombo("Sticker", kit_parser::sticker_kits.at(sticker_index).name.c_str()))
+				{
+					for (size_t i = 0; i < kit_parser::sticker_kits.size(); i++)
+					{
+						const auto& kit = kit_parser::sticker_kits.at(i);
+						if (sticker_filter.PassFilter(kit.name.c_str()))
+						{
+							const bool is_selected = (sticker_index == i);
+							if (ImGui::Selectable(kit.name.c_str(), is_selected))
+							{
+								conf.skin_changer().get_selected().get_selected_sticker().paint_kit = kit.id;
+								need_to_update = true;
+							}
+							if (is_selected)
+								ImGui::SetItemDefaultFocus();
+						}
+					}
+					ImGui::EndCombo();
+				}
+				if (ImGui::SliderFloat("Wear", &conf.skin_changer().get_selected().get_selected_sticker().wear, FLT_MIN, 1, "%.5f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat))
+					need_to_update = true;
+				if (ImGui::SliderFloat("Scale", &conf.skin_changer().get_selected().get_selected_sticker().scale, 0.1f, 5))
+					need_to_update = true;
+				if (ImGui::SliderFloat("Rotation", &conf.skin_changer().get_selected().get_selected_sticker().rotation, 0, 360))
+					need_to_update = true;
 				if (need_to_update)
 					interfaces::clientstate->full_update();
+				ImGui::Separator();
 				ImGui::Checkbox("Animated Skins", &conf.skin_changer().get_selected().animated_skins);
 				if (conf.skin_changer().get_selected().animated_skins)
 				{

@@ -61,6 +61,44 @@ static void change_model(weapon_t& item, const int new_index)
 	}
 }
 
+template <typename T>
+static constexpr auto relative_to_absolute(const uintptr_t address)
+{
+	return (T)(address + 4 + *reinterpret_cast<std::int32_t*>(address));
+}
+
+static void set_or_add_attribute_value_by_name(std::uintptr_t attributeList, const char* attribute, float value)
+{
+	__asm movd xmm2, value
+	static void(__thiscall * setOrAddAttributeValueByNameFunction)(std::uintptr_t, const char* attribute);
+	if (!setOrAddAttributeValueByNameFunction)
+		setOrAddAttributeValueByNameFunction = relative_to_absolute<decltype(setOrAddAttributeValueByNameFunction)>(uintptr_t(utilities::pattern_scan("client.dll", "E8 ? ? ? ? 8B 8D ? ? ? ? 85 C9 74 10") + 1));
+
+	setOrAddAttributeValueByNameFunction(attributeList, attribute);
+}
+
+static void set_or_add_attribute_value_by_name(std::uintptr_t attributeList, const char* attribute, int value)
+{
+	set_or_add_attribute_value_by_name(attributeList, attribute, *reinterpret_cast<float*>(&value));
+}
+
+static void apply_sticker_changer(weapon_t& item, const std::array<config::sticker, 5>& stickers)
+{
+	const auto attribute_list = std::uintptr_t(&item.m_Item()) + 0x244;
+	for (std::size_t i = 0; i < stickers.size(); ++i)
+	{
+		const auto& sticker = stickers[i];
+		if (!sticker.paint_kit)
+			continue;
+
+		const auto attributeString = "sticker slot " + std::to_string(i) + ' ';
+		set_or_add_attribute_value_by_name(attribute_list, (attributeString + "id").c_str(), sticker.paint_kit);
+		set_or_add_attribute_value_by_name(attribute_list, (attributeString + "wear").c_str(), sticker.wear);
+		set_or_add_attribute_value_by_name(attribute_list, (attributeString + "scale").c_str(), sticker.scale);
+		set_or_add_attribute_value_by_name(attribute_list, (attributeString + "rotation").c_str(), sticker.rotation);
+	}
+}
+
 static void apply_skin(weapon_t& item, const config::skin& skin)
 {
 	if (skin.paint_kit)
@@ -77,6 +115,7 @@ static void apply_skin(weapon_t& item, const config::skin& skin)
 		if (skin.stat_trak)
 			item.stat_trak() = skin.stat_trak;
 		item.wear() = skin.wear;
+		apply_sticker_changer(item, skin.stickers);
 	}
 }
 

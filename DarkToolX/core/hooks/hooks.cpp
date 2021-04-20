@@ -134,10 +134,10 @@ bool hooks::initialize() {
 		throw std::runtime_error("failed to initialize modify_eye_position");
 
 	if (MH_CreateHook(update_animation_state_target, &update_animation_state::hook, reinterpret_cast<void**>(&update_animation_state_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize modify_eye_position");
+		throw std::runtime_error("failed to initialize update_animation_state");
 
 	if (MH_CreateHook(update_client_side_animation_target, &update_client_side_animation::hook, reinterpret_cast<void**>(&update_client_side_animation_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize modify_eye_position");
+		throw std::runtime_error("failed to initialize update_client_side_animation");
 
 	D3DDEVICE_CREATION_PARAMETERS params;
 	interfaces::directx->GetCreationParameters(&params);
@@ -277,7 +277,7 @@ class bf_read
 	uintptr_t base;
 	uintptr_t offset;
 public:
-	bf_read(const uintptr_t address) : base(address), offset(0) {}
+	bf_read(const uintptr_t address) : base(address), offset(1) {}
 	void skip(const uintptr_t length)
 	{
 		offset += length;
@@ -363,7 +363,7 @@ void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel
 
 long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 {
-	static auto water_mark = std::string("DarkToolX Pro - beta v12.5 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX Pro - beta v13.0 - UID: ") + std::to_string(csgo::user.uid);
 	IDirect3DStateBlock9* pixel_state = NULL;
 	device->CreateStateBlock(D3DSBT_ALL, &pixel_state);
 	pixel_state->Capture();
