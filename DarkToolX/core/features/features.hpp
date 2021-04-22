@@ -29,6 +29,7 @@ namespace features {
 	void fake_lag(bool& send_packet);
 	void fov(view_setup_t* view);
 	void glow();
+	void modify_smoke();
 	void no_duck_delay(c_usercmd* cmd);
 	void no_flash();
 	void ragdolls();

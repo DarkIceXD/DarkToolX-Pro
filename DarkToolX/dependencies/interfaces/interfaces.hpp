@@ -32,6 +32,7 @@
 #include "i_view_render_beams.hpp"
 
 struct IDirect3DDevice9;
+class i_view_render;
 
 namespace interfaces {
 	enum class interface_type { index, bruteforce };
@@ -103,5 +104,6 @@ namespace interfaces {
 	inline i_game_types* game_types;
 	inline i_engine_sound* engine_sound;
 	inline i_view_render_beams* render_beams;
+	inline i_view_render* view_render;
 	bool initialize();
 }

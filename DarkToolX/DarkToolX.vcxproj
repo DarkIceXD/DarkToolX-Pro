@@ -155,6 +155,7 @@
     <ClCompile Include="core\features\color_modulation\asus_walls.cpp" />
     <ClCompile Include="core\features\fake_duck.cpp" />
     <ClCompile Include="core\features\logs.cpp" />
+    <ClCompile Include="core\features\modify_smoke.cpp" />
     <ClCompile Include="core\features\resolver.cpp" />
     <ClCompile Include="core\features\util\auto_stop.cpp" />
     <ClCompile Include="core\features\quick_switch.cpp" />

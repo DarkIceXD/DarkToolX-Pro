@@ -21,6 +21,7 @@ hooks::lock_cursor::fn lock_cursor_original = nullptr;
 hooks::get_color_modulation::fn get_color_modulation_original = nullptr;
 hooks::is_using_static_prop_debug_modes::fn is_using_static_prop_debug_modes_original = nullptr;
 hooks::should_draw_fog::fn should_draw_fog_original = nullptr;
+hooks::render_smoke_overlay::fn render_smoke_overlay_original = nullptr;
 hooks::should_skip_animation_frame::fn should_skip_animation_frame_original = nullptr;
 hooks::do_procedural_foot_plant::fn do_procedural_foot_plant_original = nullptr;
 hooks::build_transformations::fn build_transformations_original = nullptr;
@@ -53,6 +54,7 @@ bool hooks::initialize() {
 	const auto get_color_modulation_target = static_cast<void*>(utilities::pattern_scan("materialsystem.dll", "55 8B EC 83 EC ? 56 8B F1 8A 46"));
 	const auto is_using_static_prop_debug_modes_target = static_cast<void*>(utilities::pattern_scan("engine.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? A1 ? ? ? ? 35 ? ? ? ? EB ? 8B 01 FF 50 ? 83 F8 ? 0F 85 ? ? ? ? 8B 0D"));
 	const auto should_draw_fog_target = reinterpret_cast<void*>(get_virtual(interfaces::clientmode, 17));
+	const auto render_smoke_overlay_target = reinterpret_cast<void*>(get_virtual(interfaces::view_render, 41));
 	const auto should_skip_animation_frame_target = static_cast<void*>(utilities::pattern_scan("client.dll", "57 8B F9 8B 07 8B 80 ? ? ? ? FF D0 84 C0 75 02"));
 	const auto do_procedural_foot_plant_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F0 83 EC 78 56 8B F1 57 8B 56"));
 	const auto build_transformations_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 56 8B 75 18 57"));
@@ -82,8 +84,8 @@ bool hooks::initialize() {
 	if (MH_CreateHook(frame_stage_notify_target, &frame_stage_notify::hook, reinterpret_cast<void**>(&frame_stage_notify_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize frame_stage_notify");
 
-	/*if (MH_CreateHook(dispatch_user_message_target, &dispatch_user_message::hook, reinterpret_cast<void**>(&dispatch_user_message_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize dispatch_user_message");*/
+	if (MH_CreateHook(dispatch_user_message_target, &dispatch_user_message::hook, reinterpret_cast<void**>(&dispatch_user_message_original)) != MH_OK)
+		throw std::runtime_error("failed to initialize dispatch_user_message");
 
 	if (MH_CreateHook(sv_teamid_overhead_get_int_target, &sv_teamid_overhead_get_int::hook, reinterpret_cast<void**>(&sv_teamid_overhead_get_int_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize sv_teamid_overhead_get_int");
@@ -108,6 +110,9 @@ bool hooks::initialize() {
 
 	if (MH_CreateHook(should_draw_fog_target, &should_draw_fog::hook, reinterpret_cast<void**>(&should_draw_fog_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize should_draw_fog");
+
+	if (MH_CreateHook(render_smoke_overlay_target, &render_smoke_overlay::hook, reinterpret_cast<void**>(&render_smoke_overlay_original)) != MH_OK)
+		throw std::runtime_error("failed to initialize render_smoke_overlay");
 
 	if (MH_CreateHook(should_skip_animation_frame_target, &should_skip_animation_frame::hook, reinterpret_cast<void**>(&should_skip_animation_frame_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize should_skip_animation_frame");
@@ -258,6 +263,7 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 		case FRAME_NET_UPDATE_END:
 			break;
 		case FRAME_RENDER_START:
+			features::modify_smoke();
 			features::backtrack::update();
 			features::sky_box_changer();
 			features::step_esp();
@@ -292,19 +298,6 @@ public:
 	{
 		return read_byte();
 	}
-	uint32_t read_uint32()
-	{
-		uint32_t result = 0;
-		int i = 0;
-		uint32_t b;
-		do
-		{
-			b = read_byte();
-			result |= (b & 0x7F) << (7 * i);
-			++i;
-		} while (b & 0x80);
-		return result;
-	}
 	std::string read_string()
 	{
 		const auto str_length = read_byte();
@@ -320,12 +313,12 @@ void __stdcall hooks::dispatch_user_message::hook(int type, unsigned int a3, uns
 	if (type == cs_um_votestart && interfaces::clientmode->get_hud_chat())
 	{
 		const auto team = buf.read_byte();
+		buf.skip(1);
 		const auto idx = buf.read_byte();
+		buf.skip(1);
 		const auto type = buf.read_byte();
 		interfaces::clientmode->get_hud_chat()->printf(0, "team: %d, ent_idx: %d, vote_type: %d", team, idx, type);
-		/*interfaces::clientmode->get_hud_chat()->printf(0, "disp_str: %s, details_str: %s, other_team_str: %s", buf.read_string().c_str(), buf.read_string().c_str(), buf.read_string().c_str());
-		interfaces::clientmode->get_hud_chat()->printf(0, "is_yes_no_vote: %d, entidx_target: %d", buf.read_bool(), buf.read_uint32());*/
-		interfaces::clientmode->get_hud_chat()->printf(0, "local_player_id: %d, team: %d, idx: %d", csgo::local_player->index(), csgo::local_player->team(), interfaces::engine->get_player_for_user_id(idx));
+		interfaces::clientmode->get_hud_chat()->printf(0, "local_player_id: %d, team: %d", csgo::local_player->index(), csgo::local_player->team());
 	}
 	dispatch_user_message_original(interfaces::client, type, a3, length, msg_data);
 }
@@ -363,7 +356,7 @@ void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel
 
 long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 {
-	static auto water_mark = std::string("DarkToolX Pro - beta v13.0 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX Pro - beta v13.2 - UID: ") + std::to_string(csgo::user.uid);
 	IDirect3DStateBlock9* pixel_state = NULL;
 	device->CreateStateBlock(D3DSBT_ALL, &pixel_state);
 	pixel_state->Capture();
@@ -451,6 +444,14 @@ bool __stdcall hooks::should_draw_fog::hook()
 	if (*static_cast<uint32_t*>(_ReturnAddress()) != 0x6274C084)
 		return should_draw_fog_original(interfaces::clientmode);
 	return !csgo::conf->view().no_fog;
+}
+
+void __stdcall hooks::render_smoke_overlay::hook(bool update)
+{
+	if (csgo::conf->view().modify_smoke)
+		*reinterpret_cast<float*>(std::uintptr_t(interfaces::view_render) + 0x588) = 0.0f;
+	else
+		render_smoke_overlay_original(interfaces::view_render, update);
 }
 
 bool __fastcall hooks::should_skip_animation_frame::hook(void* this_pointer, void* edx)

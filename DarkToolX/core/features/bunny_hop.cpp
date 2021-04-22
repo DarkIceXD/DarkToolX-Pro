@@ -71,11 +71,5 @@ void features::bunny_hop(c_usercmd* cmd)
 		auto_strafe(cmd);
 
 	if (!(csgo::local_player->flags() & fl_onground))
-	{
 		cmd->buttons &= ~in_jump;
-		/*if (cmd->mousedx < 0)
-			sidemove = -450.0f;
-		else if (cmd->mousedx > 0)
-			sidemove = 450.0f;*/
-	}
 }

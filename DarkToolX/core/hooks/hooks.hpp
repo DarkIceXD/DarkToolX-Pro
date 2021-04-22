@@ -76,6 +76,11 @@ namespace hooks {
 		bool __stdcall hook();
 	};
 
+	namespace render_smoke_overlay {
+		using fn = void(__thiscall*)(void* this_pointer, bool update);
+		void __stdcall hook(bool update);
+	};
+
 	namespace should_skip_animation_frame {
 		using fn = bool(__fastcall*)(void*, void*);
 		bool __fastcall hook(void* this_pointer, void* edx);

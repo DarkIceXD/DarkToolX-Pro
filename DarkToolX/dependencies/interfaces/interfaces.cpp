@@ -34,6 +34,8 @@ bool interfaces::initialize() {
 	glow_manager = reinterpret_cast<glow_manager_t*>(*reinterpret_cast<uintptr_t*>(utilities::pattern_scan("client.dll", "0F 11 05 ? ? ? ? 83 C8 01 C7 05 ? ? ? ? 00 00 00 00") + 3));
 	move_helper = **reinterpret_cast<player_move_helper***>(utilities::pattern_scan("client.dll", "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01") + 2);
 	weapon_system = *reinterpret_cast<i_weapon_system**>(utilities::pattern_scan("client.dll", "8B 35 ? ? ? ? FF 10 0F B7 C0") + 2);
+
+	view_render = **reinterpret_cast<i_view_render***>(utilities::pattern_scan("client.dll", "8B 0D ? ? ? ? FF 75 0C 8B 45 08") + 2);
 	console::log("[setup] interfaces initialized!\n");
 	return true;
 }

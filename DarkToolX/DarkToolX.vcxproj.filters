@@ -252,6 +252,9 @@
     <ClCompile Include="core\features\fake_duck.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="core\features\modify_smoke.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\features\features.hpp">

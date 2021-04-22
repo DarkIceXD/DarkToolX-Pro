@@ -264,6 +264,7 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::Checkbox("No Fog", &conf.view().no_fog);
 				ImGui::Checkbox("No Flash", &conf.view().no_flash);
 				ImGui::SliderFloat("View Fov", &conf.view().view_fov, 0, 60);
+				ImGui::Combo("Modify Smoke", &conf.view().modify_smoke, "-\0Wireframe\0Remove Smoke\0");
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Skin Changer"))
