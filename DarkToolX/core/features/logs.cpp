@@ -38,7 +38,7 @@ void features::logs::player_hurt(i_game_event* event)
 	player_info_t attacker_info, victim_info;
 	interfaces::engine->get_player_info(attacker_id, &attacker_info);
 	interfaces::engine->get_player_info(victim_id, &victim_info);
-	chat->printf(0, "%s%c%s\x01 hit %c%s\x01 for %d", darktoolx, team(is_attacker_team), attacker_id ? attacker_info.name : "\x06World", team(is_victim_team), victim_info.name, event->get_int("dmg_health"));
+	chat->printf(0, "%s%c%s\x01 hit %c%s\x01 for %d (%d hp left)", darktoolx, team(is_attacker_team), attacker_id ? attacker_info.name : "\x06World", team(is_victim_team), victim_info.name, event->get_int("dmg_health"), event->get_int("health"));
 }
 
 void features::logs::player_death(i_game_event* event)
