@@ -3,8 +3,11 @@
 struct entity_data {
 	ImVec2 min, max;
 	float health;
+	float armor;
 	char name[128];
+	short weapon_index;
 	bool enemy;
+	bool has_heavy_armor;
 	bool draw;
 };
 
@@ -78,12 +81,63 @@ void features::esp::update()
 				continue;
 
 			data.health = static_cast<float>(hp) / entity->max_health();
+			data.armor = entity->armor() / 100.f;
+			const auto weapon = entity->active_weapon();
+			data.weapon_index = weapon ? weapon->item_definition_index() : 0;
 			data.enemy = csgo::local_player->is_enemy(entity);
+			data.has_heavy_armor = entity->has_heavy_armor();
 			player_info_t info;
 			interfaces::engine->get_player_info(entity->index(), &info);
 			strcpy_s(data.name, info.name);
 			data.draw = true;
 		}
+	}
+}
+
+const char* get_weapon_name(short index) {
+	switch (index) {
+	default: return "Weapon";
+	case WEAPON_GLOCK: return "Glock-18";
+	case WEAPON_HKP2000: return "P2000";
+	case WEAPON_USP_SILENCER: return "USP-S";
+	case WEAPON_ELITE: return "Dual Berettas";
+	case WEAPON_P250: return "P250";
+	case WEAPON_TEC9: return "Tec-9";
+	case WEAPON_FIVESEVEN: return "Five-SeveN";
+	case WEAPON_CZ75A: return "CZ75-Auto";
+	case WEAPON_DEAGLE: return "Desert Eagle";
+	case WEAPON_REVOLVER: return "R8 Revolver";
+	case WEAPON_MAC10: return "MAC-10";
+	case WEAPON_MP9: return "MP9";
+	case WEAPON_MP7: return "MP7";
+	case WEAPON_MP5_SD: return "MP5-SD";
+	case WEAPON_UMP45: return "UMP-45";
+	case WEAPON_P90: return "P90";
+	case WEAPON_BIZON: return "PP-Bizon";
+	case WEAPON_GALILAR: return "Galil AR";
+	case WEAPON_FAMAS: return "FAMAS";
+	case WEAPON_AK47: return "AK-47";
+	case WEAPON_M4A1: return "M4A4";
+	case WEAPON_M4A1_SILENCER: return "M4A1-S";
+	case WEAPON_SG556: return "SG 553";
+	case WEAPON_AUG: return "AUG";
+	case WEAPON_SSG08: return "SSG 08";
+	case WEAPON_AWP: return "AWP";
+	case WEAPON_G3SG1: return "G3SG1";
+	case WEAPON_SCAR20: return "SCAR-20";
+	case WEAPON_NOVA: return "Nova";
+	case WEAPON_XM1014: return "XM1014";
+	case WEAPON_SAWEDOFF: return "Sawed-Off";
+	case WEAPON_MAG7: return "MAG-7";
+	case WEAPON_M249: return "M249";
+	case WEAPON_NEGEV: return "Negev";
+	case WEAPON_FLASHBANG: return "Flashbang";
+	case WEAPON_HEGRENADE: return "HE Grenade";
+	case WEAPON_SMOKEGRENADE: return "Smoke Grenade";
+	case WEAPON_MOLOTOV: return "Molotov";
+	case WEAPON_DECOY: return "Decoy Grenade";
+	case WEAPON_INCGRENADE: return "Incendiary";
+	case WEAPON_C4: return "C4";
 	}
 }
 
@@ -100,18 +154,36 @@ void features::esp::draw(ImDrawList* draw_list)
 			continue;
 
 		draw_list->AddRect(entity.min, entity.max, entity.enemy ? enemy_color : team_color);
-		ImVec2 hp_min, hp_max;
-		hp_min.x = entity.max.x + 3;
-		hp_min.y = entity.min.y;
-		hp_max.x = hp_min.x + 2;
-		const auto health_based_y = (entity.max.y - entity.min.y) * entity.health;
-		hp_max.y = hp_min.y + health_based_y;
-		draw_list->AddRectFilled(hp_min, hp_max, config::rgb::scale({ 0, 1, 0, 1 }, { 1, 0, 0, 1 }, entity.health).to_u32());
-		hp_min.x -= 1;
-		hp_max.x += 1;
-		draw_list->AddRect(hp_min, hp_max, IM_COL32_BLACK);
+		{
+			ImVec2 hp_min, hp_max;
+			hp_min.x = entity.max.x + 3;
+			hp_min.y = entity.min.y;
+			hp_max.x = hp_min.x + 2;
+			const auto health_based_y = (entity.max.y - entity.min.y) * entity.health;
+			hp_max.y = hp_min.y + health_based_y;
+			draw_list->AddRectFilled(hp_min, hp_max, config::rgb::scale({ 0, 1, 0, 1 }, { 1, 0, 0, 1 }, entity.health).to_u32());
+			hp_min.x -= 1;
+			hp_max.x += 1;
+			draw_list->AddRect(hp_min, hp_max, IM_COL32_BLACK);
+		}
+		if (entity.armor > 0)
+		{
+			ImVec2 armor_min, armor_max;
+			armor_min.x = entity.min.x;
+			armor_min.y = entity.min.y + 3;
+			const auto armor_based_x = (entity.max.x - entity.min.x) * entity.armor;
+			armor_max.x = armor_min.x + armor_based_x;
+			armor_max.y = armor_min.y + 2;
+			draw_list->AddRectFilled(armor_min, armor_max, entity.has_heavy_armor ? IM_COL32(255, 128, 0, 255) : IM_COL32(0, 85, 255, 255));
+			armor_min.y -= 1;
+			armor_max.y += 1;
+			draw_list->AddRect(armor_min, armor_max, IM_COL32_BLACK);
+		}
 		const auto name_size = ImGui::CalcTextSize(entity.name);
 		draw_list->AddText({ entity.min.x + (entity.max.x - entity.min.x - name_size.x) / 2, entity.max.y - name_size.y - 2 }, IM_COL32_WHITE, entity.name);
+		const auto weapon = get_weapon_name(entity.weapon_index);
+		const auto weapon_size = ImGui::CalcTextSize(weapon);
+		draw_list->AddText({ entity.min.x + (entity.max.x - entity.min.x - weapon_size.x) / 2, entity.min.y + weapon_size.y }, IM_COL32_WHITE, weapon);
 	}
 
 	if (csgo::conf->visuals().show_aimbot_spot)
