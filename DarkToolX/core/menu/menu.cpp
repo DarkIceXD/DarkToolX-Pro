@@ -222,8 +222,6 @@ void menu::render(bool& enabled, conf& conf)
 					ImGui::ColorEdit4("Color", &rgb.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
 				}
 				ImGui::Separator();
-				ImGui::Checkbox("Enemy Overhead Info", &conf.visuals().enemy_overhead_info);
-				ImGui::Separator();
 				ImGui::Checkbox("Box ESP", &conf.visuals().box_esp);
 				ImGui::Checkbox("Dormant ESP", &conf.visuals().dormant_esp);
 				ImGui::ColorEdit4("Box Team Color", &conf.visuals().box_team.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_InputRGB | ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
@@ -343,7 +341,7 @@ void menu::render(bool& enabled, conf& conf)
 					}
 					ImGui::EndCombo();
 				}
-				if (ImGui::SliderFloat("Wear", &conf.skin_changer().get_selected().get_selected_sticker().wear, FLT_MIN, 1, "%.5f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat))
+				if (ImGui::SliderFloat("Sticker Wear", &conf.skin_changer().get_selected().get_selected_sticker().wear, FLT_MIN, 1, "%.5f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_NoRoundToFormat))
 					need_to_update = true;
 				if (ImGui::SliderFloat("Scale", &conf.skin_changer().get_selected().get_selected_sticker().scale, 0.1f, 5))
 					need_to_update = true;

@@ -46,7 +46,6 @@ bool hooks::initialize() {
 	const auto do_post_screen_effects_target = reinterpret_cast<void*>(get_virtual(interfaces::clientmode, 44));
 	const auto frame_stage_notify_target = reinterpret_cast<void*>(get_virtual(interfaces::client, 37));
 	const auto dispatch_user_message_target = reinterpret_cast<void*>(get_virtual(interfaces::client, 38));
-	const auto sv_teamid_overhead_get_int_target = reinterpret_cast<void*>(get_virtual(interfaces::console->get_convar("sv_teamid_overhead"), 13));
 	const auto emit_sound_target = reinterpret_cast<void*>(get_virtual(interfaces::engine_sound, 5));
 	const auto end_scene_target = reinterpret_cast<void*>(get_virtual(interfaces::directx, 42));
 	const auto reset_target = reinterpret_cast<void*>(get_virtual(interfaces::directx, 16));
@@ -84,11 +83,8 @@ bool hooks::initialize() {
 	if (MH_CreateHook(frame_stage_notify_target, &frame_stage_notify::hook, reinterpret_cast<void**>(&frame_stage_notify_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize frame_stage_notify");
 
-	if (MH_CreateHook(dispatch_user_message_target, &dispatch_user_message::hook, reinterpret_cast<void**>(&dispatch_user_message_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize dispatch_user_message");
-
-	if (MH_CreateHook(sv_teamid_overhead_get_int_target, &sv_teamid_overhead_get_int::hook, reinterpret_cast<void**>(&sv_teamid_overhead_get_int_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize sv_teamid_overhead_get_int");
+	/*if (MH_CreateHook(dispatch_user_message_target, &dispatch_user_message::hook, reinterpret_cast<void**>(&dispatch_user_message_original)) != MH_OK)
+		throw std::runtime_error("failed to initialize dispatch_user_message");*/
 
 	if (MH_CreateHook(emit_sound_target, &emit_sound::hook, reinterpret_cast<void**>(&emit_sound_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize emit_sound");
@@ -178,7 +174,6 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	csgo::want_to_shoot = cmd->buttons & in_attack;
 	csgo::manual_shoot = csgo::want_to_shoot;
 	csgo::target = {};
-
 	features::bunny_hop(cmd);
 	features::no_duck_delay(cmd);
 	features::reveal_ranks(cmd);
@@ -197,7 +192,6 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	prediction::end();
 	features::quick_switch(cmd);
 	features::resolver::new_tick(cmd);
-
 	math::correct_movement(cmd, old_yaw);
 
 	cmd->forwardmove = std::clamp(cmd->forwardmove, -450.0f, 450.0f);
@@ -278,7 +272,7 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 	frame_stage_notify_original(interfaces::client, stage);
 }
 
-class bf_read
+/*class bf_read
 {
 	uintptr_t base;
 	uintptr_t offset;
@@ -305,43 +299,79 @@ public:
 		skip(str_length + 1);
 		return str;
 	}
+};*/
+class bf_read
+{
+public:
+	uintptr_t base_address;
+	uintptr_t cur_offset;
+
+	bf_read(uintptr_t addr)
+	{
+		base_address = addr;
+		cur_offset = 0;
+	}
+
+	void SetOffset(uintptr_t offset)
+	{
+		cur_offset = offset;
+	}
+
+	void Skip(uintptr_t length)
+	{
+		cur_offset += length;
+	}
+
+	int ReadByte()
+	{
+		auto val = *reinterpret_cast<char*>(base_address + cur_offset);
+		++cur_offset;
+		return val;
+	}
+
+	bool ReadBool()
+	{
+		auto val = *reinterpret_cast<bool*>(base_address + cur_offset);
+		++cur_offset;
+		return val;
+	}
+
+	std::string ReadString()
+	{
+		char buffer[256];
+		auto str_length = *reinterpret_cast<char*>(base_address + cur_offset);
+		++cur_offset;
+		memcpy(buffer, reinterpret_cast<void*>(base_address + cur_offset), str_length > 255 ? 255 : str_length);
+		buffer[str_length > 255 ? 255 : str_length] = '\0';
+		cur_offset += str_length + 1;
+		return std::string(buffer);
+	}
 };
 
 void __stdcall hooks::dispatch_user_message::hook(int type, unsigned int a3, unsigned int length, const void* msg_data)
 {
-	bf_read buf{ uintptr_t(msg_data) };
+	//bf_read buf{ uintptr_t(msg_data) };
 	if (type == cs_um_votestart && interfaces::clientmode->get_hud_chat())
 	{
-		const auto team = buf.read_byte();
-		buf.skip(1);
-		const auto idx = buf.read_byte();
-		buf.skip(1);
-		const auto type = buf.read_byte();
-		interfaces::clientmode->get_hud_chat()->printf(0, "team: %d, ent_idx: %d, vote_type: %d", team, idx, type);
+		bf_read read = bf_read(reinterpret_cast<uintptr_t>(msg_data));
+		read.SetOffset(1);
+		int team = read.ReadByte();//2 - T 3 - CT
+
+		read.Skip(1);
+		int ent_idx = read.ReadByte(); //client ID of initiator
+		read.Skip(1);
+		int vote_type = read.ReadByte();
+		read.Skip(1);
+		/*std::string disp_str = read.ReadString();//#SFUI_vote_kick_player_other
+		std::string details_str = read.ReadString();// target name
+		std::string other_team_str = read.ReadString();//#SFUI_otherteam_vote_kick_player
+		int target_idx = read.ReadByte();
+		int unk = read.ReadByte();//vote type? 
+		*/
+		interfaces::clientmode->get_hud_chat()->printf(0, "team: %d, ent_idx: %d, vote_type: %d", team, ent_idx, vote_type);
 		interfaces::clientmode->get_hud_chat()->printf(0, "local_player_id: %d, team: %d", csgo::local_player->index(), csgo::local_player->team());
 	}
 	dispatch_user_message_original(interfaces::client, type, a3, length, msg_data);
-}
-
-int __fastcall hooks::sv_teamid_overhead_get_int::hook(uintptr_t ecx, uintptr_t edx)
-{
-	static auto ret_to_process_input = uintptr_t(utilities::pattern_scan("client.dll", "85 C0 74 0D E8 ? ? ? ?"));
-	auto ret_addr = uintptr_t(_ReturnAddress());
-
-	if (ret_addr != ret_to_process_input || !csgo::conf->visuals().enemy_overhead_info)
-		return sv_teamid_overhead_get_int_original(ecx, edx);
-
-	const auto base = *reinterpret_cast<uintptr_t*>((reinterpret_cast<uintptr_t>(_AddressOfReturnAddress()) - sizeof(uintptr_t)));
-	auto& is_spectator = *(bool*)(base - 0x18A);
-	is_spectator = true;
-
-	static auto cl_teamid_overhead_maxdist_spec = interfaces::console->get_convar("cl_teamid_overhead_maxdist_spec");
-	cl_teamid_overhead_maxdist_spec->set_value(INT_MAX);
-
-	static auto cl_teamid_overhead_always = interfaces::console->get_convar("cl_teamid_overhead_mode");
-	cl_teamid_overhead_always->set_value(2);
-
-	return 1;
 }
 
 void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel, const char* pSoundEntry, unsigned int nSoundEntryHash, const char* pSample, float flVolume, float flAttenuation, int nSeed, int iFlags, int iPitch, const vec3_t* pOrigin, const vec3_t* pDirection, vec3_t* pUtlVecOrigins, bool bUpdatePositions, float soundtime, int speakerentity, int params)
