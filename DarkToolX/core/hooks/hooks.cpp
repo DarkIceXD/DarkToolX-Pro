@@ -13,7 +13,6 @@ hooks::override_view::fn override_view_original = nullptr;
 hooks::do_post_screen_effects::fn do_post_screen_effects_original = nullptr;
 hooks::frame_stage_notify::fn frame_stage_notify_original = nullptr;
 hooks::dispatch_user_message::fn dispatch_user_message_original = nullptr;
-hooks::sv_teamid_overhead_get_int::fn sv_teamid_overhead_get_int_original = nullptr;
 hooks::emit_sound::fn emit_sound_original = nullptr;
 hooks::end_scene::fn end_scene_original = nullptr;
 hooks::reset::fn reset_original = nullptr;
@@ -386,7 +385,7 @@ void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel
 
 long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 {
-	static auto water_mark = std::string("DarkToolX Pro - beta v13.2 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX Pro - beta v14.0 - UID: ") + std::to_string(csgo::user.uid);
 	IDirect3DStateBlock9* pixel_state = NULL;
 	device->CreateStateBlock(D3DSBT_ALL, &pixel_state);
 	pixel_state->Capture();

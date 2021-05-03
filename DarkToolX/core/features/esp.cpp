@@ -5,7 +5,7 @@ struct entity_data {
 	float health;
 	float armor;
 	char name[128];
-	short weapon_index;
+	const char* weapon_name;
 	bool enemy;
 	bool has_heavy_armor;
 	bool draw;
@@ -54,49 +54,9 @@ bool bounding_box(entity_t* entity, ImVec2& p_min, ImVec2& p_max)
 	return true;
 }
 
-void features::esp::update()
-{
-	if (!csgo::local_player)
-		return;
-
-	if (csgo::conf->visuals().box_esp)
-	{
-		for (auto i = 1; i <= interfaces::globals->max_clients; i++)
-		{
-			auto& data = entities[i];
-			data.draw = false;
-
-			auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
-			if (!entity || !entity->is_player() || entity == csgo::local_player)
-				continue;
-
-			if (!csgo::conf->visuals().dormant_esp && entity->dormant())
-				continue;
-
-			const auto hp = entity->health();
-			if (hp < 1)
-				continue;
-
-			if (!bounding_box(entity, data.min, data.max))
-				continue;
-
-			data.health = static_cast<float>(hp) / entity->max_health();
-			data.armor = entity->armor() / 100.f;
-			const auto weapon = entity->active_weapon();
-			data.weapon_index = weapon ? weapon->item_definition_index() : 0;
-			data.enemy = csgo::local_player->is_enemy(entity);
-			data.has_heavy_armor = entity->has_heavy_armor();
-			player_info_t info;
-			interfaces::engine->get_player_info(entity->index(), &info);
-			strcpy_s(data.name, info.name);
-			data.draw = true;
-		}
-	}
-}
-
 const char* get_weapon_name(short index) {
 	switch (index) {
-	default: return "Weapon";
+	default: return "Knife";
 	case WEAPON_GLOCK: return "Glock-18";
 	case WEAPON_HKP2000: return "P2000";
 	case WEAPON_USP_SILENCER: return "USP-S";
@@ -141,6 +101,46 @@ const char* get_weapon_name(short index) {
 	}
 }
 
+void features::esp::update()
+{
+	if (!csgo::local_player)
+		return;
+
+	if (csgo::conf->visuals().box_esp)
+	{
+		for (auto i = 1; i <= interfaces::globals->max_clients; i++)
+		{
+			auto& data = entities[i];
+			data.draw = false;
+
+			auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
+			if (!entity || !entity->is_player() || entity == csgo::local_player)
+				continue;
+
+			if (!csgo::conf->visuals().dormant_esp && entity->dormant())
+				continue;
+
+			const auto hp = entity->health();
+			if (hp < 1)
+				continue;
+
+			if (!bounding_box(entity, data.min, data.max))
+				continue;
+
+			data.health = static_cast<float>(hp) / entity->max_health();
+			data.armor = entity->armor() / 100.f;
+			const auto weapon = entity->active_weapon();
+			data.weapon_name = get_weapon_name(weapon ? weapon->item_definition_index() : 0);
+			data.enemy = csgo::local_player->is_enemy(entity);
+			data.has_heavy_armor = entity->has_heavy_armor();
+			player_info_t info;
+			interfaces::engine->get_player_info(entity->index(), &info);
+			strcpy_s(data.name, info.name);
+			data.draw = true;
+		}
+	}
+}
+
 void features::esp::draw(ImDrawList* draw_list)
 {
 	if (!csgo::local_player)
@@ -181,9 +181,8 @@ void features::esp::draw(ImDrawList* draw_list)
 		}
 		const auto name_size = ImGui::CalcTextSize(entity.name);
 		draw_list->AddText({ entity.min.x + (entity.max.x - entity.min.x - name_size.x) / 2, entity.max.y - name_size.y - 2 }, IM_COL32_WHITE, entity.name);
-		const auto weapon = get_weapon_name(entity.weapon_index);
-		const auto weapon_size = ImGui::CalcTextSize(weapon);
-		draw_list->AddText({ entity.min.x + (entity.max.x - entity.min.x - weapon_size.x) / 2, entity.min.y + weapon_size.y }, IM_COL32_WHITE, weapon);
+		const auto weapon_size = ImGui::CalcTextSize(entity.weapon_name);
+		draw_list->AddText({ entity.min.x + (entity.max.x - entity.min.x - weapon_size.x) / 2, entity.min.y + weapon_size.y }, IM_COL32_WHITE, entity.weapon_name);
 	}
 
 	if (csgo::conf->visuals().show_aimbot_spot)

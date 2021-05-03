@@ -36,11 +36,6 @@ namespace hooks {
 		void __stdcall hook(int type, unsigned int a3, unsigned int length, const void* msg_data);
 	};
 
-	namespace sv_teamid_overhead_get_int {
-		using fn = int(__fastcall*)(uintptr_t, uintptr_t);
-		int __fastcall hook(uintptr_t ecx, uintptr_t edx);
-	};
-
 	namespace emit_sound {
 		using fn = void(__thiscall*)(i_engine_sound*, void*, int, int, const char*, unsigned int, const char*, float, float, int, int, int, const vec3_t*, const vec3_t*, vec3_t*, bool, float, int, int);
 		void __stdcall hook(void* filter, int iEntIndex, int iChannel, const char* pSoundEntry, unsigned int nSoundEntryHash, const char* pSample, float flVolume, float flAttenuation, int nSeed, int iFlags, int iPitch, const vec3_t* pOrigin, const vec3_t* pDirection, vec3_t* pUtlVecOrigins, bool bUpdatePositions, float soundtime, int speakerentity, int params);
