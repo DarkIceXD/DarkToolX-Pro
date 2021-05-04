@@ -57,13 +57,13 @@ namespace config {
 		int selection{ 0 };
 		std::array<rgb, 11> glow;
 		bool health_based{ true };
-		bool enemy_overhead_info{ true };
 		bool esp{ false };
 		bool dormant_esp{ true };
-		bool show_aimbot_spot{ false };
+		bool aimbot_spot{ false };
 		rgb box_team{ 0, 0, 1, 1 };
 		rgb box_enemy{ 1, 0, 0, 1 };
-		rgb skeleton{ 1, 1, 1, 1 };
+		rgb skeleton_team{ 1, 1, 1, 1 };
+		rgb skeleton_enemy{ 1, 1, 1, 1 };
 		rgb step_color{ 0, 0.5f, 1, 1, false };
 		float step_max_radius{ 500 };
 		float step_lifetime{ 1 };
@@ -139,6 +139,6 @@ namespace config {
 				return nullptr;
 			return &glow.at(i);
 		}
-		JSON_SERIALIZE(visuals, conf_name, glow, health_based, enemy_overhead_info, esp, dormant_esp, show_aimbot_spot, box_team, box_team, step_color, step_max_radius, step_lifetime, step_width, bullet_trace_local_player, bullet_trace_team, bullet_trace_enemy, bullet_trace_lifetime)
+		JSON_SERIALIZE(visuals, conf_name, glow, health_based, esp, dormant_esp, aimbot_spot, box_team, box_enemy, skeleton_team, skeleton_enemy, step_color, step_max_radius, step_lifetime, step_width, bullet_trace_local_player, bullet_trace_team, bullet_trace_enemy, bullet_trace_lifetime)
 	};
 };

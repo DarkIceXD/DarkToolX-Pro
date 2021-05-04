@@ -121,7 +121,8 @@ void features::esp::draw(ImDrawList* draw_list)
 
 	const auto team_color = csgo::conf->visuals().box_team.to_u32();
 	const auto enemy_color = csgo::conf->visuals().box_enemy.to_u32();
-	const auto skeleton_color = csgo::conf->visuals().skeleton.to_u32();
+	const auto skeleton_team_color = csgo::conf->visuals().skeleton_team.to_u32();
+	const auto skeleton_enemy_color = csgo::conf->visuals().skeleton_enemy.to_u32();
 	for (const auto& entity : entities)
 	{
 		if (!entity.draw)
@@ -166,11 +167,11 @@ void features::esp::draw(ImDrawList* draw_list)
 			if (!math::world_to_screen(bone.from, bone_point) || !math::world_to_screen(bone.to, parent_point))
 				continue;
 
-			draw_list->AddLine({ bone_point.x, bone_point.y }, { parent_point.x, parent_point.y }, skeleton_color);
+			draw_list->AddLine({ bone_point.x, bone_point.y }, { parent_point.x, parent_point.y }, entity.enemy ? skeleton_enemy_color : skeleton_team_color);
 		}
 	}
 
-	if (csgo::conf->visuals().show_aimbot_spot)
+	if (csgo::conf->visuals().aimbot_spot)
 	{
 		if (csgo::target.entity)
 		{
