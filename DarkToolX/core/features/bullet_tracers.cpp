@@ -17,7 +17,7 @@ static void draw_trace(const bullet_data& bullet, const config::rgb& rgb, const 
 	beam_info.m_vecEnd = bullet.end;
 	beam_info.m_flLife = lifetime;
 	beam_info.m_flFadeLength = 0.1f;
-	beam_info.m_flAmplitude = 2.3f;
+	beam_info.m_flAmplitude = 0;
 	beam_info.m_nSegments = 2;
 	beam_info.m_flRed = rgb.r * 255;
 	beam_info.m_flGreen = rgb.g * 255;
@@ -27,8 +27,8 @@ static void draw_trace(const bullet_data& bullet, const config::rgb& rgb, const 
 	beam_info.m_flSpeed = 0.2f;
 	beam_info.m_nStartFrame = 0;
 	beam_info.m_flFrameRate = 0.f;
-	beam_info.m_flWidth = 3.5f;
-	beam_info.m_flEndWidth = 1.1f;
+	beam_info.m_flWidth = 2.f;
+	beam_info.m_flEndWidth = 2.f;
 
 	auto beam = interfaces::render_beams->create_beam_point(beam_info);
 	if (beam)
