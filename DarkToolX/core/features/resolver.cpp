@@ -59,33 +59,12 @@ void features::resolver::weapon_fire(i_game_event* event)
 	if (!csgo::local_player)
 		return;
 
-	player_info_t info;
-	interfaces::engine->get_player_info(csgo::local_player->index(), &info);
-	if (event->get_int("userid") != info.userid)
+	const auto local_player_index = csgo::local_player->index();
+	if (event->get_int("userid") != local_player_index)
 		return;
 
 	missed_shots[last_shots.front()]++;
 	last_shots.pop_front();
-}
-
-void features::resolver::bullet_impact(i_game_event* event)
-{
-	if (!csgo::target.entity)
-		return;
-
-	if (!csgo::local_player)
-		return;
-
-	if (!new_shot)
-		return;
-
-	player_info_t info;
-	interfaces::engine->get_player_info(csgo::local_player->index(), &info);
-	if (event->get_int("userid") != info.userid)
-		return;
-
-
-	new_shot = false;
 }
 
 void features::resolver::player_hurt(i_game_event* event)
@@ -93,11 +72,11 @@ void features::resolver::player_hurt(i_game_event* event)
 	if (!csgo::local_player)
 		return;
 
-	player_info_t info;
-	interfaces::engine->get_player_info(csgo::local_player->index(), &info);
-	const auto victim = event->get_int("userid");
-	if (event->get_int("attacker") != info.userid || victim == info.userid)
+	const auto local_player_index = csgo::local_player->index();
+	const auto victim = interfaces::engine->get_player_for_user_id(event->get_int("userid"));
+	if (interfaces::engine->get_player_for_user_id(event->get_int("attacker")) != local_player_index ||
+		victim == local_player_index)
 		return;
 
-	missed_shots[interfaces::engine->get_player_for_user_id(victim)]--;
+	missed_shots[victim]--;
 }
