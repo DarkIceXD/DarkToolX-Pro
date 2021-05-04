@@ -15,9 +15,9 @@ constexpr float get_delta(const float max_delta, const int misses)
 	case 2:
 		return max_delta;
 	case 3:
-		return -max_delta / 2;
+		return -(std::min)(max_delta, 35.f);
 	case 4:
-		return max_delta / 2;
+		return (std::min)(max_delta, 35.f);
 	}
 }
 
@@ -46,7 +46,7 @@ void features::resolver::run()
 		if (!anim_state)
 			continue;
 
-		const auto new_goal_feet_yaw = entity->eye_angles().y + get_delta(entity->max_desync_angle(), missed_shots[i]);
+		const auto new_goal_feet_yaw = entity->eye_angles().y + get_delta(std::abs(entity->max_desync_angle()), missed_shots[i]);
 		anim_state->goal_feet_yaw = std::isfinite(new_goal_feet_yaw) ? std::remainder(new_goal_feet_yaw, 360.0f) : 0.0f;
 	}
 }
