@@ -1,11 +1,15 @@
 #include "features.hpp"
 
 struct entity_data {
+	struct bone {
+		vec3_t from, to;
+	};
 	ImVec2 min, max;
 	float health;
 	float armor;
 	char name[128];
 	const char* weapon_name;
+	std::vector<bone> bones;
 	bool enemy;
 	bool has_heavy_armor;
 	bool draw;
@@ -106,7 +110,7 @@ void features::esp::update()
 	if (!csgo::local_player)
 		return;
 
-	if (csgo::conf->visuals().box_esp)
+	if (csgo::conf->visuals().esp)
 	{
 		for (auto i = 1; i <= interfaces::globals->max_clients; i++)
 		{
@@ -136,6 +140,22 @@ void features::esp::update()
 			player_info_t info;
 			interfaces::engine->get_player_info(entity->index(), &info);
 			strcpy_s(data.name, info.name);
+
+			data.bones.clear();
+			matrix_t boneMatrices[MAXSTUDIOBONES];
+			if (entity->setup_bones(boneMatrices, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, 0))
+			{
+				const auto studio_model = interfaces::model_info->get_studio_model(entity->model());
+				for (int i = 0; i < studio_model->bones_count; i++) {
+					const auto bone = studio_model->bone(i);
+
+					if (!bone || bone->parent == -1 || !(bone->flags & BONE_USED_BY_HITBOX))
+						continue;
+
+					data.bones.push_back({ { boneMatrices[i][0][3], boneMatrices[i][1][3], boneMatrices[i][2][3] }, { boneMatrices[bone->parent][0][3], boneMatrices[bone->parent][1][3], boneMatrices[bone->parent][2][3] } });
+				}
+			}
+
 			data.draw = true;
 		}
 	}
@@ -148,6 +168,7 @@ void features::esp::draw(ImDrawList* draw_list)
 
 	const auto team_color = csgo::conf->visuals().box_team.to_u32();
 	const auto enemy_color = csgo::conf->visuals().box_enemy.to_u32();
+	const auto skeleton_color = csgo::conf->visuals().skeleton.to_u32();
 	for (const auto& entity : entities)
 	{
 		if (!entity.draw)
@@ -183,16 +204,22 @@ void features::esp::draw(ImDrawList* draw_list)
 		draw_list->AddText({ entity.min.x + (entity.max.x - entity.min.x - name_size.x) / 2, entity.max.y - name_size.y - 2 }, IM_COL32_WHITE, entity.name);
 		const auto weapon_size = ImGui::CalcTextSize(entity.weapon_name);
 		draw_list->AddText({ entity.min.x + (entity.max.x - entity.min.x - weapon_size.x) / 2, entity.min.y + weapon_size.y }, IM_COL32_WHITE, entity.weapon_name);
+		for (const auto& bone : entity.bones)
+		{
+			vec2_t bone_point, parent_point;
+			if (!math::world_to_screen(bone.from, bone_point) || !math::world_to_screen(bone.to, parent_point))
+				continue;
+
+			draw_list->AddLine({ bone_point.x, bone_point.y }, { parent_point.x, parent_point.y }, skeleton_color);
+		}
 	}
 
 	if (csgo::conf->visuals().show_aimbot_spot)
 	{
 		if (csgo::target.entity)
 		{
-			const auto forward = math::angle_vector(csgo::target.angle) * 10000;
-			const auto end = csgo::local_player->get_eye_pos() + forward;
 			vec2_t end_screen;
-			if (math::world_to_screen(end, end_screen))
+			if (math::world_to_screen(csgo::target.aim_spot, end_screen))
 			{
 				draw_list->AddLine({ end_screen.x - 5, end_screen.y - 5 }, { end_screen.x + 5, end_screen.y + 5 }, IM_COL32_WHITE);
 				draw_list->AddLine({ end_screen.x - 5, end_screen.y + 5 }, { end_screen.x + 5, end_screen.y - 5 }, IM_COL32_WHITE);

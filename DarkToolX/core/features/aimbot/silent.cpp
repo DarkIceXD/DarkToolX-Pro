@@ -17,6 +17,7 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 			target.entity = data.entity;
 			target.damage = static_cast<int>(data.damage);
 			target.angle = new_viewangles;
+			target.aim_spot = hitbox_position;
 			target.lethal = target.damage >= hp;
 			if (target.lethal)
 				break;

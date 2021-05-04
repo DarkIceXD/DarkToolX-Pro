@@ -14,6 +14,7 @@
 struct best_target {
 	player_t* entity;
 	vec3_t angle;
+	vec3_t aim_spot;
 	int damage;
 	float fov;
 	int best_record;
