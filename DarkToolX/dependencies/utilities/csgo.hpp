@@ -31,6 +31,7 @@ namespace csgo {
 	inline conf* conf = nullptr;
 	inline bool want_to_shoot = false;
 	inline bool manual_shoot = false;
+	inline bool didnt_shoot_due_to_hitchance = false;
 	inline License::User user;
 	inline bool should_animate = true;
 	inline vec3_t real = {};

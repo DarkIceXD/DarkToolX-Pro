@@ -170,9 +170,11 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	bool& send_packet = *reinterpret_cast<bool*>(*frame_pointer - 0x1C);
 
 	const auto old_yaw = cmd->viewangles.y;
-	csgo::want_to_shoot = cmd->buttons & in_attack;
-	csgo::manual_shoot = csgo::want_to_shoot;
+	csgo::want_to_shoot = csgo::manual_shoot = cmd->buttons & in_attack;
 	csgo::target = {};
+	if (csgo::didnt_shoot_due_to_hitchance || (cmd->forwardmove == 0 && cmd->sidemove == 0))
+		features::util::auto_stop(cmd);
+	csgo::didnt_shoot_due_to_hitchance = false;
 	features::bunny_hop(cmd);
 	features::no_duck_delay(cmd);
 	features::reveal_ranks(cmd);
@@ -365,7 +367,7 @@ void __stdcall hooks::dispatch_user_message::hook(int type, unsigned int a3, uns
 		std::string details_str = read.ReadString();// target name
 		std::string other_team_str = read.ReadString();//#SFUI_otherteam_vote_kick_player
 		int target_idx = read.ReadByte();
-		int unk = read.ReadByte();//vote type? 
+		int unk = read.ReadByte();//vote type?
 		*/
 		interfaces::clientmode->get_hud_chat()->printf(0, "team: %d, ent_idx: %d, vote_type: %d", team, ent_idx, vote_type);
 		interfaces::clientmode->get_hud_chat()->printf(0, "local_player_id: %d, team: %d", csgo::local_player->index(), csgo::local_player->team());
@@ -385,7 +387,7 @@ void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel
 
 long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 {
-	static auto water_mark = std::string("DarkToolX Pro - beta v14.8 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX Pro - beta v15.0 - UID: ") + std::to_string(csgo::user.uid);
 	IDirect3DStateBlock9* pixel_state = NULL;
 	device->CreateStateBlock(D3DSBT_ALL, &pixel_state);
 	pixel_state->Capture();

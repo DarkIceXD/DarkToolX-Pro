@@ -93,32 +93,22 @@ static best_target get_best_target(const vec3_t& viewangles, const weapon_info_t
 static bool is_visible(player_t* entity, vec3_t vStart, vec3_t vEnd)
 {
 	matrix_t matrix[MAXSTUDIOBONES];
-
 	entity->setup_bones(matrix, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, interfaces::globals->cur_time);
-
 	auto pStudioModel = interfaces::model_info->get_studio_model(entity->model());
-
 	auto set = pStudioModel->hitbox_set(entity->hitbox_set());
-
 	for (int i = 0; i < set->hitbox_count; i++)
 	{
 		auto hitbox = set->hitbox(i);
-
-		auto bone = hitbox->bone;
-
 		auto vMaxUntransformed = hitbox->maxs;
 		auto vMinUntransformed = hitbox->mins;
-
 		if (hitbox->radius != -1.f)
 		{
 			vMinUntransformed -= vec3_t(hitbox->radius, hitbox->radius, hitbox->radius);
 			vMaxUntransformed += vec3_t(hitbox->radius, hitbox->radius, hitbox->radius);
 		}
-
 		if (math::IntersectLineWithOBB(vStart, vEnd, vMinUntransformed, vMaxUntransformed, matrix[hitbox->bone]))
 			return true;
 	}
-
 	return false;
 }
 
@@ -145,9 +135,6 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 			return;
 		}
 
-		if (csgo::conf->aimbot().auto_scope && weapon_data->weapon_type == WEAPONTYPE_SNIPER_RIFLE && !csgo::local_player->is_scoped())
-			cmd->buttons |= in_attack2;
-
 		if (csgo::target.best_record)
 			features::backtrack::restore_record(csgo::target.entity, csgo::target.best_record);
 
@@ -161,7 +148,10 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 		}
 		else
 		{
-			features::util::auto_stop(cmd);
+			if (csgo::conf->aimbot().auto_scope && weapon_data->weapon_type == WEAPONTYPE_SNIPER_RIFLE && !csgo::local_player->is_scoped())
+				cmd->buttons |= in_attack2;
+
+			csgo::didnt_shoot_due_to_hitchance = true;
 		}
 		if (csgo::target.best_record)
 			features::backtrack::restore_record(csgo::target.entity, 0);
