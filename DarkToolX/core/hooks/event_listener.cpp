@@ -42,9 +42,6 @@ void event_listener::fire_game_event(i_game_event* event)
 	case fnv::hash("weapon_fire"):
 		features::resolver::weapon_fire(event);
 		break;
-	case fnv::hash("start_vote"):
-		features::logs::start_vote(event);
-		break;
 	case fnv::hash("vote_cast"):
 		features::logs::vote_cast(event);
 		break;

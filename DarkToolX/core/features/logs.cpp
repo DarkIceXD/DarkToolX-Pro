@@ -1,16 +1,26 @@
 #include "features.hpp"
 
 constexpr auto darktoolx = "[""\x03""DarkToolX\x01]\x01 ";
-constexpr char team(const bool is_team)
-{
-	constexpr auto team_color = '\x0C';
-	constexpr auto enemy_color = '\x07';
-	return is_team ? team_color : enemy_color;
-}
 
-constexpr bool is_enabled(const config::log& log, const bool team, const bool is_local_player)
+struct player_event {
+	int id;
+	player_t* entity;
+	bool is_enemy;
+	constexpr char team_color() const
+	{
+		constexpr auto team_color = '\x0C';
+		constexpr auto enemy_color = '\x07';
+		return is_enemy ? enemy_color : team_color;
+	}
+};
+
+static player_event get_player(const int user_id)
 {
-	return team ? (is_local_player ? log.local_player : log.team) : log.enemy;
+	player_event p;
+	p.id = interfaces::engine->get_player_for_user_id(user_id);
+	p.entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(p.id));
+	p.is_enemy = csgo::local_player->is_enemy(p.entity);
+	return p;
 }
 
 void features::logs::player_hurt(i_game_event* event)
@@ -26,19 +36,15 @@ void features::logs::player_hurt(i_game_event* event)
 	if (!chat)
 		return;
 
-	const auto attacker_id = interfaces::engine->get_player_for_user_id(event->get_int("attacker"));
-	const auto attacker = static_cast<player_t*>(interfaces::entity_list->get_client_entity(attacker_id));
-	const auto is_attacker_team = !csgo::local_player->is_enemy(attacker);
-	if (!is_enabled(log, is_attacker_team, attacker == csgo::local_player))
+	const auto attacker = get_player(event->get_int("attacker"));
+	if (!log.is_enabled(!attacker.is_enemy, attacker.entity == csgo::local_player))
 		return;
 
-	const auto victim_id = interfaces::engine->get_player_for_user_id(event->get_int("userid"));
-	const auto victim = static_cast<player_t*>(interfaces::entity_list->get_client_entity(victim_id));
-	const auto is_victim_team = !csgo::local_player->is_enemy(victim);
+	const auto victim = get_player(event->get_int("userid"));
 	player_info_t attacker_info, victim_info;
-	interfaces::engine->get_player_info(attacker_id, &attacker_info);
-	interfaces::engine->get_player_info(victim_id, &victim_info);
-	chat->printf(0, "%s%c%s\x01 hit %c%s\x01 for %d hp (%d hp left)", darktoolx, team(is_attacker_team), attacker_id ? attacker_info.name : "\x06World", team(is_victim_team), victim_info.name, event->get_int("dmg_health"), event->get_int("health"));
+	interfaces::engine->get_player_info(attacker.id, &attacker_info);
+	interfaces::engine->get_player_info(victim.id, &victim_info);
+	chat->printf(0, "%s%c%s\x01 hit %c%s\x01 for %d hp (%d hp left)", darktoolx, attacker.team_color(), attacker.id ? attacker_info.name : "\x06World", victim.team_color(), victim_info.name, event->get_int("dmg_health"), event->get_int("health"));
 }
 
 void features::logs::player_death(i_game_event* event)
@@ -54,53 +60,15 @@ void features::logs::player_death(i_game_event* event)
 	if (!chat)
 		return;
 
-	const auto attacker_id = interfaces::engine->get_player_for_user_id(event->get_int("attacker"));
-	const auto attacker = static_cast<player_t*>(interfaces::entity_list->get_client_entity(attacker_id));
-	const auto is_attacker_team = !csgo::local_player->is_enemy(attacker);
-	if (!is_enabled(log, is_attacker_team, attacker == csgo::local_player))
+	const auto attacker = get_player(event->get_int("attacker"));
+	if (!log.is_enabled(!attacker.is_enemy, attacker.entity == csgo::local_player))
 		return;
 
-	const auto victim_id = interfaces::engine->get_player_for_user_id(event->get_int("userid"));
-	const auto victim = static_cast<player_t*>(interfaces::entity_list->get_client_entity(victim_id));
-	const auto is_victim_team = !csgo::local_player->is_enemy(victim);
+	const auto victim = get_player(event->get_int("userid"));
 	player_info_t attacker_info, victim_info;
-	interfaces::engine->get_player_info(attacker_id, &attacker_info);
-	interfaces::engine->get_player_info(victim_id, &victim_info);
-	chat->printf(0, "%s%c%s\x01 killed %c%s", darktoolx, team(is_attacker_team), attacker_id ? attacker_info.name : "\x06World", team(is_victim_team), victim_info.name);
-}
-
-void features::logs::start_vote(i_game_event* event)
-{
-	if (!csgo::conf->logs().votes)
-		return;
-
-	if (!csgo::local_player)
-		return;
-
-	const auto chat = interfaces::clientmode->get_hud_chat();
-	if (!chat)
-		return;
-
-	const auto vote_starter_id = interfaces::engine->get_player_for_user_id(event->get_int("userid"));
-	const auto vote_starter = static_cast<player_t*>(interfaces::entity_list->get_client_entity(vote_starter_id));
-	const auto is_vote_starter_team = !csgo::local_player->is_enemy(vote_starter);
-	player_info_t vote_starter_info;
-	interfaces::engine->get_player_info(vote_starter_id, &vote_starter_info);
-	const auto type = event->get_int("type");
-	if (type)
-	{
-		const auto victim_id = interfaces::engine->get_player_for_user_id(event->get_int("vote_parameter"));
-		const auto victim = static_cast<player_t*>(interfaces::entity_list->get_client_entity(victim_id));
-		const auto is_victim_team = !csgo::local_player->is_enemy(victim);
-		player_info_t victim_info;
-		interfaces::engine->get_player_info(victim_id, &victim_info);
-		chat->printf(0, "%s%c%s\x01 started a votekick against %c%s", darktoolx, team(is_vote_starter_team), vote_starter_info.name, team(is_victim_team), victim_info.name);
-	}
-	else
-	{
-		chat->printf(0, "%s%c%s\x01 started a vote to surrender", darktoolx, team(is_vote_starter_team), vote_starter_info.name);
-	}
-	interfaces::clientmode->get_hud_chat()->printf(0, "%sType: %d", darktoolx, type);
+	interfaces::engine->get_player_info(attacker.id, &attacker_info);
+	interfaces::engine->get_player_info(victim.id, &victim_info);
+	chat->printf(0, "%s%c%s\x01 killed %c%s", darktoolx, attacker.team_color(), attacker.id ? attacker_info.name : "\x06World", victim.team_color(), victim_info.name);
 }
 
 void features::logs::vote_cast(i_game_event* event)
@@ -115,13 +83,14 @@ void features::logs::vote_cast(i_game_event* event)
 	if (!chat)
 		return;
 
-	const auto voter_id = event->get_int("entityid");
-	const auto voter = static_cast<player_t*>(interfaces::entity_list->get_client_entity(voter_id));
-	const auto is_voter_team = !csgo::local_player->is_enemy(voter);
+	player_event voter;
+	voter.id = event->get_int("entityid");
+	voter.entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(voter.id));
+	voter.is_enemy = csgo::local_player->is_enemy(voter.entity);
 	player_info_t voter_info;
-	interfaces::engine->get_player_info(voter_id, &voter_info);
+	interfaces::engine->get_player_info(voter.id, &voter_info);
 	const auto voted_yes = event->get_int("vote_option") == 0;
-	chat->printf(0, "%s%c%s\x01 voted %s", darktoolx, team(is_voter_team), voter_info.name, voted_yes ? "\x04yes" : "\x02no");
+	chat->printf(0, "%s%c%s\x01 voted %s", darktoolx, voter.team_color(), voter_info.name, voted_yes ? "\x04yes" : "\x02no");
 }
 
 void features::logs::item_pickup(i_game_event* event)
@@ -137,13 +106,11 @@ void features::logs::item_pickup(i_game_event* event)
 	if (!chat)
 		return;
 
-	const auto pickuper_id = interfaces::engine->get_player_for_user_id(event->get_int("userid"));
-	const auto pickuper = static_cast<player_t*>(interfaces::entity_list->get_client_entity(pickuper_id));
-	const auto is_pickuper_team = !csgo::local_player->is_enemy(pickuper);
-	if (!is_enabled(log, is_pickuper_team, pickuper == csgo::local_player))
+	const auto pickuper = get_player(event->get_int("userid"));
+	if (!log.is_enabled(!pickuper.is_enemy, pickuper.entity == csgo::local_player))
 		return;
 
 	player_info_t pickuper_info;
-	interfaces::engine->get_player_info(pickuper_id, &pickuper_info);
-	chat->printf(0, "%s%c%s\x01 picked up %s", darktoolx, team(is_pickuper_team), pickuper_id ? pickuper_info.name : "\x06World", weapon_t::get_weapon_name(event->get_int("defindex")));
+	interfaces::engine->get_player_info(pickuper.id, &pickuper_info);
+	chat->printf(0, "%s%c%s\x01 picked up %s", darktoolx, pickuper.team_color(), pickuper_info.name, weapon_t::get_weapon_name(event->get_int("defindex")));
 }

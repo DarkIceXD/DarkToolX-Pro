@@ -62,7 +62,6 @@ namespace features {
 	namespace logs {
 		void player_hurt(i_game_event* event);
 		void player_death(i_game_event* event);
-		void start_vote(i_game_event* event);
 		void vote_cast(i_game_event* event);
 		void item_pickup(i_game_event* event);
 	}

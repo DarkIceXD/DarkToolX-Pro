@@ -8,10 +8,9 @@ void features::events::update_stattrak(i_game_event* event)
 	if (!csgo::local_player)
 		return;
 
-	player_info_t info;
-	interfaces::engine->get_player_info(csgo::local_player->index(), &info);
-
-	if (event->get_int("attacker") != info.userid || event->get_int("userid") == info.userid)
+	const auto local_player_index = csgo::local_player->index();
+	if (interfaces::engine->get_player_for_user_id(event->get_int("attacker")) != local_player_index ||
+		interfaces::engine->get_player_for_user_id(event->get_int("userid")) == local_player_index)
 		return;
 
 	const auto weapon = csgo::local_player->active_weapon();

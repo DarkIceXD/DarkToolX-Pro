@@ -15,7 +15,7 @@ namespace config {
 		bool enabled{ false };
 		int type{ 0 };
 		int key_bind{ 0 };
-		void run()
+		constexpr void run()
 		{
 			if (type == 1 && GetAsyncKeyState(key_bind) & 1)
 				enabled = !enabled;

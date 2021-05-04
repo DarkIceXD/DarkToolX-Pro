@@ -7,6 +7,10 @@ namespace config {
 		bool local_player{ false };
 		bool team{ false };
 		bool enemy{ false };
+		constexpr bool is_enabled(const bool team, const bool is_local_player) const
+		{
+			return team ? (is_local_player ? this->local_player : this->team) : this->enemy;
+		}
 		JSON_SERIALIZE(log, enabled, local_player, team, enemy)
 	};
 
