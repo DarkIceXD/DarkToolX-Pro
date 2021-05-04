@@ -19,7 +19,8 @@ namespace config {
 		std::string conf_name{ "New Config" };
 		log deaths{ };
 		log damage{ };
+		log pickup{ };
 		bool votes{ false };
-		JSON_SERIALIZE(logs, conf_name, deaths, damage, votes)
+		JSON_SERIALIZE(logs, conf_name, deaths, damage, pickup, votes)
 	};
 };

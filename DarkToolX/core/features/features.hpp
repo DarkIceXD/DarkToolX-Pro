@@ -64,6 +64,7 @@ namespace features {
 		void player_death(i_game_event* event);
 		void start_vote(i_game_event* event);
 		void vote_cast(i_game_event* event);
+		void item_pickup(i_game_event* event);
 	}
 	namespace resolver {
 		void new_tick(c_usercmd* cmd);

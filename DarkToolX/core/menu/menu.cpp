@@ -570,6 +570,15 @@ void menu::render(bool& enabled, conf& conf)
 				ImGui::Checkbox("Enemy", &conf.logs().damage.enemy);
 				ImGui::PopID();
 				ImGui::Separator();
+				ImGui::PushID(2);
+				ImGui::Checkbox("Pickup", &conf.logs().pickup.enabled);
+				ImGui::Checkbox("Local Player", &conf.logs().pickup.local_player);
+				ImGui::SameLine();
+				ImGui::Checkbox("Team", &conf.logs().pickup.team);
+				ImGui::SameLine();
+				ImGui::Checkbox("Enemy", &conf.logs().pickup.enemy);
+				ImGui::PopID();
+				ImGui::Separator();
 				ImGui::Checkbox("Votes", &conf.logs().votes);
 				ImGui::EndTabItem();
 			}

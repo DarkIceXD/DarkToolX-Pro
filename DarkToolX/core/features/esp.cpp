@@ -58,53 +58,6 @@ bool bounding_box(entity_t* entity, ImVec2& p_min, ImVec2& p_max)
 	return true;
 }
 
-const char* get_weapon_name(short index) {
-	switch (index) {
-	default: return "Knife";
-	case WEAPON_GLOCK: return "Glock-18";
-	case WEAPON_HKP2000: return "P2000";
-	case WEAPON_USP_SILENCER: return "USP-S";
-	case WEAPON_ELITE: return "Dual Berettas";
-	case WEAPON_P250: return "P250";
-	case WEAPON_TEC9: return "Tec-9";
-	case WEAPON_FIVESEVEN: return "Five-SeveN";
-	case WEAPON_CZ75A: return "CZ75-Auto";
-	case WEAPON_DEAGLE: return "Desert Eagle";
-	case WEAPON_REVOLVER: return "R8 Revolver";
-	case WEAPON_MAC10: return "MAC-10";
-	case WEAPON_MP9: return "MP9";
-	case WEAPON_MP7: return "MP7";
-	case WEAPON_MP5_SD: return "MP5-SD";
-	case WEAPON_UMP45: return "UMP-45";
-	case WEAPON_P90: return "P90";
-	case WEAPON_BIZON: return "PP-Bizon";
-	case WEAPON_GALILAR: return "Galil AR";
-	case WEAPON_FAMAS: return "FAMAS";
-	case WEAPON_AK47: return "AK-47";
-	case WEAPON_M4A1: return "M4A4";
-	case WEAPON_M4A1_SILENCER: return "M4A1-S";
-	case WEAPON_SG556: return "SG 553";
-	case WEAPON_AUG: return "AUG";
-	case WEAPON_SSG08: return "SSG 08";
-	case WEAPON_AWP: return "AWP";
-	case WEAPON_G3SG1: return "G3SG1";
-	case WEAPON_SCAR20: return "SCAR-20";
-	case WEAPON_NOVA: return "Nova";
-	case WEAPON_XM1014: return "XM1014";
-	case WEAPON_SAWEDOFF: return "Sawed-Off";
-	case WEAPON_MAG7: return "MAG-7";
-	case WEAPON_M249: return "M249";
-	case WEAPON_NEGEV: return "Negev";
-	case WEAPON_FLASHBANG: return "Flashbang";
-	case WEAPON_HEGRENADE: return "HE Grenade";
-	case WEAPON_SMOKEGRENADE: return "Smoke Grenade";
-	case WEAPON_MOLOTOV: return "Molotov";
-	case WEAPON_DECOY: return "Decoy Grenade";
-	case WEAPON_INCGRENADE: return "Incendiary";
-	case WEAPON_C4: return "C4";
-	}
-}
-
 void features::esp::update()
 {
 	if (!csgo::local_player)
@@ -134,7 +87,7 @@ void features::esp::update()
 			data.health = static_cast<float>(hp) / entity->max_health();
 			data.armor = entity->armor() / 100.f;
 			const auto weapon = entity->active_weapon();
-			data.weapon_name = get_weapon_name(weapon ? weapon->item_definition_index() : 0);
+			data.weapon_name = weapon ? weapon->get_weapon_name() : nullptr;
 			data.enemy = csgo::local_player->is_enemy(entity);
 			data.has_heavy_armor = entity->has_heavy_armor();
 			player_info_t info;
@@ -202,8 +155,11 @@ void features::esp::draw(ImDrawList* draw_list)
 		}
 		const auto name_size = ImGui::CalcTextSize(entity.name);
 		draw_list->AddText({ entity.min.x + (entity.max.x - entity.min.x - name_size.x) / 2, entity.max.y - name_size.y - 2 }, IM_COL32_WHITE, entity.name);
-		const auto weapon_size = ImGui::CalcTextSize(entity.weapon_name);
-		draw_list->AddText({ entity.min.x + (entity.max.x - entity.min.x - weapon_size.x) / 2, entity.min.y + weapon_size.y }, IM_COL32_WHITE, entity.weapon_name);
+		if (entity.weapon_name)
+		{
+			const auto weapon_size = ImGui::CalcTextSize(entity.weapon_name);
+			draw_list->AddText({ entity.min.x + (entity.max.x - entity.min.x - weapon_size.x) / 2, entity.min.y + weapon_size.y }, IM_COL32_WHITE, entity.weapon_name);
+		}
 		for (const auto& bone : entity.bones)
 		{
 			vec2_t bone_point, parent_point;

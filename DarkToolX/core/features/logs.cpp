@@ -38,7 +38,7 @@ void features::logs::player_hurt(i_game_event* event)
 	player_info_t attacker_info, victim_info;
 	interfaces::engine->get_player_info(attacker_id, &attacker_info);
 	interfaces::engine->get_player_info(victim_id, &victim_info);
-	chat->printf(0, "%s%c%s\x01 hit %c%s\x01 for %d (%d hp left)", darktoolx, team(is_attacker_team), attacker_id ? attacker_info.name : "\x06World", team(is_victim_team), victim_info.name, event->get_int("dmg_health"), event->get_int("health"));
+	chat->printf(0, "%s%c%s\x01 hit %c%s\x01 for %d hp (%d hp left)", darktoolx, team(is_attacker_team), attacker_id ? attacker_info.name : "\x06World", team(is_victim_team), victim_info.name, event->get_int("dmg_health"), event->get_int("health"));
 }
 
 void features::logs::player_death(i_game_event* event)
@@ -108,6 +108,9 @@ void features::logs::vote_cast(i_game_event* event)
 	if (!csgo::conf->logs().votes)
 		return;
 
+	if (!csgo::local_player)
+		return;
+
 	const auto chat = interfaces::clientmode->get_hud_chat();
 	if (!chat)
 		return;
@@ -119,4 +122,28 @@ void features::logs::vote_cast(i_game_event* event)
 	interfaces::engine->get_player_info(voter_id, &voter_info);
 	const auto voted_yes = event->get_int("vote_option") == 0;
 	chat->printf(0, "%s%c%s\x01 voted %s", darktoolx, team(is_voter_team), voter_info.name, voted_yes ? "\x04yes" : "\x02no");
+}
+
+void features::logs::item_pickup(i_game_event* event)
+{
+	const auto& log = csgo::conf->logs().pickup;
+	if (!log.enabled)
+		return;
+
+	if (!csgo::local_player)
+		return;
+	
+	const auto chat = interfaces::clientmode->get_hud_chat();
+	if (!chat)
+		return;
+
+	const auto pickuper_id = interfaces::engine->get_player_for_user_id(event->get_int("userid"));
+	const auto pickuper = static_cast<player_t*>(interfaces::entity_list->get_client_entity(pickuper_id));
+	const auto is_pickuper_team = !csgo::local_player->is_enemy(pickuper);
+	if (!is_enabled(log, is_pickuper_team, pickuper == csgo::local_player))
+		return;
+
+	player_info_t pickuper_info;
+	interfaces::engine->get_player_info(pickuper_id, &pickuper_info);
+	chat->printf(0, "%s%c%s\x01 picked up %s", darktoolx, team(is_pickuper_team), pickuper_id ? pickuper_info.name : "\x06World", weapon_t::get_weapon_name(event->get_int("defindex")));
 }
