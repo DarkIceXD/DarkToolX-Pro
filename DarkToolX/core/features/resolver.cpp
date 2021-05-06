@@ -24,7 +24,7 @@ constexpr float get_delta(const float max_delta, const int misses)
 void features::resolver::new_tick(c_usercmd* cmd)
 {
 	new_shot = true;
-	if (csgo::target.entity && (cmd->buttons & in_attack))
+	if (csgo::target.entity && csgo::want_to_shoot && !csgo::manual_shoot)
 		last_shots.push_back(csgo::target.entity->index());
 }
 
@@ -59,8 +59,7 @@ void features::resolver::weapon_fire(i_game_event* event)
 	if (!csgo::local_player)
 		return;
 
-	const auto local_player_index = csgo::local_player->index();
-	if (event->get_int("userid") != local_player_index)
+	if (interfaces::engine->get_player_for_user_id(event->get_int("userid")) != csgo::local_player->index())
 		return;
 
 	missed_shots[last_shots.front()]++;
