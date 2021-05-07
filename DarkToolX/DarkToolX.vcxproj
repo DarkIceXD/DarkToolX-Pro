@@ -154,6 +154,7 @@
     <ClCompile Include="core\features\auto_accept.cpp" />
     <ClCompile Include="core\features\color_modulation\asus_walls.cpp" />
     <ClCompile Include="core\features\fake_duck.cpp" />
+    <ClCompile Include="core\features\granade_prediction.cpp" />
     <ClCompile Include="core\features\logs.cpp" />
     <ClCompile Include="core\features\modify_smoke.cpp" />
     <ClCompile Include="core\features\resolver.cpp" />
@@ -182,7 +183,6 @@
     <ClCompile Include="core\features\engine_prediction.cpp" />
     <ClCompile Include="core\features\hitsound.cpp" />
     <ClCompile Include="core\features\no_flash.cpp" />
-    <ClCompile Include="core\features\ragdolls.cpp" />
     <ClCompile Include="core\features\reveal_ranks.cpp" />
     <ClCompile Include="core\features\sky_box_changer.cpp" />
     <ClCompile Include="core\features\slow_walk.cpp" />

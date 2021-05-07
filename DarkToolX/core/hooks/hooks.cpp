@@ -31,6 +31,7 @@ hooks::calculate_view::fn calculate_view_original = nullptr;
 hooks::modify_eye_position::fn modify_eye_position_original = nullptr;
 hooks::update_animation_state::fn update_animation_state_original = nullptr;
 hooks::update_client_side_animation::fn update_client_side_animation_original = nullptr;
+hooks::cl_grenadepreview::fn cl_grenadepreview_original = nullptr;
 static event_listener* listener = nullptr;
 static recv_prop_hook* sequence_hook = nullptr;
 static HWND window = nullptr;
@@ -63,6 +64,7 @@ bool hooks::initialize() {
 	const auto modify_eye_position_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 5C 53 8B D9 56 57 83"));
 	const auto update_animation_state_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 18 56 57 8B F9 F3"));
 	const auto update_client_side_animation_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 51 56 8B F1 80 BE ? ? ? ? ? 74"));
+	const auto cl_grenadepreview_target = reinterpret_cast<void*>(get_virtual(interfaces::console->get_convar("cl_grenadepreview"), 13));
 	sequence_hook = new recv_prop_hook(base_view_model_t::sequence_prop(), &hooks::sequence_proxy::hook);
 	if (MH_Initialize() != MH_OK)
 		throw std::runtime_error("failed to initialize MH_Initialize");
@@ -139,6 +141,8 @@ bool hooks::initialize() {
 	if (MH_CreateHook(update_client_side_animation_target, &update_client_side_animation::hook, reinterpret_cast<void**>(&update_client_side_animation_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize update_client_side_animation");
 
+	/*if (MH_CreateHook(cl_grenadepreview_target, &cl_grenadepreview::hook, reinterpret_cast<void**>(&cl_grenadepreview_original)) != MH_OK)
+		throw std::runtime_error("failed to initialize cl_grenadepreview");*/
 	D3DDEVICE_CREATION_PARAMETERS params;
 	interfaces::directx->GetCreationParameters(&params);
 	window = params.hFocusWindow;
@@ -261,10 +265,9 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 			features::modify_smoke();
 			features::backtrack::update();
 			features::sky_box_changer();
-			features::step_esp();
-			features::bullet_tracers();
+			features::step_esp::draw();
+			features::bullet_tracers::draw();
 			features::animation_fix();
-			// features::ragdolls();
 			break;
 		case FRAME_RENDER_END:
 			break;
@@ -564,6 +567,15 @@ void __fastcall hooks::update_client_side_animation::hook(player_t* this_pointer
 
 	if (csgo::should_animate)
 		update_client_side_animation_original(this_pointer);
+}
+
+bool __fastcall hooks::cl_grenadepreview::hook(void* this_pointer, void* edx)
+{
+	static auto cl_grenadepreview = reinterpret_cast<void*>(utilities::pattern_scan("client.dll", "85 C0 74 7D 83 BF"));
+	if (cl_grenadepreview == _ReturnAddress())
+		return 1;
+
+	return cl_grenadepreview_original(this_pointer, edx);
 }
 
 void __cdecl hooks::sequence_proxy::hook(const c_recv_proxy_data* proxy_data_const, void* entity, void* output)

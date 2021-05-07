@@ -201,9 +201,6 @@
     <ClCompile Include="core\features\dormant.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="core\features\ragdolls.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="dependencies\imgui\imgui_tables.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -253,6 +250,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="core\features\modify_smoke.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="core\features\granade_prediction.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

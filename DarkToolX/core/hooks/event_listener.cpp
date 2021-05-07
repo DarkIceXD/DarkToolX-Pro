@@ -33,10 +33,10 @@ void event_listener::fire_game_event(i_game_event* event)
 		features::logs::player_death(event);
 		break;
 	case fnv::hash("player_footstep"):
-		features::events::step_esp(event);
+		features::step_esp::player_footstep(event);
 		break;
 	case fnv::hash("bullet_impact"):
-		features::events::bullet_tracers(event);
+		features::bullet_tracers::bullet_impact(event);
 		break;
 	case fnv::hash("weapon_fire"):
 		features::resolver::weapon_fire(event);

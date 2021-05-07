@@ -115,62 +115,51 @@ public:
 };
 
 struct BeamInfo_t {
-	int			m_nType;
+	int			m_nType{ TE_BEAMPOINTS };
 
 	// Entities
-	player_t* m_pStartEnt;
-	int			m_nStartAttachment;
-	player_t* m_pEndEnt;
-	int			m_nEndAttachment;
+	player_t* m_pStartEnt{};
+	int			m_nStartAttachment{};
+	player_t* m_pEndEnt{};
+	int			m_nEndAttachment{};
 
 	// Points
-	vec3_t		m_vecStart;
-	vec3_t		m_vecEnd;
+	vec3_t		m_vecStart{};
+	vec3_t		m_vecEnd{};
 
-	int			m_nModelIndex;
-	const char* m_pszModelName;
+	int			m_nModelIndex{ -1 };
+	const char* m_pszModelName{};
 
-	int			m_nHaloIndex;
-	const char* m_pszHaloName;
-	float		m_flHaloScale;
+	int			m_nHaloIndex{ -1 };
+	const char* m_pszHaloName{};
+	float		m_flHaloScale{};
 
-	float		m_flLife;
-	float		m_flWidth;
-	float		m_flEndWidth;
-	float		m_flFadeLength;
-	float		m_flAmplitude;
+	float		m_flLife{};
+	float		m_flWidth{};
+	float		m_flEndWidth{};
+	float		m_flFadeLength{};
+	float		m_flAmplitude{};
 
-	float		m_flBrightness;
-	float		m_flSpeed;
+	float		m_flBrightness{};
+	float		m_flSpeed{};
 
-	int			m_nStartFrame;
-	float		m_flFrameRate;
+	int			m_nStartFrame{};
+	float		m_flFrameRate{};
 
-	float		m_flRed;
-	float		m_flGreen;
-	float		m_flBlue;
+	float		m_flRed{};
+	float		m_flGreen{};
+	float		m_flBlue{};
 
-	bool		m_bRenderable;
+	bool		m_bRenderable{ true };
 
-	int			m_nSegments;
+	int			m_nSegments{ -1 };
 
-	int			m_nFlags;
+	int			m_nFlags{};
 
 	// Rings
-	vec3_t		m_vecCenter;
-	float		m_flStartRadius;
-	float		m_flEndRadius;
-
-	BeamInfo_t() {
-		m_nType = TE_BEAMPOINTS;
-		m_nSegments = -1;
-		m_pszModelName = NULL;
-		m_pszHaloName = NULL;
-		m_nModelIndex = -1;
-		m_nHaloIndex = -1;
-		m_bRenderable = true;
-		m_nFlags = 0;
-	}
+	vec3_t		m_vecCenter{};
+	float		m_flStartRadius{};
+	float		m_flEndRadius{};
 };
 
 class C_Beam;

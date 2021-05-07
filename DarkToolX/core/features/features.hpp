@@ -19,7 +19,6 @@ namespace features {
 	void anti_aim(c_usercmd* cmd, bool& send_packet);
 	void auto_accept();
 	void quick_switch(c_usercmd* cmd);
-	void bullet_tracers();
 	void bunny_hop(c_usercmd* cmd);
 	void clan_tag_changer();
 	void crosshair();
@@ -32,14 +31,12 @@ namespace features {
 	void modify_smoke();
 	void no_duck_delay(c_usercmd* cmd);
 	void no_flash();
-	void ragdolls();
 	bool remove_scope();
 	void reveal_ranks(const c_usercmd* cmd);
 	void sequence_remapping(c_recv_proxy_data* data, base_view_model_t* entity);
 	void skin_changer();
 	void sky_box_changer();
 	void slow_walk(c_usercmd* cmd);
-	void step_esp();
 	void thirdperson();
 	void trigger(c_usercmd* cmd);
 	namespace aimbot {
@@ -54,6 +51,10 @@ namespace features {
 		int restore_tick_count(const int player_index, const int record_index);
 		void update();
 		void run(c_usercmd* cmd);
+	}
+	namespace bullet_tracers {
+		void bullet_impact(i_game_event* event);
+		void draw();
 	}
 	namespace esp {
 		void update();
@@ -70,6 +71,10 @@ namespace features {
 		void run();
 		void weapon_fire(i_game_event* event);
 		void player_hurt(i_game_event* event);
+	}
+	namespace step_esp{
+		void player_footstep(i_game_event* event);
+		void draw();
 	}
 	namespace util {
 		void auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data);
@@ -94,9 +99,6 @@ namespace features {
 	namespace events {
 		void hit_sound(i_game_event* event);
 		void update_stattrak(i_game_event* event);
-		void step_esp(i_game_event* event);
 		void chat_bot(i_game_event* event);
-		void chat_listener(i_game_event* event);
-		void bullet_tracers(i_game_event* event);
 	}
 }

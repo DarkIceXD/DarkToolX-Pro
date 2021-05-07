@@ -17,8 +17,3 @@ void features::events::chat_bot(i_game_event* event)
 	const auto rand = std::rand() % size;
 	interfaces::engine->execute_cmd(("say " + csgo::conf->chat_bot().msgs.at(rand).msg).c_str());
 }
-
-void features::events::chat_listener(i_game_event* event)
-{
-
-}

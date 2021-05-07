@@ -324,13 +324,6 @@ public:
 	}
 };
 
-class ragdoll_t : public entity_t
-{
-public:
-	NETVAR("DT_CSRagdoll", "m_vecForce", force, vec3_t)
-	NETVAR("DT_CSRagdoll", "m_vecRagdollVelocity", velocity, vec3_t)
-};
-
 class econ_view_item_t {
 public:
 	NETVAR("DT_ScriptCreatedItem", "m_bInitialized", is_initialized, bool)

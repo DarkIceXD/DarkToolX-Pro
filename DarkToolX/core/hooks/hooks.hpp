@@ -126,6 +126,11 @@ namespace hooks {
 		void __fastcall hook(player_t* this_pointer, void* edx);
 	};
 
+	namespace cl_grenadepreview {
+		using fn = bool(__fastcall*)(void*, void*);
+		bool __fastcall hook(void* this_pointer, void* edx);
+	};
+
 	namespace sequence_proxy {
 		void __cdecl hook(const c_recv_proxy_data* proxy_data_const, void* entity, void* output);
 	};
