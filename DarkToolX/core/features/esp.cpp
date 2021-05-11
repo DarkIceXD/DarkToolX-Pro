@@ -63,54 +63,54 @@ void features::esp::update()
 	if (!csgo::local_player)
 		return;
 
-	if (csgo::conf->visuals().esp)
+	for (auto i = 1; i <= interfaces::globals->max_clients; i++)
 	{
-		for (auto i = 1; i <= interfaces::globals->max_clients; i++)
+		auto& data = entities[i];
+		data.draw = false;
+
+		if (!csgo::conf->visuals().esp)
+			continue;
+
+		auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
+		if (!entity || !entity->is_player() || entity == csgo::local_player)
+			continue;
+
+		if (!csgo::conf->visuals().dormant_esp && entity->dormant())
+			continue;
+
+		const auto hp = entity->health();
+		if (hp < 1)
+			continue;
+
+		if (!bounding_box(entity, data.min, data.max))
+			continue;
+
+		data.health = static_cast<float>(hp) / entity->max_health();
+		data.armor = entity->armor() / 100.f;
+		const auto weapon = entity->active_weapon();
+		data.weapon_name = weapon ? weapon->get_weapon_name() : nullptr;
+		data.enemy = csgo::local_player->is_enemy(entity);
+		data.has_heavy_armor = entity->has_heavy_armor();
+		player_info_t info;
+		interfaces::engine->get_player_info(entity->index(), &info);
+		strcpy_s(data.name, info.name);
+
+		data.bones.clear();
+		matrix_t bone_matrices[MAXSTUDIOBONES];
+		if (entity->setup_bones(bone_matrices, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, 0))
 		{
-			auto& data = entities[i];
-			data.draw = false;
+			const auto studio_model = interfaces::model_info->get_studio_model(entity->model());
+			for (int i = 0; i < studio_model->bones_count; i++) {
+				const auto bone = studio_model->bone(i);
 
-			auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
-			if (!entity || !entity->is_player() || entity == csgo::local_player)
-				continue;
+				if (!bone || bone->parent == -1 || !(bone->flags & BONE_USED_BY_HITBOX))
+					continue;
 
-			if (!csgo::conf->visuals().dormant_esp && entity->dormant())
-				continue;
-
-			const auto hp = entity->health();
-			if (hp < 1)
-				continue;
-
-			if (!bounding_box(entity, data.min, data.max))
-				continue;
-
-			data.health = static_cast<float>(hp) / entity->max_health();
-			data.armor = entity->armor() / 100.f;
-			const auto weapon = entity->active_weapon();
-			data.weapon_name = weapon ? weapon->get_weapon_name() : nullptr;
-			data.enemy = csgo::local_player->is_enemy(entity);
-			data.has_heavy_armor = entity->has_heavy_armor();
-			player_info_t info;
-			interfaces::engine->get_player_info(entity->index(), &info);
-			strcpy_s(data.name, info.name);
-
-			data.bones.clear();
-			matrix_t boneMatrices[MAXSTUDIOBONES];
-			if (entity->setup_bones(boneMatrices, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, 0))
-			{
-				const auto studio_model = interfaces::model_info->get_studio_model(entity->model());
-				for (int i = 0; i < studio_model->bones_count; i++) {
-					const auto bone = studio_model->bone(i);
-
-					if (!bone || bone->parent == -1 || !(bone->flags & BONE_USED_BY_HITBOX))
-						continue;
-
-					data.bones.push_back({ { boneMatrices[i][0][3], boneMatrices[i][1][3], boneMatrices[i][2][3] }, { boneMatrices[bone->parent][0][3], boneMatrices[bone->parent][1][3], boneMatrices[bone->parent][2][3] } });
-				}
+				data.bones.push_back({ { bone_matrices[i][0][3], bone_matrices[i][1][3], bone_matrices[i][2][3] }, { bone_matrices[bone->parent][0][3], bone_matrices[bone->parent][1][3], bone_matrices[bone->parent][2][3] } });
 			}
-
-			data.draw = true;
 		}
+
+		data.draw = true;
 	}
 }
 
