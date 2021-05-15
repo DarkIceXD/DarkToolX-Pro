@@ -11,7 +11,7 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 		const auto new_viewangles = math::calculate_angle(local_head, hitbox_position).normalized_angles();
 		if (math::fov(viewangles, new_viewangles) > csgo::conf->aimbot().fov)
 			continue;
-		const auto data = features::util::auto_wall(hitbox_position - local_head, weapon_data, csgo::conf->aimbot().auto_wall);
+		const auto data = features::util::auto_wall(local_head, hitbox_position - local_head, weapon_data, csgo::conf->aimbot().auto_wall);
 		if (data.damage > target.damage)
 		{
 			target.entity = data.entity;
@@ -60,9 +60,8 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 	return target;
 }
 
-static best_target get_best_target(const vec3_t& viewangles, const weapon_info_t* weapon_data)
+static best_target get_best_target(const vec3_t& viewangles, const weapon_info_t* weapon_data, const vec3_t& local_head)
 {
-	const auto local_head = csgo::local_player->get_eye_pos();
 	best_target target = {};
 	for (auto i = 1; i <= interfaces::globals->max_clients; i++)
 	{
@@ -94,11 +93,11 @@ static bool is_visible(player_t* entity, vec3_t vStart, vec3_t vEnd)
 {
 	matrix_t matrix[MAXSTUDIOBONES];
 	entity->setup_bones(matrix, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, interfaces::globals->cur_time);
-	auto pStudioModel = interfaces::model_info->get_studio_model(entity->model());
-	auto set = pStudioModel->hitbox_set(entity->hitbox_set());
+	const auto pStudioModel = interfaces::model_info->get_studio_model(entity->model());
+	const auto set = pStudioModel->hitbox_set(entity->hitbox_set());
 	for (int i = 0; i < set->hitbox_count; i++)
 	{
-		auto hitbox = set->hitbox(i);
+		const auto hitbox = set->hitbox(i);
 		auto vMaxUntransformed = hitbox->maxs;
 		auto vMinUntransformed = hitbox->mins;
 		if (hitbox->radius != -1.f)
@@ -114,9 +113,19 @@ static bool is_visible(player_t* entity, vec3_t vStart, vec3_t vEnd)
 
 void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data)
 {
-	csgo::target = get_best_target(cmd->viewangles, weapon_data);
+	csgo::target = get_best_target(cmd->viewangles, weapon_data, csgo::local_player->get_eye_pos());
 	if (csgo::target.damage < 1)
+	{
+		const auto duckamount = csgo::local_player->duck_amount();
+		if (duckamount > 0 && csgo::conf->aimbot().auto_duck_peek)
+		{
+			csgo::target = get_best_target(cmd->viewangles, weapon_data, csgo::local_player->get_eye_pos() + vec3_t(0, 0, 18 * duckamount));
+			const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(weapon->item_definition_index());
+			if (csgo::target.lethal || csgo::target.damage >= weapon_setting.get_min_dmg(csgo::conf->aimbot().min_dmg_override.enabled))
+				cmd->buttons &= ~in_duck;
+		}
 		return;
+	}
 
 	const auto recoil_compensated_angle = (csgo::target.angle - csgo::local_player->recoil()).normalized_angles();
 	const bool is_shooting_manually = cmd->buttons & in_attack;

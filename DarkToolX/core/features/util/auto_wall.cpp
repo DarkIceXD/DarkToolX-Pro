@@ -114,10 +114,9 @@ static float handle_bulletpenetration(const trace_t& enterTrace, const vec3_t& d
 	return damage - ((11.25f / penetration + (exitTrace.end - enterTrace.end).length_sqr() / 24.0f) / penetrationModifier + damage * damageModifier);
 }
 
-auto_wall_data features::util::auto_wall(vec3_t direction, const weapon_info_t* weapon_data, const bool bangable)
+auto_wall_data features::util::auto_wall(vec3_t start, vec3_t direction, const weapon_info_t* weapon_data, const bool bangable)
 {
 	auto_wall_data data{ nullptr, static_cast<float>(weapon_data->weapon_damage) };
-	auto start(csgo::local_player->get_eye_pos());
 	direction.normalize();
 	auto max_range = weapon_data->weapon_range;
 	trace_filter filter(csgo::local_player);

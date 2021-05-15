@@ -39,6 +39,7 @@ namespace config {
 		hitboxes hitbox_override{};
 		bool auto_shoot{ false };
 		bool auto_wall{ false };
+		bool auto_duck_peek{ false };
 		bool auto_cock_revolver{ true };
 		bool auto_scope{ true };
 		bool dmg_indicator{ false };
@@ -92,6 +93,6 @@ namespace config {
 				return false;
 			}
 		}
-		JSON_SERIALIZE(aimbot, conf_name, mode, aim, min_dmg_override, hitbox_override_bind, smoothness, fov, hitbox, hitbox_override, auto_shoot, auto_wall, dmg_indicator, auto_cock_revolver, auto_scope, weapons, backtrack, backtrack_time_limit)
+		JSON_SERIALIZE(aimbot, conf_name, mode, aim, min_dmg_override, hitbox_override_bind, smoothness, fov, hitbox, hitbox_override, auto_shoot, auto_wall, auto_duck_peek, dmg_indicator, auto_cock_revolver, auto_scope, weapons, backtrack, backtrack_time_limit)
 	};
 };

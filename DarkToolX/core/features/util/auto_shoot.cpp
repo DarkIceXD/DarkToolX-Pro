@@ -5,7 +5,7 @@ void features::util::auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_i
 	if (cmd->buttons & in_attack)
 		return;
 
-	const auto entity = auto_wall(math::angle_vector(cmd->viewangles + csgo::local_player->recoil()), weapon_data, csgo::conf->aimbot().auto_wall).entity;
+	const auto entity = auto_wall(csgo::local_player->get_eye_pos(), math::angle_vector(cmd->viewangles + csgo::local_player->recoil()), weapon_data, csgo::conf->aimbot().auto_wall).entity;
 	if (!entity)
 		return;
 

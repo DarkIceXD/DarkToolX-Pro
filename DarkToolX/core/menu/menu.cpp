@@ -59,6 +59,23 @@ void menu::init(HWND window, IDirect3DDevice9* device)
 	ImGui::CreateContext();
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX9_Init(device);
+	/*ImFontGlyphRangesBuilder builder;
+	constexpr ImWchar baseRanges[]{
+		0x0100, 0x024F, // Latin Extended-A + Latin Extended-B
+		0x0300, 0x03FF, // Combining Diacritical Marks + Greek/Coptic
+		0x0600, 0x06FF, // Arabic
+		0x0E00, 0x0E7F, // Thai
+		0
+	};
+	builder.AddRanges(baseRanges);
+	builder.AddRanges(ImGui::GetIO().Fonts->GetGlyphRangesCyrillic());
+	builder.AddRanges(ImGui::GetIO().Fonts->GetGlyphRangesChineseSimplifiedCommon());
+	static ImVector<ImWchar> ranges;
+	builder.BuildRanges(&ranges);
+	ImFontConfig conf;
+	conf.GlyphRanges = ranges.Data;
+	ImGui::GetIO().Fonts->AddFontDefault(&conf);
+	ImGui::GetIO().Fonts->Build();*/
 	auto& style = ImGui::GetStyle();
 	style.Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 	style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
@@ -175,6 +192,7 @@ void menu::render(bool& enabled, conf& conf)
 					ImGui::Separator();
 					ImGui::Checkbox("Auto Shoot", &conf.aimbot().auto_shoot);
 					ImGui::Checkbox("Auto Wall", &conf.aimbot().auto_wall);
+					ImGui::Checkbox("Auto Duck Peek", &conf.aimbot().auto_duck_peek);
 					ImGui::Checkbox("Auto Cock Revolver", &conf.aimbot().auto_cock_revolver);
 					ImGui::Checkbox("Auto Scope", &conf.aimbot().auto_scope);
 					ImGui::Checkbox("Damage Indicator", &conf.aimbot().dmg_indicator);

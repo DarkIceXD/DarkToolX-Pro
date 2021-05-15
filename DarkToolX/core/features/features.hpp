@@ -72,18 +72,18 @@ namespace features {
 		void weapon_fire(i_game_event* event);
 		void player_hurt(i_game_event* event);
 	}
-	namespace step_esp{
+	namespace step_esp {
 		void player_footstep(i_game_event* event);
 		void draw();
 	}
 	namespace util {
 		void auto_shoot(c_usercmd* cmd, weapon_t* weapon, const weapon_info_t* weapon_data);
 		void auto_stop(c_usercmd* cmd);
-		auto_wall_data auto_wall(vec3_t direction, const weapon_info_t* weapon_data, const bool bangable);
+		auto_wall_data auto_wall(vec3_t start, vec3_t direction, const weapon_info_t* weapon_data, const bool bangable);
 		bool cock_revolver(weapon_t* weapon);
 		bool can_force_item_update(weapon_t* item);
 		void force_item_update(weapon_t* item);
-		bool hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const float range);
+		bool hitchance(const vec3_t& view_angles, player_t* player, const int needed_hitchance, weapon_t* weapon, const float range, const int hitbox = 0);
 		void walkbot(c_usercmd* cmd);
 	}
 	namespace color_modulation {
