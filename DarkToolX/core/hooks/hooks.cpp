@@ -12,7 +12,6 @@ hooks::paint_traverse::fn paint_traverse_original = nullptr;
 hooks::override_view::fn override_view_original = nullptr;
 hooks::do_post_screen_effects::fn do_post_screen_effects_original = nullptr;
 hooks::frame_stage_notify::fn frame_stage_notify_original = nullptr;
-hooks::dispatch_user_message::fn dispatch_user_message_original = nullptr;
 hooks::emit_sound::fn emit_sound_original = nullptr;
 hooks::end_scene::fn end_scene_original = nullptr;
 hooks::reset::fn reset_original = nullptr;
@@ -45,7 +44,6 @@ bool hooks::initialize() {
 	const auto override_view_target = reinterpret_cast<void*>(get_virtual(interfaces::clientmode, 18));
 	const auto do_post_screen_effects_target = reinterpret_cast<void*>(get_virtual(interfaces::clientmode, 44));
 	const auto frame_stage_notify_target = reinterpret_cast<void*>(get_virtual(interfaces::client, 37));
-	const auto dispatch_user_message_target = reinterpret_cast<void*>(get_virtual(interfaces::client, 38));
 	const auto emit_sound_target = reinterpret_cast<void*>(get_virtual(interfaces::engine_sound, 5));
 	const auto end_scene_target = reinterpret_cast<void*>(get_virtual(interfaces::directx, 42));
 	const auto reset_target = reinterpret_cast<void*>(get_virtual(interfaces::directx, 16));
@@ -83,9 +81,6 @@ bool hooks::initialize() {
 
 	if (MH_CreateHook(frame_stage_notify_target, &frame_stage_notify::hook, reinterpret_cast<void**>(&frame_stage_notify_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize frame_stage_notify");
-
-	/*if (MH_CreateHook(dispatch_user_message_target, &dispatch_user_message::hook, reinterpret_cast<void**>(&dispatch_user_message_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize dispatch_user_message");*/
 
 	if (MH_CreateHook(emit_sound_target, &emit_sound::hook, reinterpret_cast<void**>(&emit_sound_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize emit_sound");
@@ -276,108 +271,6 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 	frame_stage_notify_original(interfaces::client, stage);
 }
 
-/*class bf_read
-{
-	uintptr_t base;
-	uintptr_t offset;
-public:
-	bf_read(const uintptr_t address) : base(address), offset(1) {}
-	void skip(const uintptr_t length)
-	{
-		offset += length;
-	}
-	uint8_t read_byte()
-	{
-		const auto value = *reinterpret_cast<uint8_t*>(base + offset);
-		skip(sizeof(uint8_t));
-		return value;
-	}
-	bool read_bool()
-	{
-		return read_byte();
-	}
-	std::string read_string()
-	{
-		const auto str_length = read_byte();
-		std::string str(reinterpret_cast<char*>(base + offset), str_length);
-		skip(str_length + 1);
-		return str;
-	}
-};*/
-class bf_read
-{
-public:
-	uintptr_t base_address;
-	uintptr_t cur_offset;
-
-	bf_read(uintptr_t addr)
-	{
-		base_address = addr;
-		cur_offset = 0;
-	}
-
-	void SetOffset(uintptr_t offset)
-	{
-		cur_offset = offset;
-	}
-
-	void Skip(uintptr_t length)
-	{
-		cur_offset += length;
-	}
-
-	int ReadByte()
-	{
-		auto val = *reinterpret_cast<char*>(base_address + cur_offset);
-		++cur_offset;
-		return val;
-	}
-
-	bool ReadBool()
-	{
-		auto val = *reinterpret_cast<bool*>(base_address + cur_offset);
-		++cur_offset;
-		return val;
-	}
-
-	std::string ReadString()
-	{
-		char buffer[256];
-		auto str_length = *reinterpret_cast<char*>(base_address + cur_offset);
-		++cur_offset;
-		memcpy(buffer, reinterpret_cast<void*>(base_address + cur_offset), str_length > 255 ? 255 : str_length);
-		buffer[str_length > 255 ? 255 : str_length] = '\0';
-		cur_offset += str_length + 1;
-		return std::string(buffer);
-	}
-};
-
-void __stdcall hooks::dispatch_user_message::hook(int type, unsigned int a3, unsigned int length, const void* msg_data)
-{
-	//bf_read buf{ uintptr_t(msg_data) };
-	if (type == cs_um_votestart && interfaces::clientmode->get_hud_chat())
-	{
-		bf_read read = bf_read(reinterpret_cast<uintptr_t>(msg_data));
-		read.SetOffset(1);
-		int team = read.ReadByte();//2 - T 3 - CT
-
-		read.Skip(1);
-		int ent_idx = read.ReadByte(); //client ID of initiator
-		read.Skip(1);
-		int vote_type = read.ReadByte();
-		read.Skip(1);
-		/*std::string disp_str = read.ReadString();//#SFUI_vote_kick_player_other
-		std::string details_str = read.ReadString();// target name
-		std::string other_team_str = read.ReadString();//#SFUI_otherteam_vote_kick_player
-		int target_idx = read.ReadByte();
-		int unk = read.ReadByte();//vote type?
-		*/
-		interfaces::clientmode->get_hud_chat()->printf(0, "team: %d, ent_idx: %d, vote_type: %d", team, ent_idx, vote_type);
-		interfaces::clientmode->get_hud_chat()->printf(0, "local_player_id: %d, team: %d", csgo::local_player->index(), csgo::local_player->team());
-	}
-	dispatch_user_message_original(interfaces::client, type, a3, length, msg_data);
-}
-
 void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel, const char* pSoundEntry, unsigned int nSoundEntryHash, const char* pSample, float flVolume, float flAttenuation, int nSeed, int iFlags, int iPitch, const vec3_t* pOrigin, const vec3_t* pDirection, vec3_t* pUtlVecOrigins, bool bUpdatePositions, float soundtime, int speakerentity, int params)
 {
 	switch (fnv::hash(pSoundEntry)) {
@@ -390,7 +283,7 @@ void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel
 
 long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 {
-	static auto water_mark = std::string("DarkToolX Pro - beta v15.0 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::string("DarkToolX Pro - beta v15.4 - UID: ") + std::to_string(csgo::user.uid);
 	IDirect3DStateBlock9* pixel_state = NULL;
 	device->CreateStateBlock(D3DSBT_ALL, &pixel_state);
 	pixel_state->Capture();

@@ -31,11 +31,6 @@ namespace hooks {
 		void __stdcall hook(int stage);
 	};
 
-	namespace dispatch_user_message {
-		using fn = bool(__thiscall*)(i_base_client_dll*, int, unsigned int, unsigned int, const void*);
-		void __stdcall hook(int type, unsigned int a3, unsigned int length, const void* msg_data);
-	};
-
 	namespace emit_sound {
 		using fn = void(__thiscall*)(i_engine_sound*, void*, int, int, const char*, unsigned int, const char*, float, float, int, int, int, const vec3_t*, const vec3_t*, vec3_t*, bool, float, int, int);
 		void __stdcall hook(void* filter, int iEntIndex, int iChannel, const char* pSoundEntry, unsigned int nSoundEntryHash, const char* pSample, float flVolume, float flAttenuation, int nSeed, int iFlags, int iPitch, const vec3_t* pOrigin, const vec3_t* pDirection, vec3_t* pUtlVecOrigins, bool bUpdatePositions, float soundtime, int speakerentity, int params);

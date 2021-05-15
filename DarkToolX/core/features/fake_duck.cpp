@@ -26,12 +26,12 @@ void features::fake_duck(c_usercmd* cmd, bool& send_packet)
 			cmd->buttons &= ~in_attack;
 			csgo::want_to_shoot = false;
 		}
-		else 
+		else
 		{
 			return;
 		}
 	}
-		
+
 	send_packet = interfaces::clientstate->choked_commands >= 14;
 	if (interfaces::clientstate->choked_commands >= 7)
 		cmd->buttons |= in_duck;

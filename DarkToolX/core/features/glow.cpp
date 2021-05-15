@@ -4,9 +4,9 @@ void features::glow()
 {
 	if (!csgo::local_player)
 		return;
-	auto glow_objects = interfaces::glow_manager->objects;
-	auto size = interfaces::glow_manager->size;
-	for (auto i = 0; i < size; i++)
+
+	const auto glow_objects = interfaces::glow_manager->objects;
+	for (auto i = 0; i < interfaces::glow_manager->size; i++)
 	{
 		auto entity = static_cast<entity_t*>(glow_objects[i].entity);
 		if (!entity || entity->dormant())
