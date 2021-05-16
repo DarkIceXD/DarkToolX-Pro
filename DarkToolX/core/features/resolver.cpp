@@ -1,8 +1,13 @@
 #include "features.hpp"
 
 static std::array<int, 65> missed_shots;
-static std::list<int> last_shots;
-static bool new_shot = true;
+struct shot_data {
+	player_t* entity;
+	vec3_t start, end;
+	vec3_t origin, mins, maxs, eye;
+	matrix_t matrix[256];
+	bool wants_to_shoot, shot_valid, hit_target;
+} data;
 
 constexpr float get_delta(const float max_delta, const int misses)
 {
@@ -21,11 +26,57 @@ constexpr float get_delta(const float max_delta, const int misses)
 	}
 }
 
+static void store_data(shot_data& data)
+{
+	data.origin = data.entity->abs_origin();
+	data.eye = data.entity->abs_angles();
+	data.mins = data.entity->collideable()->mins();
+	data.maxs = data.entity->collideable()->maxs();
+	data.entity->setup_bones(data.matrix, 256, BONE_USED_BY_ANYTHING, interfaces::globals->cur_time);
+}
+
+static void load_data(shot_data& data)
+{
+	auto& bone_cache = data.entity->get_cached_bones();
+	std::memcpy(bone_cache.base(), data.matrix, bone_cache.count() * sizeof(matrix_t));
+	data.entity->set_position(data.origin);
+	data.entity->set_angles(data.eye);
+	data.entity->collideable()->set_collision_bounds(data.mins, data.maxs);
+}
+
 void features::resolver::new_tick(c_usercmd* cmd)
 {
-	new_shot = true;
+	if (data.shot_valid && !data.hit_target)
+	{
+		data.shot_valid = false;
+		shot_data backup;
+		backup.entity = data.entity;
+		store_data(backup);
+		load_data(data);
+		ray_t ray(data.start, data.end);
+		trace_t tr;
+		interfaces::trace_ray->clip_ray_to_entity(ray, MASK_SHOT, data.entity, &tr);
+		if (!tr.did_hit())
+		{
+			missed_shots[data.entity->index()]--;
+		}
+		else
+		{
+		}
+		load_data(backup);
+	}
 	if (csgo::target.entity && csgo::want_to_shoot && !csgo::manual_shoot)
-		last_shots.push_back(csgo::target.entity->index());
+	{
+		data.wants_to_shoot = true;
+		data.hit_target = false;
+		data.entity = csgo::target.entity;
+		data.start = csgo::local_player->get_eye_pos();
+		data.origin = data.entity->abs_origin();
+		data.eye = data.entity->abs_angles();
+		data.mins = data.entity->collideable()->mins();
+		data.maxs = data.entity->collideable()->maxs();
+		data.entity->setup_bones(data.matrix, 256, BONE_USED_BY_ANYTHING, interfaces::globals->cur_time);
+	}
 }
 
 void features::resolver::run()
@@ -53,7 +104,7 @@ void features::resolver::run()
 
 void features::resolver::weapon_fire(i_game_event* event)
 {
-	if (last_shots.empty())
+	if (!data.wants_to_shoot)
 		return;
 
 	if (!csgo::local_player)
@@ -62,12 +113,30 @@ void features::resolver::weapon_fire(i_game_event* event)
 	if (interfaces::engine->get_player_for_user_id(event->get_int("userid")) != csgo::local_player->index())
 		return;
 
-	missed_shots[last_shots.front()]++;
-	last_shots.pop_front();
+	data.wants_to_shoot = false;
+	data.shot_valid = true;
+	missed_shots[data.entity->index()]++;
+}
+
+void features::resolver::bullet_impact(i_game_event* event)
+{
+	if (!data.shot_valid)
+		return;
+
+	if (!csgo::local_player)
+		return;
+
+	if (interfaces::engine->get_player_for_user_id(event->get_int("userid")) != csgo::local_player->index())
+		return;
+
+	data.end = { event->get_float("x"), event->get_float("y"), event->get_float("z") };
 }
 
 void features::resolver::player_hurt(i_game_event* event)
 {
+	if (!data.shot_valid)
+		return;
+
 	if (!csgo::local_player)
 		return;
 
@@ -77,5 +146,6 @@ void features::resolver::player_hurt(i_game_event* event)
 		victim == local_player_index)
 		return;
 
+	data.hit_target = true;
 	missed_shots[victim]--;
 }

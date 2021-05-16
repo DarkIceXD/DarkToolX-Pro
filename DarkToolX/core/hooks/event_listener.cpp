@@ -37,6 +37,7 @@ void event_listener::fire_game_event(i_game_event* event)
 		break;
 	case fnv::hash("bullet_impact"):
 		features::bullet_tracers::bullet_impact(event);
+		features::resolver::bullet_impact(event);
 		break;
 	case fnv::hash("weapon_fire"):
 		features::resolver::weapon_fire(event);

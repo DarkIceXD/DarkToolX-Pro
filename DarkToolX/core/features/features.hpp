@@ -70,6 +70,7 @@ namespace features {
 		void new_tick(c_usercmd* cmd);
 		void run();
 		void weapon_fire(i_game_event* event);
+		void bullet_impact(i_game_event* event);
 		void player_hurt(i_game_event* event);
 	}
 	namespace step_esp {
