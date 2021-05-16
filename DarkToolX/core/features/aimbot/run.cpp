@@ -22,8 +22,7 @@ void features::aimbot::run(c_usercmd* cmd)
 	if (!weapon)
 		return;
 
-	const auto index = weapon->item_definition_index();
-	if (csgo::conf->aimbot().auto_cock_revolver && index == WEAPON_REVOLVER && features::util::cock_revolver(weapon))
+	if (csgo::conf->aimbot().auto_cock_revolver && features::util::cock_revolver(weapon))
 	{
 		cmd->buttons |= in_attack;
 		return;
