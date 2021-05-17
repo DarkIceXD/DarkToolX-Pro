@@ -58,10 +58,16 @@ void features::resolver::new_tick(c_usercmd* cmd)
 		interfaces::trace_ray->clip_ray_to_entity(ray, MASK_SHOT, data.entity, &tr);
 		if (!tr.did_hit())
 		{
-			missed_shots[data.entity->index()]--;
+			const auto chat = interfaces::clientmode->get_hud_chat();
+			if (chat)
+				chat->printf(0, "[""\x03""DarkToolX\x01]\x01 Shot missed due to spread");
 		}
 		else
 		{
+			const auto chat = interfaces::clientmode->get_hud_chat();
+			if (chat)
+				chat->printf(0, "[""\x03""DarkToolX\x01]\x01 Shot missed due to Anti Aim");
+			missed_shots[data.entity->index()]++;
 		}
 		load_data(backup);
 	}
@@ -69,13 +75,9 @@ void features::resolver::new_tick(c_usercmd* cmd)
 	{
 		data.wants_to_shoot = true;
 		data.hit_target = false;
-		data.entity = csgo::target.entity;
 		data.start = csgo::local_player->get_eye_pos();
-		data.origin = data.entity->abs_origin();
-		data.eye = data.entity->abs_angles();
-		data.mins = data.entity->collideable()->mins();
-		data.maxs = data.entity->collideable()->maxs();
-		data.entity->setup_bones(data.matrix, 256, BONE_USED_BY_ANYTHING, interfaces::globals->cur_time);
+		data.entity = csgo::target.entity;
+		store_data(data);
 	}
 }
 
@@ -102,25 +104,9 @@ void features::resolver::run()
 	}
 }
 
-void features::resolver::weapon_fire(i_game_event* event)
-{
-	if (!data.wants_to_shoot)
-		return;
-
-	if (!csgo::local_player)
-		return;
-
-	if (interfaces::engine->get_player_for_user_id(event->get_int("userid")) != csgo::local_player->index())
-		return;
-
-	data.wants_to_shoot = false;
-	data.shot_valid = true;
-	missed_shots[data.entity->index()]++;
-}
-
 void features::resolver::bullet_impact(i_game_event* event)
 {
-	if (!data.shot_valid)
+	if (!data.wants_to_shoot && !data.shot_valid)
 		return;
 
 	if (!csgo::local_player)
@@ -129,6 +115,8 @@ void features::resolver::bullet_impact(i_game_event* event)
 	if (interfaces::engine->get_player_for_user_id(event->get_int("userid")) != csgo::local_player->index())
 		return;
 
+	data.shot_valid = true;
+	data.wants_to_shoot = false;
 	data.end = { event->get_float("x"), event->get_float("y"), event->get_float("z") };
 }
 
@@ -147,5 +135,4 @@ void features::resolver::player_hurt(i_game_event* event)
 		return;
 
 	data.hit_target = true;
-	missed_shots[victim]--;
 }

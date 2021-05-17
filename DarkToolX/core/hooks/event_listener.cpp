@@ -9,7 +9,6 @@ event_listener::event_listener()
 	interfaces::event_manager->add_listener(this, "player_death", false);
 	interfaces::event_manager->add_listener(this, "player_footstep", false);
 	interfaces::event_manager->add_listener(this, "bullet_impact", false);
-	interfaces::event_manager->add_listener(this, "weapon_fire", false);
 	interfaces::event_manager->add_listener(this, "vote_cast", false);
 	interfaces::event_manager->add_listener(this, "item_pickup", false);
 }
@@ -38,9 +37,6 @@ void event_listener::fire_game_event(i_game_event* event)
 	case fnv::hash("bullet_impact"):
 		features::bullet_tracers::bullet_impact(event);
 		features::resolver::bullet_impact(event);
-		break;
-	case fnv::hash("weapon_fire"):
-		features::resolver::weapon_fire(event);
 		break;
 	case fnv::hash("vote_cast"):
 		features::logs::vote_cast(event);

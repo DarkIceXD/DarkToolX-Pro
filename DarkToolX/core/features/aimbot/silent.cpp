@@ -161,8 +161,8 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 				cmd->buttons |= in_attack2;
 
 			csgo::didnt_shoot_due_to_hitchance = true;
+			if (csgo::target.best_record)
+				features::backtrack::restore_record(csgo::target.entity, 0);
 		}
-		if (csgo::target.best_record)
-			features::backtrack::restore_record(csgo::target.entity, 0);
 	}
 }

@@ -115,7 +115,8 @@ void features::aimbot::legit(c_usercmd* cmd, weapon_t* weapon, const weapon_info
 		{
 			if (cmd->buttons & in_attack)
 				cmd->tick_count = features::backtrack::restore_tick_count(csgo::target.entity->index(), csgo::target.best_record);
-			features::backtrack::restore_record(csgo::target.entity, 0);
+			else
+				features::backtrack::restore_record(csgo::target.entity, 0);
 		}
 	}
 }
