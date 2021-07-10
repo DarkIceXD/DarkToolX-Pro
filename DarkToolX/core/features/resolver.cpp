@@ -64,14 +64,14 @@ void features::resolver::new_tick(c_usercmd* cmd)
 		}
 		else
 		{
+			missed_shots[data.entity->index()]++;
 			const auto chat = interfaces::clientmode->get_hud_chat();
 			if (chat)
-				chat->printf(0, "[""\x03""DarkToolX\x01]\x01 Shot missed due to Anti Aim");
-			missed_shots[data.entity->index()]++;
+				chat->printf(0, "[""\x03""DarkToolX\x01]\x01 Shot missed due to Anti Aim. (%d)", missed_shots[data.entity->index()] % 5);
 		}
 		load_data(backup);
 	}
-	if (csgo::target.entity && csgo::want_to_shoot && !csgo::manual_shoot)
+	if (csgo::conf->misc().resolver && csgo::target.entity && csgo::want_to_shoot && !csgo::manual_shoot)
 	{
 		data.wants_to_shoot = true;
 		data.hit_target = false;
