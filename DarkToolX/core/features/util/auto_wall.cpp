@@ -2,9 +2,15 @@
 
 static bool traceToExit(const trace_t& enterTrace, const vec3_t& start, const vec3_t& direction, vec3_t& end, trace_t& exitTrace)
 {
-	static uintptr_t traceToExitFn = (uintptr_t)utilities::pattern_scan("client.dll", "55 8B EC 83 EC 30 F3 0F 10 75");
+	static uintptr_t traceToExitFn = (uintptr_t)utilities::pattern_scan("client.dll", "55 8B EC 83 EC 4C F3 0F 10 75");
+	constexpr int player = 0;
+	constexpr int unk2 = 0;
+	constexpr int unk1 = 0;
 	bool result;
 	__asm {
+		push player
+		push unk2
+		push unk1
 		push exitTrace
 		mov eax, direction
 		push[eax]vec3_t.z
@@ -17,7 +23,7 @@ static bool traceToExit(const trace_t& enterTrace, const vec3_t& start, const ve
 		mov edx, enterTrace
 		mov ecx, end
 		call traceToExitFn
-		add esp, 28
+		add esp, 0x28
 		mov result, al
 	}
 	return result;
