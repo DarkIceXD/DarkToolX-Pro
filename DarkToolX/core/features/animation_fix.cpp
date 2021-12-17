@@ -2,7 +2,7 @@
 
 static float feet_yaw;
 static anim_layer layers[13];
-static float poses[24];
+static std::array<float, 24> pose_parameters;
 
 void features::animation_fix()
 {
@@ -22,11 +22,11 @@ void features::animation_fix()
 		csgo::local_player->update_client_side_animations();
 		if (!interfaces::clientstate->choked_commands) {
 			feet_yaw = animation_state->goal_feet_yaw;
-			csgo::local_player->get_pose_parameters(poses);
+			pose_parameters = csgo::local_player->get_pose_parameter();
 		}
 		csgo::should_animate = false;
 	}
-	csgo::local_player->set_anim_layers(layers);
-	csgo::local_player->set_pose_parameters(poses);
+	/*csgo::local_player->set_anim_layers(layers);*/
+	csgo::local_player->get_pose_parameter() = pose_parameters;
 	csgo::local_player->set_angles({ 0, feet_yaw, 0 });
 }

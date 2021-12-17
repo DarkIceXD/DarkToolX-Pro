@@ -578,8 +578,8 @@ public:
 		return *reinterpret_cast<bool*>(uintptr_t(this) + offset);
 	}
 
-	float* get_pose_parameter() {
-		return (float*)(this + netvar_manager::get_net_var(fnv::hash("DT_BaseAnimating"), fnv::hash("m_flPoseParameter")));
+	std::array<float, 24>& get_pose_parameter() {
+		return *(std::array<float, 24>*)(this + netvar_manager::get_net_var(fnv::hash("DT_BaseAnimating"), fnv::hash("m_flPoseParameter")));
 	}
 
 	void get_anim_layers(anim_layer* layers) {
@@ -592,18 +592,6 @@ public:
 		auto& overlay = anim_layers();
 		if (overlay.base())
 			std::memcpy(overlay.base(), layers, sizeof(anim_layer) * overlay.count());
-	}
-
-	void get_pose_parameters(float* poses) {
-		const auto m_poses = get_pose_parameter();
-		if (m_poses)
-			std::memcpy(poses, m_poses, sizeof(float) * 24);
-	}
-
-	void set_pose_parameters(float* poses) {
-		const auto m_poses = get_pose_parameter();
-		if (m_poses)
-			std::memcpy(m_poses, poses, sizeof(float) * 24);
 	}
 
 	float max_desync_angle() {

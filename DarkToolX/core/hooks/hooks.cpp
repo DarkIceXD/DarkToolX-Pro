@@ -257,12 +257,12 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 		case FRAME_NET_UPDATE_END:
 			break;
 		case FRAME_RENDER_START:
+			features::animation_fix();
 			features::modify_smoke();
 			features::backtrack::update();
 			features::sky_box_changer();
 			features::step_esp::draw();
 			features::bullet_tracers::draw();
-			features::animation_fix();
 			break;
 		case FRAME_RENDER_END:
 			break;
@@ -428,7 +428,7 @@ void __fastcall hooks::standard_blending_rules::hook(player_t* this_pointer, voi
 
 void __fastcall hooks::calculate_view::hook(player_t* this_pointer, void* edx, vec3_t& eye_origin, vec3_t& eye_angles, float& z_near, float& z_far, float& fov)
 {
-	if (this_pointer != csgo::local_player)
+	if (this_pointer != csgo::local_player || !this_pointer->is_alive())
 		return calculate_view_original(this_pointer, eye_origin, eye_angles, z_near, z_far, fov);
 
 	const auto old = this_pointer->use_new_animation_state();
