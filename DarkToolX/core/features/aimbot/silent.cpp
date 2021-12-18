@@ -147,7 +147,7 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 		if (csgo::target.best_record)
 			features::backtrack::restore_record(csgo::target.entity, csgo::target.best_record);
 
-		if (features::util::hitchance(recoil_compensated_angle, csgo::target.entity, weapon_setting.hitchance, weapon, weapon_data->weapon_range))
+		if (features::util::hitchance(recoil_compensated_angle, csgo::target.entity, weapon_setting.hitchance, weapon, weapon_data->range))
 		{
 			if (csgo::target.best_record)
 				cmd->tick_count = features::backtrack::restore_tick_count(csgo::target.entity->index(), csgo::target.best_record);
@@ -157,7 +157,7 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 		}
 		else
 		{
-			if (csgo::conf->aimbot().auto_scope && weapon_data->weapon_type == WEAPONTYPE_SNIPER_RIFLE && !csgo::local_player->is_scoped())
+			if (csgo::conf->aimbot().auto_scope && weapon_data->type == WEAPONTYPE_SNIPER_RIFLE && !csgo::local_player->is_scoped())
 				cmd->buttons |= in_attack2;
 
 			csgo::didnt_shoot_due_to_hitchance = true;

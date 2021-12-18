@@ -25,7 +25,7 @@ void features::slow_walk(c_usercmd* cmd)
 	if (!weapon_data)
 		return;
 	
-	const auto max_speed = (!csgo::local_player->is_scoped() ? weapon_data->weapon_max_speed : weapon_data->weapon_max_speed_alt) * 0.34f;
+	const auto max_speed = (!csgo::local_player->is_scoped() ? weapon_data->max_speed : weapon_data->max_speed_alt) * 0.34f;
 	const auto scale = max_speed / sqrt(cmd->forwardmove * cmd->forwardmove + cmd->sidemove * cmd->sidemove);
 	cmd->forwardmove *= scale;
 	cmd->sidemove *= scale;

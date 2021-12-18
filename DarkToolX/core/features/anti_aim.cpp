@@ -129,7 +129,7 @@ void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 	if (!weapon_data)
 		return;
 
-	const auto type = weapon_data->weapon_type;
+	const auto type = weapon_data->type;
 	if (type == WEAPONTYPE_GRENADE)
 	{
 		if ((!weapon->is_pin_pulled() || (cmd->buttons & (in_attack | in_attack2))) && weapon->throw_time() > 0.f)

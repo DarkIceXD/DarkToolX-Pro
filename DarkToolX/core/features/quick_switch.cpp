@@ -14,7 +14,7 @@ static weapon_t* get_weapon_of_type(const int type)
 		if (!weapon_data)
 			continue;
 
-		if (weapon_data->weapon_type == type)
+		if (weapon_data->type == type)
 			break;
 	}
 	return weapon;

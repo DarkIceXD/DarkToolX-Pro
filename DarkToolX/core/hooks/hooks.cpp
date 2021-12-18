@@ -54,12 +54,12 @@ bool hooks::initialize() {
 	const auto render_smoke_overlay_target = reinterpret_cast<void*>(get_virtual(interfaces::view_render, 41));
 	const auto should_skip_animation_frame_target = static_cast<void*>(utilities::pattern_scan("client.dll", "57 8B F9 8B 07 8B 80 ? ? ? ? FF D0 84 C0 75 02"));
 	const auto do_procedural_foot_plant_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F0 83 EC 78 56 8B F1 57 8B 56"));
-	const auto build_transformations_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 56 8B 75 18 57"));
+	const auto build_transformations_target = static_cast<void*>(utilities::pattern_scan("client.dll", "81 EC ? ? ? ? 56 57 8B F9 8B 0D ? ? ? ? 89 7C 24 28") - 0x3);
 	const auto check_for_sequence_change_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 51 53 8B 5D 08 56 8B F1 57 85"));
 	const auto is_hltv_target = reinterpret_cast<void*>(get_virtual(interfaces::engine, 93));
-	const auto standard_blending_rules_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F0 B8 ? ? ? ? E8 ? ? ? ? 56 8B 75 08 57 8B F9 85 F6"));
+	const auto standard_blending_rules_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 EC 08 8B 45 08 56 57 8B F9 8D"));
 	const auto calculate_view_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 EC 14 53 56 57 FF 75 18"));
-	const auto modify_eye_position_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 5C 53 8B D9 56 57 83"));
+	const auto modify_eye_position_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 70 56 57 8B F9 89 7C 24 14 83 7F 60"));
 	const auto update_animation_state_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 18 56 57 8B F9 F3"));
 	const auto update_client_side_animation_target = static_cast<void*>(utilities::pattern_scan("client.dll", "55 8B EC 51 56 8B F1 80 BE ? ? ? ? ? 74"));
 	const auto cl_grenadepreview_target = reinterpret_cast<void*>(get_virtual(interfaces::console->get_convar("cl_grenadepreview"), 13));
@@ -112,8 +112,8 @@ bool hooks::initialize() {
 	if (MH_CreateHook(do_procedural_foot_plant_target, &do_procedural_foot_plant::hook, reinterpret_cast<void**>(&do_procedural_foot_plant_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize do_procedural_foot_plant");
 
-	if (MH_CreateHook(build_transformations_target, &build_transformations::hook, reinterpret_cast<void**>(&build_transformations_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize build_transformations");
+	/*if (MH_CreateHook(build_transformations_target, &build_transformations::hook, reinterpret_cast<void**>(&build_transformations_original)) != MH_OK)
+		throw std::runtime_error("failed to initialize build_transformations");*/
 
 	if (MH_CreateHook(check_for_sequence_change_target, &check_for_sequence_change::hook, reinterpret_cast<void**>(&check_for_sequence_change_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize check_for_sequence_change");
@@ -121,14 +121,14 @@ bool hooks::initialize() {
 	if (MH_CreateHook(is_hltv_target, &is_hltv::hook, reinterpret_cast<void**>(&is_hltv_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize is_hltv");
 
-	if (MH_CreateHook(standard_blending_rules_target, &standard_blending_rules::hook, reinterpret_cast<void**>(&standard_blending_rules_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize standard_blending_rules");
+	/*if (MH_CreateHook(standard_blending_rules_target, &standard_blending_rules::hook, reinterpret_cast<void**>(&standard_blending_rules_original)) != MH_OK)
+		throw std::runtime_error("failed to initialize standard_blending_rules");*/
 
 	if (MH_CreateHook(calculate_view_target, &calculate_view::hook, reinterpret_cast<void**>(&calculate_view_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize calculate_view");
 
-	if (MH_CreateHook(modify_eye_position_target, &modify_eye_position::hook, reinterpret_cast<void**>(&modify_eye_position_original)) != MH_OK)
-		throw std::runtime_error("failed to initialize modify_eye_position");
+	/*if (MH_CreateHook(modify_eye_position_target, &modify_eye_position::hook, reinterpret_cast<void**>(&modify_eye_position_original)) != MH_OK)
+		throw std::runtime_error("failed to initialize modify_eye_position");*/
 
 	if (MH_CreateHook(update_animation_state_target, &update_animation_state::hook, reinterpret_cast<void**>(&update_animation_state_original)) != MH_OK)
 		throw std::runtime_error("failed to initialize update_animation_state");
@@ -238,8 +238,9 @@ int __stdcall hooks::do_post_screen_effects::hook(int a1)
 
 void __stdcall hooks::frame_stage_notify::hook(int stage)
 {
-	csgo::local_player = static_cast<player_t*>(interfaces::entity_list->get_client_entity(interfaces::engine->get_local_player()));
-	if (interfaces::engine->is_in_game())
+	static auto get_local_player = *reinterpret_cast<player_t***>(utilities::pattern_scan("client.dll", "A1 ? ? ? ? 89 45 BC 85 C0") + 1);
+	csgo::local_player = *get_local_player;
+	if (csgo::local_player && interfaces::engine->is_in_game())
 	{
 		switch (stage)
 		{
@@ -257,7 +258,7 @@ void __stdcall hooks::frame_stage_notify::hook(int stage)
 		case FRAME_NET_UPDATE_END:
 			break;
 		case FRAME_RENDER_START:
-			features::animation_fix();
+			// features::animation_fix();
 			features::modify_smoke();
 			features::backtrack::update();
 			features::sky_box_changer();

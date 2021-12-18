@@ -67,7 +67,7 @@ static void scale_damage(player_t* entity, const int hit_group, const weapon_inf
 	const auto armorValue = entity->armor();
 	if (armorValue > 0 && is_armored(hit_group, entity->has_helmet()))
 	{
-		float bonusValue = 1.f, armorBonusRatio = 0.5f, armorRatio = weaponData->weapon_armor_ratio / 2.f;
+		float bonusValue = 1.f, armorBonusRatio = 0.5f, armorRatio = weaponData->armor_ratio / 2.f;
 		if (hasHeavyArmor)
 		{
 			armorBonusRatio = 0.33f;
@@ -122,9 +122,9 @@ static float handle_bulletpenetration(const trace_t& enterTrace, const vec3_t& d
 
 auto_wall_data features::util::auto_wall(vec3_t start, vec3_t direction, const weapon_info_t* weapon_data, const bool bangable)
 {
-	auto_wall_data data{ nullptr, static_cast<float>(weapon_data->weapon_damage) };
+	auto_wall_data data{ nullptr, static_cast<float>(weapon_data->damage) };
 	direction.normalize();
-	auto max_range = weapon_data->weapon_range;
+	auto max_range = weapon_data->range;
 	trace_filter filter(csgo::local_player);
 	auto current_distance = 0.f;
 	while (data.damage >= 1.0f) {
@@ -135,7 +135,7 @@ auto_wall_data features::util::auto_wall(vec3_t start, vec3_t direction, const w
 		if (!trace.did_hit())
 			break;
 		current_distance += trace.flFraction * max_range;
-		data.damage *= pow(weapon_data->weapon_range_mod, current_distance / 500.f);
+		data.damage *= pow(weapon_data->range_modifier, current_distance / 500.f);
 		if (trace.entity && csgo::local_player->is_enemy(trace.entity) && hitgroup_generic < trace.hitGroup && trace.hitGroup < hitgroup_gear) {
 			scale_damage(trace.entity, trace.hitGroup, weapon_data, data.damage);
 			data.entity = trace.entity;
@@ -145,7 +145,7 @@ auto_wall_data features::util::auto_wall(vec3_t start, vec3_t direction, const w
 		if (!bangable)
 			break;
 
-		data.damage = handle_bulletpenetration(trace, direction, weapon_data->weapon_penetration, data.damage, start);
+		data.damage = handle_bulletpenetration(trace, direction, weapon_data->penetration, data.damage, start);
 	}
 	return { nullptr, 0 };
 }

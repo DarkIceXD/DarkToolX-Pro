@@ -19,7 +19,7 @@ bool features::remove_scope()
 	if (!weapon_data)
 		return false;
 
-	const auto type = weapon_data->weapon_type;
+	const auto type = weapon_data->type;
 	if (type != WEAPONTYPE_SNIPER_RIFLE)
 		return false;
 

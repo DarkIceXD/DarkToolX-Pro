@@ -213,7 +213,7 @@ public:
 	}
 	bool is_player() {
 		using original_fn = bool(__thiscall*)(entity_t*);
-		return (*(original_fn * *)this)[157](this);
+		return (*(original_fn * *)this)[158](this);
 	}
 	bool is_weapon() {
 		using original_fn = bool(__thiscall*)(entity_t*);
@@ -628,7 +628,7 @@ public:
 		if (!weapon_data)
 			return false;
 		
-		if (!weapon_data->weapon_full_auto && weapon->next_primary_attack() > interfaces::globals->cur_time)
+		if (!weapon_data->full_auto && weapon->next_primary_attack() > interfaces::globals->cur_time)
 			return false;
 
 		return true;

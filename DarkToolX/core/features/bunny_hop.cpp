@@ -25,7 +25,7 @@ static float idealAngleDelta2(const float speed)
 	if (!weaponData) return 0.0f;
 
 	float steer = 30;
-	steer *= csgo::local_player->is_scoped() ? weaponData->weapon_max_speed_alt / 250 : weaponData->weapon_max_speed / 250;
+	steer *= csgo::local_player->is_scoped() ? weaponData->max_speed_alt / 250 : weaponData->max_speed / 250;
 	return std::fminf(std::asinf(steer / speed), math::M_PI / 2);
 }
 
