@@ -15,7 +15,7 @@ namespace config {
 		std::string name{ "New Clan Tag" };
 		int delay{ 400 };
 		std::vector<std::string> tags{};
-		JSON_SERIALIZE(clan_tag, name, delay, tags)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(clan_tag, name, delay, tags)
 	};
 
 	struct clan_tag_changer {
@@ -34,6 +34,6 @@ namespace config {
 			selected = std::clamp(selected, 0U, tags.size() - 1);
 			return tags.at(selected);
 		}
-		JSON_SERIALIZE(clan_tag_changer, enabled, conf_name, selected, tags)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(clan_tag_changer, enabled, conf_name, selected, tags)
 	};
 };

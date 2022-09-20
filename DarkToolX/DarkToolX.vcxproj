@@ -216,7 +216,7 @@
     <ClCompile Include="dependencies\utilities\Animation.cpp" />
     <ClCompile Include="dependencies\utilities\console\console.cpp" />
     <ClCompile Include="dependencies\utilities\kit_parser.cpp" />
-    <ClCompile Include="dependencies\utilities\License.cpp" />
+    <ClCompile Include="dependencies\utilities\license.cpp" />
     <ClCompile Include="dependencies\utilities\navmesh-parser\micropather.cpp" />
     <ClCompile Include="dependencies\utilities\navmesh-parser\nav_area.cpp" />
     <ClCompile Include="dependencies\utilities\navmesh-parser\nav_buffer.cpp" />
@@ -224,8 +224,9 @@
     <ClCompile Include="dependencies\utilities\navmesh-parser\nav_hiding_spot.cpp" />
     <ClCompile Include="dependencies\utilities\netvars\netvars.cpp" />
     <ClCompile Include="dependencies\utilities\renderer\renderer.cpp" />
+    <ClCompile Include="dependencies\utilities\user_db.cpp" />
     <ClCompile Include="dependencies\utilities\utilities.cpp" />
-    <ClCompile Include="dependencies\utilities\Utils.cpp" />
+    <ClCompile Include="dependencies\utilities\utils.cpp" />
     <ClCompile Include="source-sdk\math\view_matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -298,7 +299,7 @@
     <ClInclude Include="dependencies\utilities\fnv.hpp" />
     <ClInclude Include="dependencies\utilities\json.hpp" />
     <ClInclude Include="dependencies\utilities\kit_parser.h" />
-    <ClInclude Include="dependencies\utilities\License.h" />
+    <ClInclude Include="dependencies\utilities\license.h" />
     <ClInclude Include="dependencies\utilities\navmesh-parser\micropather.h" />
     <ClInclude Include="dependencies\utilities\navmesh-parser\nav_area.h" />
     <ClInclude Include="dependencies\utilities\navmesh-parser\nav_buffer.h" />
@@ -308,11 +309,11 @@
     <ClInclude Include="dependencies\utilities\netvars\netvars.hpp" />
     <ClInclude Include="dependencies\utilities\netvars\recv_proxy_hook.hpp" />
     <ClInclude Include="dependencies\utilities\renderer\renderer.hpp" />
-    <ClInclude Include="dependencies\utilities\SimpleIni.h" />
     <ClInclude Include="dependencies\utilities\singleton.hpp" />
-    <ClInclude Include="dependencies\utilities\str_obfuscator.hpp" />
+    <ClInclude Include="dependencies\utilities\user_db.h" />
     <ClInclude Include="dependencies\utilities\utilities.hpp" />
-    <ClInclude Include="dependencies\utilities\Utils.h" />
+    <ClInclude Include="dependencies\utilities\utils.h" />
+    <ClInclude Include="dependencies\utilities\xorstr.h" />
     <ClInclude Include="source-sdk\classes\client_class.hpp" />
     <ClInclude Include="source-sdk\classes\collideable.hpp" />
     <ClInclude Include="source-sdk\classes\convar.hpp" />

@@ -2,14 +2,6 @@
 #include "../../source-sdk/classes/entities.hpp"
 #include "../json.hpp"
 
-#define JSON_FROM(v1) \
-	if(nlohmann_json_j.contains(#v1)) \
-		nlohmann_json_j.at(#v1).get_to(nlohmann_json_t.v1); \
-
-#define JSON_SERIALIZE(Type, ...)  \
-    friend void to_json(nlohmann::json& nlohmann_json_j, const Type& nlohmann_json_t) { NLOHMANN_JSON_EXPAND(NLOHMANN_JSON_PASTE(NLOHMANN_JSON_TO, __VA_ARGS__)) } \
-    friend void from_json(const nlohmann::json& nlohmann_json_j, Type& nlohmann_json_t) { NLOHMANN_JSON_EXPAND(NLOHMANN_JSON_PASTE(JSON_FROM, __VA_ARGS__)) }
-
 namespace config {
 	struct keybind {
 		bool enabled{ false };
@@ -22,7 +14,7 @@ namespace config {
 			else if (type == 2)
 				enabled = GetAsyncKeyState(key_bind);
 		}
-		JSON_SERIALIZE(keybind, enabled, type, key_bind)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(keybind, enabled, type, key_bind)
 	};
 	constexpr const char* weapon_list_all = "Gloves\0Knife\0CZ75-Auto\0Desert Eagle\0Dual Berettas\0Five-SeveN\0Glock-18\0P2000\0P250\0R8 Revolver\0Tec-9\0USP-S\0AK-47\0AUG\0AWP\0FAMAS\0G3SG1\0Galil AR\0M4A1-S\0M4A4\0SCAR-20\0SG 553\0SSG 08\0MAC-10\0MP5-SD\0MP7\0MP9\0PP-Bizon\0P90\0UMP-45\0Nova\0MAG-7\0Sawed-Off\0XM1014\0M249\0Negev\0";
 	constexpr const char* weapon_list = weapon_list_all + 13;

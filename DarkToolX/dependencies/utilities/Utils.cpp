@@ -1,4 +1,4 @@
-#include "Utils.h"
+#include "utils.h"
 #include <Windows.h>
 #include <winhttp.h>
 #pragma comment(lib, "Winhttp.lib")
@@ -12,7 +12,7 @@ static wchar_t* str_to_wstr(const char* str)
 	return wstr;
 }
 
-std::vector<char> Util::download(const char* server, const char* dir)
+std::vector<char> util::download(const char* server, const char* dir)
 {
 	std::vector<char> buffer;
 	const auto hSession = WinHttpOpen(nullptr, WINHTTP_ACCESS_TYPE_NO_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
@@ -61,14 +61,4 @@ std::vector<char> Util::download(const char* server, const char* dir)
 		WinHttpCloseHandle(hSession);
 	}
 	return buffer;
-}
-
-void Util::next(int& current_index, const int size)
-{
-	current_index = current_index < size - 1 ? current_index + 1 : 0;
-}
-
-void Util::prev(int& current_index, const int size)
-{
-	current_index = current_index > 0 ? current_index - 1 : size - 1;
 }

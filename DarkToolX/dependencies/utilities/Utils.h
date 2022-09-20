@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-namespace Util
+namespace util
 {
 	constexpr uint64_t hash(const char* str)
 	{
@@ -11,6 +11,4 @@ namespace Util
 		return hash;
 	}
 	std::vector<char> download(const char* server, const char* dir);
-	void next(int& current_index, const int size);
-	void prev(int& current_index, const int size);
 }

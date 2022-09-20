@@ -9,6 +9,6 @@ namespace config {
 		}
 		std::string conf_name{ "New Config" };
 		keybind bind{};
-		JSON_SERIALIZE(trigger, conf_name, bind)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(trigger, conf_name, bind)
 	};
 };

@@ -206,5 +206,5 @@ struct conf
 		s_logs = std::clamp(s_logs, 0U, _logs.size() - 1);
 		return _logs.at(s_logs);
 	}
-	JSON_SERIALIZE(conf, s_aimbot, _aimbot, s_trigger, _trigger, s_visuals, _visuals, s_view, _view, s_skin_changer, _skin_changer, s_clan_tag_changer, _clan_tag_changer, s_chat_bot, _chat_bot, s_misc, _misc, s_logs, _logs)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(conf, s_aimbot, _aimbot, s_trigger, _trigger, s_visuals, _visuals, s_view, _view, s_skin_changer, _skin_changer, s_clan_tag_changer, _clan_tag_changer, s_chat_bot, _chat_bot, s_misc, _misc, s_logs, _logs)
 };

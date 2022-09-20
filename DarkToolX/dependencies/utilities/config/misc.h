@@ -29,6 +29,6 @@ namespace config {
 		bool auto_accept{ true };
 		bool reveal_ranks{ true };
 		bool resolver{ false };
-		JSON_SERIALIZE(misc, conf_name, anti_aim, smart_anti_aim, pitch, yaw, desync, max_desync_delta, fake_lag, fake_lag_ticks, bhop, auto_strafe, no_duck_delay, slow_walk, auto_stop, fake_duck, walk_bot, hitsound, quick_switch, auto_accept, reveal_ranks, resolver)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(misc, conf_name, anti_aim, smart_anti_aim, pitch, yaw, desync, max_desync_delta, fake_lag, fake_lag_ticks, bhop, auto_strafe, no_duck_delay, slow_walk, auto_stop, fake_duck, walk_bot, hitsound, quick_switch, auto_accept, reveal_ranks, resolver)
 	};
 };

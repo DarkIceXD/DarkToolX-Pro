@@ -11,7 +11,7 @@ namespace config {
 		{
 			return team ? (is_local_player ? this->local_player : this->team) : this->enemy;
 		}
-		JSON_SERIALIZE(log, enabled, local_player, team, enemy)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(log, enabled, local_player, team, enemy)
 	};
 
 	struct logs
@@ -25,6 +25,6 @@ namespace config {
 		log damage{ };
 		log pickup{ };
 		bool votes{ false };
-		JSON_SERIALIZE(logs, conf_name, deaths, damage, pickup, votes)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(logs, conf_name, deaths, damage, pickup, votes)
 	};
 };

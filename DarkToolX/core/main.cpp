@@ -3,8 +3,8 @@
 #include "../dependencies/utilities/kit_parser.h"
 
 unsigned long WINAPI initialize(void* instance) {
-	csgo::user = License::check();
-	if (csgo::user.status == License::Status::VALID) {
+	csgo::user = license::check(user_db::user::DARKTOOLX);
+	if (csgo::user.status == license::status::VALID) {
 		while (!GetModuleHandleA("serverbrowser.dll"))
 			Sleep(200);
 
@@ -29,7 +29,7 @@ unsigned long WINAPI initialize(void* instance) {
 	}
 	else
 	{
-		MessageBoxA(nullptr, (std::string("License check failed!\nYour HWID is: ") + std::to_string(csgo::user.hwid) + ".\nTry again later.").c_str(), "DarkToolX", MB_OK | MB_ICONERROR);
+		MessageBoxA(nullptr, std::format("License check failed! ({})\nYour HWID is: {:x}", license::status_to_str(csgo::user.status), csgo::user.my_hwid).c_str(), "DarkToolX", MB_OK | MB_ICONERROR);
 	}
 	FreeLibraryAndExitThread(static_cast<HMODULE>(instance), 0);
 }

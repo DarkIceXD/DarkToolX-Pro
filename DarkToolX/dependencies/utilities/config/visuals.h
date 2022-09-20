@@ -44,7 +44,7 @@ namespace config {
 				b = 0;
 			}
 		}
-		JSON_SERIALIZE(rgb, r, g, b, a, enabled)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(rgb, r, g, b, a, enabled)
 	};
 
 	struct visuals
@@ -139,6 +139,6 @@ namespace config {
 				return nullptr;
 			return &glow.at(i);
 		}
-		JSON_SERIALIZE(visuals, conf_name, glow, health_based, esp, dormant_esp, aimbot_spot, box_team, box_enemy, skeleton_team, skeleton_enemy, step_color, step_max_radius, step_lifetime, step_width, bullet_trace_local_player, bullet_trace_team, bullet_trace_enemy, bullet_trace_lifetime)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(visuals, conf_name, glow, health_based, esp, dormant_esp, aimbot_spot, box_team, box_enemy, skeleton_team, skeleton_enemy, step_color, step_max_radius, step_lifetime, step_width, bullet_trace_local_player, bullet_trace_team, bullet_trace_enemy, bullet_trace_lifetime)
 	};
 };

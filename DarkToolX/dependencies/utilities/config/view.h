@@ -24,6 +24,6 @@ namespace config {
 		bool no_flash{ true };
 		float view_fov{ 0.f };
 		int modify_smoke{ 0 };
-		JSON_SERIALIZE(view, conf_name, thirdperson, range, spectator_thirdperson, crosshair, show_recoil, remove_scope, sky_box, dark_skybox, night_mode, asus_walls, asus_walls_alpha, no_fog, no_flash, view_fov, modify_smoke)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(view, conf_name, thirdperson, range, spectator_thirdperson, crosshair, show_recoil, remove_scope, sky_box, dark_skybox, night_mode, asus_walls, asus_walls_alpha, no_fog, no_flash, view_fov, modify_smoke)
 	};
 };

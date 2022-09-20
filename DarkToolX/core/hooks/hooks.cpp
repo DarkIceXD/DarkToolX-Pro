@@ -164,9 +164,10 @@ bool __stdcall hooks::create_move::hook(float input_sample_frametime, c_usercmd*
 	if (!cmd || !cmd->command_number)
 		return false;
 
-	uintptr_t* frame_pointer;
+	/*uintptr_t* frame_pointer;
 	__asm mov frame_pointer, ebp;
-	bool& send_packet = *reinterpret_cast<bool*>(*frame_pointer - 0x1C);
+	bool& send_packet = *reinterpret_cast<bool*>(*frame_pointer - 0x1C);*/
+	bool send_packet = true;
 
 	const auto old_yaw = cmd->viewangles.y;
 	csgo::want_to_shoot = csgo::manual_shoot = cmd->buttons & in_attack;
@@ -284,7 +285,7 @@ void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel
 
 long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 {
-	static auto water_mark = std::string("DarkToolX Pro - beta v15.8 - UID: ") + std::to_string(csgo::user.uid);
+	static auto water_mark = std::format("DarkToolX Pro - beta v16.0 - UID: {}", csgo::user.user.uid);
 	IDirect3DStateBlock9* pixel_state = NULL;
 	device->CreateStateBlock(D3DSBT_ALL, &pixel_state);
 	pixel_state->Capture();

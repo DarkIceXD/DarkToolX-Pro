@@ -10,7 +10,7 @@ namespace config {
 		{
 			return min_dmg_override_active ? min_dmg_override : min_dmg;
 		}
-		JSON_SERIALIZE(weapon_settings, hitchance, min_dmg, min_dmg_override)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(weapon_settings, hitchance, min_dmg, min_dmg_override)
 	};
 
 	struct hitboxes {
@@ -19,7 +19,7 @@ namespace config {
 		bool stomach{ true };
 		bool legs{ true };
 		bool arms{ false };
-		JSON_SERIALIZE(hitboxes, head, chest, stomach, legs, arms)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(hitboxes, head, chest, stomach, legs, arms)
 	};
 
 	struct aimbot
@@ -93,6 +93,6 @@ namespace config {
 				return false;
 			}
 		}
-		JSON_SERIALIZE(aimbot, conf_name, mode, aim, min_dmg_override, hitbox_override_bind, smoothness, fov, hitbox, hitbox_override, auto_shoot, auto_wall, auto_duck_peek, dmg_indicator, auto_cock_revolver, auto_scope, weapons, backtrack, backtrack_time_limit)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(aimbot, conf_name, mode, aim, min_dmg_override, hitbox_override_bind, smoothness, fov, hitbox, hitbox_override, auto_shoot, auto_wall, auto_duck_peek, dmg_indicator, auto_cock_revolver, auto_scope, weapons, backtrack, backtrack_time_limit)
 	};
 };

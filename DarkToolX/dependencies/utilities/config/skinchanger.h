@@ -16,14 +16,14 @@ namespace config {
 		int paint_kit{ 0 }, stat_trak{ 0 }, seed{ 0 };
 		float wear{ FLT_MIN };
 		std::string nametag;
-		JSON_SERIALIZE(skin_animation_frame, paint_kit, stat_trak, seed, wear, nametag)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(skin_animation_frame, paint_kit, stat_trak, seed, wear, nametag)
 	};
 
 	struct sticker
 	{
 		int paint_kit{ 0 };
 		float wear{ FLT_MIN }, scale{ 1.f }, rotation{ 0.f };
-		JSON_SERIALIZE(sticker, paint_kit, wear, scale, rotation)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(sticker, paint_kit, wear, scale, rotation)
 	};
 
 	struct skin {
@@ -69,7 +69,7 @@ namespace config {
 		{
 			return stickers.at(selected_sticker);
 		}
-		JSON_SERIALIZE(skin, paint_kit, stat_trak, seed, quality, wear, nametag, stickers, animation, count_kills, animated_skins, reverse, delay_ticks)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(skin, paint_kit, stat_trak, seed, quality, wear, nametag, stickers, animation, count_kills, animated_skins, reverse, delay_ticks)
 	};
 
 	struct skin_changer
@@ -137,6 +137,6 @@ namespace config {
 			default: return 0;
 			}
 		}
-		JSON_SERIALIZE(skin_changer, conf_name, enabled, auto_save, skins, knife_selection, glove_selection)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(skin_changer, conf_name, enabled, auto_save, skins, knife_selection, glove_selection)
 	};
 };

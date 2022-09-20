@@ -8,8 +8,8 @@
 #include "../math/math.hpp"
 #include "renderer/renderer.hpp"
 #include "console/console.hpp"
-#include "License.h"
 #include "config/config.h"
+#include "license.h"
 
 struct best_target {
 	player_t* entity;
@@ -27,12 +27,12 @@ constexpr bool sort_by_dmg(const best_target& a, const best_target& b)
 }
 
 namespace csgo {
+	inline license::result user;
 	inline player_t* local_player = nullptr;
 	inline conf* conf = nullptr;
 	inline bool want_to_shoot = false;
 	inline bool manual_shoot = false;
 	inline bool didnt_shoot_due_to_hitchance = false;
-	inline License::User user;
 	inline bool should_animate = true;
 	inline vec3_t real = {};
 	inline best_target target = {};

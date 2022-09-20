@@ -8,7 +8,7 @@ namespace config {
 			msg.reserve(15);
 		}
 		std::string msg{ "get good, get DarkToolX" };
-		JSON_SERIALIZE(chat_bot_msg, msg)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(chat_bot_msg, msg)
 	};
 
 	struct chat_bot {
@@ -19,6 +19,6 @@ namespace config {
 		std::string conf_name{ "New Config" };
 		bool enabled{ false };
 		std::vector<chat_bot_msg> msgs;
-		JSON_SERIALIZE(chat_bot, enabled, conf_name, msgs)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(chat_bot, enabled, conf_name, msgs)
 	};
 };

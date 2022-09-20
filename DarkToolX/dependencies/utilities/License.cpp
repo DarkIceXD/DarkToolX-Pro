@@ -1,49 +1,74 @@
-#include "License.h"
-#include "Utils.h"
-#include "SimpleIni.h"
-#include "str_obfuscator.hpp"
+#include "license.h"
+#include "utils.h"
+#include "xorstr.h"
+#include <Windows.h>
 #include <ctime>
 
-uint32_t License::generate_hwid()
+uint64_t license::generate_hwid()
 {
-	constexpr auto size = 50;
-	char hwid[size];
-	GetVolumeNameForVolumeMountPointA(cryptor::create("C:\\").decrypt(), hwid, size);
-	hwid[size - 1] = 0;
-	return Util::hash(hwid);
+	HW_PROFILE_INFOA hwprofinfo;
+	if (!GetCurrentHwProfileA(&hwprofinfo))
+		return 0;
+
+	return util::hash(hwprofinfo.szHwProfileGuid);
 }
 
-License::User License::check()
+license::result license::check(const user_db::user::TOOL_FLAGS flag)
 {
-	const auto tool = cryptor::create("darktoolx").decrypt();
-	const auto server = cryptor::create("darkicexd.github.io").decrypt();
-	const auto object = cryptor::create("/darktool/keys.ini").decrypt();
-	User user = {};
-	user.hwid = License::generate_hwid();
-	CSimpleIniA ini;
-	if (Util::hash(server) == 729258906494008491U && Util::hash(object) == 3076906676292336621U)
+	const auto server = xorstr("darkicexd.github.io");
+	const auto object = xorstr("/darktool/users");
+
+	result user{};
+	user.my_hwid = license::generate_hwid();
+	if (!user.my_hwid)
 	{
-		const auto data = Util::download(server, object);
-		ini.LoadData(data.data(), data.size());
-	}
-	const auto section = std::to_string(user.hwid);
-	if (!ini.GetBoolValue(section.c_str(), tool))
+		user.status = status::INVALID_HWID;
 		return user;
-	user.uid = ini.GetLongValue(section.c_str(), cryptor::create("uid").decrypt());
-	const time_t expire_time = std::stoll(ini.GetValue(section.c_str(), cryptor::create("time").decrypt(), cryptor::create("0").decrypt()));
-	const auto time = std::time(nullptr);
-	if (expire_time == 0)
-	{
-		user.status = Status::VALID;
 	}
-	else if (expire_time > time)
+
+	user_db db{};
+	if (util::hash(server) == 729258906494008491U && util::hash(object) == 820864865764569909U)
+		db.load(util::download(server, object));
+
+	const auto opt_user = db.find_user_by_hwid(user.my_hwid);
+	if (!opt_user)
 	{
-		user.status = Status::VALID;
-		user.time_left = expire_time - time;
+		user.status = status::USER_NOT_FOUND;
+		return user;
 	}
-	else
+
+	user.user = *opt_user;
+	if (!(user.user.tools & flag))
 	{
-		user.status = Status::EXPIRED;
+		user.status = status::NO_PERMISSION;
+		return user;
 	}
+
+	if (user.user.expire != 0 && user.user.expire < std::time(nullptr))
+	{
+		user.status = status::EXPIRED;
+		return user;
+	}
+
+	user.status = status::VALID;
 	return user;
+}
+
+const char* license::status_to_str(const status s)
+{
+	switch (s)
+	{
+	case status::INVALID_HWID:
+		return "Invalid HWID";
+	case status::USER_NOT_FOUND:
+		return "User not found";
+	case status::NO_PERMISSION:
+		return "No permission for this tool";
+	case status::EXPIRED:
+		return "Expired";
+	case status::VALID:
+		return "Valid";
+	default:
+		return "Invalid";
+	}
 }
