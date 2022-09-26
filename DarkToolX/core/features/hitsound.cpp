@@ -2,7 +2,7 @@
 
 void features::events::hit_sound(i_game_event* event)
 {
-	if (!csgo::conf->misc().hitsound)
+	if (!csgo::cfg.misc().hitsound)
 		return;
 
 	if (!csgo::local_player)

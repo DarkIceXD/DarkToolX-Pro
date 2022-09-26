@@ -63,7 +63,7 @@ static void apply_smart_anti_aim(vec3_t& view_angles)
 
 static void apply_anti_aim(c_usercmd* cmd)
 {
-	switch (csgo::conf->misc().anti_aim)
+	switch (csgo::cfg.misc().anti_aim)
 	{
 	default:
 		break;
@@ -72,8 +72,8 @@ static void apply_anti_aim(c_usercmd* cmd)
 		cmd->viewangles.y += 180;
 		break;
 	case 2:
-		cmd->viewangles.x = static_cast<float>(csgo::conf->misc().pitch);
-		cmd->viewangles.y += csgo::conf->misc().yaw;
+		cmd->viewangles.x = static_cast<float>(csgo::cfg.misc().pitch);
+		cmd->viewangles.y += csgo::cfg.misc().yaw;
 		break;
 	}
 }
@@ -141,12 +141,12 @@ void features::anti_aim(c_usercmd* cmd, bool& send_packet)
 			return;
 	}
 
-	if (csgo::conf->misc().smart_anti_aim)
+	if (csgo::cfg.misc().smart_anti_aim)
 		apply_smart_anti_aim(cmd->viewangles);
 
-	if (csgo::conf->misc().anti_aim)
+	if (csgo::cfg.misc().anti_aim)
 		apply_anti_aim(cmd);
 
-	if (csgo::conf->misc().desync)
-		apply_desync(cmd, send_packet, desync_left(csgo::conf->misc().desync), static_cast<float>(csgo::conf->misc().max_desync_delta));
+	if (csgo::cfg.misc().desync)
+		apply_desync(cmd, send_packet, desync_left(csgo::cfg.misc().desync), static_cast<float>(csgo::cfg.misc().max_desync_delta));
 }

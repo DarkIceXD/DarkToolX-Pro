@@ -5,13 +5,13 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 	constexpr int hitboxes[] = { hitbox_stomach, hitbox_lower_chest, hitbox_chest, hitbox_upper_chest, hitbox_head, hitbox_right_thigh, hitbox_left_thigh, hitbox_right_calf, hitbox_left_calf, hitbox_right_foot, hitbox_left_foot, hitbox_right_upper_arm, hitbox_right_forearm, hitbox_left_upper_arm, hitbox_left_forearm };
 	best_target target = {};
 	for (const auto hitbox : hitboxes) {
-		if (!csgo::conf->aimbot().is_hitbox_enabled(hitbox))
+		if (!csgo::cfg.aimbot().is_hitbox_enabled(hitbox))
 			continue;
 		const auto hitbox_position = entity->get_hitbox_position(hitbox);
 		const auto new_viewangles = math::calculate_angle(local_head, hitbox_position).normalized_angles();
-		if (math::fov(viewangles, new_viewangles) > csgo::conf->aimbot().fov)
+		if (math::fov(viewangles, new_viewangles) > csgo::cfg.aimbot().fov)
 			continue;
-		const auto data = features::util::auto_wall(local_head, hitbox_position - local_head, weapon_data, csgo::conf->aimbot().auto_wall);
+		const auto data = features::util::auto_wall(local_head, hitbox_position - local_head, weapon_data, csgo::cfg.aimbot().auto_wall);
 		if (data.damage > target.damage)
 		{
 			target.entity = data.entity;
@@ -29,7 +29,7 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 static best_target get_best_hitbox_angle(player_t* entity, const int hp, const vec3_t& local_head, const vec3_t& viewangles, const weapon_info_t* weapon_data, const std::deque<record>& records)
 {
 	auto target = get_best_hitbox_angle(entity, hp, local_head, viewangles, weapon_data);
-	if (csgo::conf->aimbot().backtrack && !target.lethal)
+	if (csgo::cfg.aimbot().backtrack && !target.lethal)
 	{
 		auto changed = false;
 		for (size_t i = 3; i < records.size(); i++)
@@ -117,11 +117,11 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 	if (csgo::target.damage < 1)
 	{
 		const auto duckamount = csgo::local_player->duck_amount();
-		if (duckamount > 0 && csgo::conf->aimbot().auto_duck_peek)
+		if (duckamount > 0 && csgo::cfg.aimbot().auto_duck_peek)
 		{
 			csgo::target = get_best_target(cmd->viewangles, weapon_data, csgo::local_player->get_eye_pos() + vec3_t(0, 0, 18 * duckamount));
-			const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(weapon->item_definition_index());
-			if (csgo::target.lethal || csgo::target.damage >= weapon_setting.get_min_dmg(csgo::conf->aimbot().min_dmg_override.enabled))
+			const auto weapon_setting = csgo::cfg.aimbot().get_weapon_settings(weapon->item_definition_index());
+			if (csgo::target.lethal || csgo::target.damage >= weapon_setting.get_min_dmg(csgo::cfg.aimbot().min_dmg_override.enabled))
 				cmd->buttons &= ~in_duck;
 		}
 		return;
@@ -135,10 +135,10 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 			cmd->tick_count = features::backtrack::restore_tick_count(csgo::target.entity->index(), csgo::target.best_record);
 		cmd->viewangles = recoil_compensated_angle;
 	}
-	else if (csgo::conf->aimbot().auto_shoot)
+	else if (csgo::cfg.aimbot().auto_shoot)
 	{
-		const auto weapon_setting = csgo::conf->aimbot().get_weapon_settings(weapon->item_definition_index());
-		if (!(csgo::target.lethal || csgo::target.damage >= weapon_setting.get_min_dmg(csgo::conf->aimbot().min_dmg_override.enabled)))
+		const auto weapon_setting = csgo::cfg.aimbot().get_weapon_settings(weapon->item_definition_index());
+		if (!(csgo::target.lethal || csgo::target.damage >= weapon_setting.get_min_dmg(csgo::cfg.aimbot().min_dmg_override.enabled)))
 		{
 			features::util::walkbot(cmd);
 			return;
@@ -157,7 +157,7 @@ void features::aimbot::silent(c_usercmd* cmd, weapon_t* weapon, const weapon_inf
 		}
 		else
 		{
-			if (csgo::conf->aimbot().auto_scope && weapon_data->type == WEAPONTYPE_SNIPER_RIFLE && !csgo::local_player->is_scoped())
+			if (csgo::cfg.aimbot().auto_scope && weapon_data->type == WEAPONTYPE_SNIPER_RIFLE && !csgo::local_player->is_scoped())
 				cmd->buttons |= in_attack2;
 
 			csgo::didnt_shoot_due_to_hitchance = true;

@@ -2,7 +2,7 @@
 
 void features::color_modulation::night_mode::static_prop(float& r, float& g, float& b)
 {
-	if (!csgo::conf->view().night_mode)
+	if (!csgo::cfg.view().night_mode)
 		return;
 
 	r *= 0.45f;
@@ -12,7 +12,7 @@ void features::color_modulation::night_mode::static_prop(float& r, float& g, flo
 
 void features::color_modulation::night_mode::sky_box(float& r, float& g, float& b)
 {
-	if (!csgo::conf->view().dark_skybox)
+	if (!csgo::cfg.view().dark_skybox)
 		return;
 
 	r *= 0.15f;
@@ -22,7 +22,7 @@ void features::color_modulation::night_mode::sky_box(float& r, float& g, float& 
 
 void features::color_modulation::night_mode::world(float& r, float& g, float& b)
 {
-	if (!csgo::conf->view().night_mode)
+	if (!csgo::cfg.view().night_mode)
 		return;
 
 	r *= 0.15f;

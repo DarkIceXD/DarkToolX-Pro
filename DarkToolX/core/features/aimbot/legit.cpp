@@ -7,14 +7,14 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 	target.entity = entity;
 	target.fov = FLT_MAX;
 	for (const auto hitbox : hitboxes) {
-		if (!csgo::conf->aimbot().is_hitbox_enabled(hitbox))
+		if (!csgo::cfg.aimbot().is_hitbox_enabled(hitbox))
 			continue;
 		const auto hitbox_position = entity->get_hitbox_position(hitbox);
 		const auto new_viewangles = math::calculate_angle(local_head, hitbox_position).normalized_angles();
 		const auto fov = math::fov(viewangles, new_viewangles);
-		if (fov > csgo::conf->aimbot().fov)
+		if (fov > csgo::cfg.aimbot().fov)
 			continue;
-		const auto data = features::util::auto_wall(local_head, hitbox_position - local_head, weapon_data, csgo::conf->aimbot().auto_wall);
+		const auto data = features::util::auto_wall(local_head, hitbox_position - local_head, weapon_data, csgo::cfg.aimbot().auto_wall);
 		if (data.entity && target.fov > fov)
 		{
 			target.damage = static_cast<int>(data.damage);
@@ -30,7 +30,7 @@ static best_target get_best_hitbox_angle(player_t* entity, const int hp, const v
 static best_target get_best_hitbox_angle(player_t* entity, const int hp, const vec3_t& local_head, const vec3_t& viewangles, const weapon_info_t* weapon_data, const std::deque<record>& records)
 {
 	auto target = get_best_hitbox_angle(entity, hp, local_head, viewangles, weapon_data);
-	if (csgo::conf->aimbot().backtrack)
+	if (csgo::cfg.aimbot().backtrack)
 	{
 		auto changed = false;
 		for (size_t i = 3; i < records.size(); i++)
@@ -88,10 +88,10 @@ void features::aimbot::legit(c_usercmd* cmd, weapon_t* weapon, const weapon_info
 	if (csgo::target.fov < FLT_MAX)
 	{
 		auto recoil_compensated_angle = (csgo::target.angle - csgo::local_player->recoil()).normalized_angles();
-		if (csgo::conf->aimbot().smoothness > 1 && csgo::target.fov > 1)
+		if (csgo::cfg.aimbot().smoothness > 1 && csgo::target.fov > 1)
 		{
 			const auto delta = (recoil_compensated_angle - cmd->viewangles).normalized_angles();
-			recoil_compensated_angle = (cmd->viewangles + delta / csgo::conf->aimbot().smoothness).normalized_angles();
+			recoil_compensated_angle = (cmd->viewangles + delta / csgo::cfg.aimbot().smoothness).normalized_angles();
 		}
 		cmd->viewangles = recoil_compensated_angle;
 		interfaces::engine->set_view_angles(recoil_compensated_angle);
@@ -106,7 +106,7 @@ void features::aimbot::legit(c_usercmd* cmd, weapon_t* weapon, const weapon_info
 		if (csgo::target.best_record)
 			cmd->tick_count = features::backtrack::restore_tick_count(csgo::target.entity->index(), csgo::target.best_record);
 	}
-	else if (csgo::conf->aimbot().auto_shoot)
+	else if (csgo::cfg.aimbot().auto_shoot)
 	{
 		if (csgo::target.best_record)
 			features::backtrack::restore_record(csgo::target.entity, csgo::target.best_record);

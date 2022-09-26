@@ -10,9 +10,9 @@ void load_skybox(const char* sky)
 void features::sky_box_changer()
 {
 	static auto is_defaut = true;
-	if (csgo::conf->view().sky_box > 0)
+	if (csgo::cfg.view().sky_box > 0)
 	{
-		load_skybox(sky_list.at(csgo::conf->view().sky_box));
+		load_skybox(sky_list.at(csgo::cfg.view().sky_box));
 		is_defaut = false;
 	}
 	else if(!is_defaut)

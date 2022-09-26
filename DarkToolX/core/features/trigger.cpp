@@ -2,9 +2,9 @@
 
 void features::trigger(c_usercmd* cmd)
 {
-	csgo::conf->trigger().bind.run();
+	csgo::cfg.trigger().bind.run();
 
-	if (!csgo::conf->trigger().bind.enabled)
+	if (!csgo::cfg.trigger().bind.enabled)
 		return;
 
 	if (!csgo::local_player->can_shoot())

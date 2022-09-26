@@ -2,10 +2,10 @@
 
 void features::events::chat_bot(i_game_event* event)
 {
-	if (!csgo::conf->chat_bot().enabled)
+	if (!csgo::cfg.chat_bot().enabled)
 		return;
 
-	const auto size = csgo::conf->chat_bot().msgs.size();
+	const auto size = csgo::cfg.chat_bot().msgs.size();
 	if (size < 1)
 		return;
 
@@ -15,5 +15,5 @@ void features::events::chat_bot(i_game_event* event)
 		return;
 
 	const auto rand = std::rand() % size;
-	interfaces::engine->execute_cmd(("say " + csgo::conf->chat_bot().msgs.at(rand).msg).c_str());
+	interfaces::engine->execute_cmd(("say " + csgo::cfg.chat_bot().msgs.at(rand).msg).c_str());
 }

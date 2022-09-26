@@ -3,6 +3,7 @@
 #include "xorstr.h"
 #include <Windows.h>
 #include <ctime>
+#include "json_utils.h"
 
 uint64_t license::generate_hwid()
 {
@@ -26,10 +27,13 @@ license::result license::check(const user_db::user::TOOL_FLAGS flag)
 		return user;
 	}
 
-	user_db db{};
-	if (util::hash(server) == 729258906494008491U && util::hash(object) == 820864865764569909U)
-		db.load(util::download(server, object));
+	if (util::hash(server) != 729258906494008491U || util::hash(object) != 820864865764569909U)
+	{
+		user.status = status::USER_NOT_FOUND;
+		return user;
+	}
 
+	const auto db = json_utils::load<user_db>(util::download(server, object), json_utils::type::MSGPACK);
 	const auto opt_user = db.find_user_by_hwid(user.my_hwid);
 	if (!opt_user)
 	{

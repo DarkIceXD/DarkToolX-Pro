@@ -37,7 +37,7 @@ static uintptr_t find_hud_element(void* this_ptr, const char* name)
 
 void features::dormant()
 {
-	if (!csgo::conf->visuals().dormant_esp)
+	if (!csgo::cfg.visuals().dormant_esp)
 		return;
 
 	static auto hud_ptr = *(uintptr_t**)(utilities::pattern_scan("client.dll", "81 25 ? ? ? ? ? ? ? ? 8B 01") + 2);

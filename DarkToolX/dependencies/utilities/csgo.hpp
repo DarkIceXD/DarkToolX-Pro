@@ -29,7 +29,7 @@ constexpr bool sort_by_dmg(const best_target& a, const best_target& b)
 namespace csgo {
 	inline license::result user;
 	inline player_t* local_player = nullptr;
-	inline conf* conf = nullptr;
+	inline conf cfg;
 	inline bool want_to_shoot = false;
 	inline bool manual_shoot = false;
 	inline bool didnt_shoot_due_to_hitchance = false;

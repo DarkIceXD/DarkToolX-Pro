@@ -2,7 +2,7 @@
 
 void features::damage_indicator()
 {
-	if (!csgo::conf->aimbot().dmg_indicator)
+	if (!csgo::cfg.aimbot().dmg_indicator)
 		return;
 
 	if (!csgo::local_player)

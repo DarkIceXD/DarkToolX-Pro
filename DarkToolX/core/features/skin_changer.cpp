@@ -137,7 +137,7 @@ static void apply_skin(weapon_t& item, const config::skin_animation_frame& skin)
 }
 
 void features::skin_changer() {
-	if (!csgo::conf->skin_changer().enabled)
+	if (!csgo::cfg.skin_changer().enabled)
 		return;
 
 	if (!csgo::local_player)
@@ -153,7 +153,7 @@ void features::skin_changer() {
 		const auto weapon = csgo::local_player->active_weapon();
 		if (weapon)
 		{
-			const auto found = csgo::conf->skin_changer().get_skin(weapon->item_definition_index());
+			const auto found = csgo::cfg.skin_changer().get_skin(weapon->item_definition_index());
 			if (found)
 			{
 				const auto animation = found->next_animation();
@@ -203,8 +203,8 @@ void features::skin_changer() {
 			glove_handle = wearables[0];
 		}
 		glove->get_index() = -1;
-		apply_skin(*glove, csgo::conf->skin_changer().skins.at(0));
-		change_model(*glove, csgo::conf->skin_changer().get_glove_index());
+		apply_skin(*glove, csgo::cfg.skin_changer().skins.at(0));
+		change_model(*glove, csgo::cfg.skin_changer().get_glove_index());
 	}
 	auto weapons = csgo::local_player->get_weapons();
 	player_info_t info;
@@ -222,9 +222,9 @@ void features::skin_changer() {
 			continue;
 
 		auto& index = weapon->item_definition_index();
-		const auto found = csgo::conf->skin_changer().get_skin(index);
+		const auto found = csgo::cfg.skin_changer().get_skin(index);
 		if (index == WEAPON_KNIFE_T || index == WEAPON_KNIFE)
-			change_model(*weapon, csgo::conf->skin_changer().get_knife_index());
+			change_model(*weapon, csgo::cfg.skin_changer().get_knife_index());
 		if (found)
 			apply_skin(*weapon, *found);
 	}

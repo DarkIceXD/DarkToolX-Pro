@@ -2,7 +2,7 @@
 
 void features::crosshair()
 {
-	if (!csgo::conf->view().crosshair)
+	if (!csgo::cfg.view().crosshair)
 		return;
 
 	if (!csgo::local_player)
@@ -11,7 +11,7 @@ void features::crosshair()
 	if (!csgo::local_player->is_alive())
 		return;
 
-	if (csgo::conf->view().show_recoil)
+	if (csgo::cfg.view().show_recoil)
 	{
 		vec3_t view_angles;
 		interfaces::engine->get_view_angles(view_angles);

@@ -1,6 +1,7 @@
 #include "../dependencies/utilities/csgo.hpp"
 #include "features/features.hpp"
 #include "../dependencies/utilities/kit_parser.h"
+#include "../dependencies/utilities/json_utils.h"
 
 unsigned long WINAPI initialize(void* instance) {
 	csgo::user = license::check(user_db::user::DARKTOOLX);
@@ -11,7 +12,7 @@ unsigned long WINAPI initialize(void* instance) {
 #ifdef _DEBUG
 		console::initialize("csgo-cheat console");
 #endif
-		csgo::conf = new conf();
+		csgo::cfg = json_utils::load<conf>(conf::file_name, json_utils::type::JSON);
 		try {
 			interfaces::initialize();
 			kit_parser::initialize();
@@ -40,7 +41,7 @@ unsigned long WINAPI release() {
 #ifdef _DEBUG
 	console::release();
 #endif
-	delete csgo::conf;
+	json_utils::save(conf::file_name, json_utils::type::JSON, csgo::cfg);
 	return TRUE;
 }
 

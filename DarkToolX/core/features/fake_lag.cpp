@@ -14,6 +14,6 @@ void features::fake_lag(bool& send_packet)
 	if (!interfaces::clientstate->net_channel)
 		return;
 
-	const auto ticks_to_choke = csgo::conf->misc().fake_lag ? csgo::conf->misc().fake_lag_ticks : (csgo::conf->misc().desync ? 1 : 0);
+	const auto ticks_to_choke = csgo::cfg.misc().fake_lag ? csgo::cfg.misc().fake_lag_ticks : (csgo::cfg.misc().desync ? 1 : 0);
 	send_packet = interfaces::clientstate->choked_commands >= ticks_to_choke;
 }

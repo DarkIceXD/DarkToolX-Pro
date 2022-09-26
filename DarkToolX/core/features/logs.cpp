@@ -25,7 +25,7 @@ static player_event get_player(const int user_id)
 
 void features::logs::player_hurt(i_game_event* event)
 {
-	const auto& log = csgo::conf->logs().damage;
+	const auto& log = csgo::cfg.logs().damage;
 	if (!log.enabled)
 		return;
 
@@ -49,7 +49,7 @@ void features::logs::player_hurt(i_game_event* event)
 
 void features::logs::player_death(i_game_event* event)
 {
-	const auto& log = csgo::conf->logs().deaths;
+	const auto& log = csgo::cfg.logs().deaths;
 	if (!log.enabled)
 		return;
 
@@ -73,7 +73,7 @@ void features::logs::player_death(i_game_event* event)
 
 void features::logs::vote_cast(i_game_event* event)
 {
-	if (!csgo::conf->logs().votes)
+	if (!csgo::cfg.logs().votes)
 		return;
 
 	if (!csgo::local_player)
@@ -95,7 +95,7 @@ void features::logs::vote_cast(i_game_event* event)
 
 void features::logs::item_pickup(i_game_event* event)
 {
-	const auto& log = csgo::conf->logs().pickup;
+	const auto& log = csgo::cfg.logs().pickup;
 	if (!log.enabled)
 		return;
 

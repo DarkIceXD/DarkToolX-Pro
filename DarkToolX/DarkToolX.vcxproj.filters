@@ -255,9 +255,6 @@
     <ClCompile Include="core\features\granade_prediction.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="dependencies\utilities\user_db.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\features\features.hpp">
@@ -576,6 +573,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\utilities\config\common.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\utilities\json_utils.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

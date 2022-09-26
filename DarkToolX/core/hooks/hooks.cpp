@@ -318,7 +318,7 @@ long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 	auto draw_list = ImGui::GetBackgroundDrawList();
 	draw_list->AddText({ 5, 5 }, IM_COL32_WHITE, water_mark.c_str());
 	features::esp::draw(draw_list);
-	menu::render(csgo::menu::enabled, *csgo::conf);
+	menu::render(csgo::menu::enabled, csgo::cfg);
 	ImGui::Render();
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 
@@ -365,19 +365,19 @@ void __fastcall hooks::get_color_modulation::hook(i_material* mat, void* edx, fl
 
 bool __stdcall hooks::is_using_static_prop_debug_modes::hook()
 {
-	return csgo::conf->view().night_mode;
+	return csgo::cfg.view().night_mode;
 }
 
 bool __stdcall hooks::should_draw_fog::hook()
 {
 	if (*static_cast<uint32_t*>(_ReturnAddress()) != 0x6274C084)
 		return should_draw_fog_original(interfaces::clientmode);
-	return !csgo::conf->view().no_fog;
+	return !csgo::cfg.view().no_fog;
 }
 
 void __stdcall hooks::render_smoke_overlay::hook(bool update)
 {
-	if (csgo::conf->view().modify_smoke)
+	if (csgo::cfg.view().modify_smoke)
 		*reinterpret_cast<float*>(std::uintptr_t(interfaces::view_render) + 0x588) = 0.0f;
 	else
 		render_smoke_overlay_original(interfaces::view_render, update);

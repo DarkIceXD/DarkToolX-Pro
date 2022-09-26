@@ -13,50 +13,7 @@
 
 struct conf
 {
-	static constexpr const char* conf_name = "DarkToolX.json";
-	conf()
-	{
-		std::ifstream stream(conf_name);
-		if (stream.good())
-		{
-			const auto json = nlohmann::json::parse(stream, nullptr, false);
-			if (!json.is_discarded())
-			{
-				s_aimbot = json.value("s_aimbot", 0);
-				_aimbot = json.value<std::vector<config::aimbot>>("_aimbot", { {} });
-
-				s_trigger = json.value("s_trigger", 0);
-				_trigger = json.value<std::vector<config::trigger>>("_trigger", { {} });
-
-				s_visuals = json.value("s_visuals", 0);
-				_visuals = json.value<std::vector<config::visuals>>("_visuals", { {} });
-
-				s_view = json.value("s_view", 0);
-				_view = json.value<std::vector<config::view>>("_view", { {} });
-
-				s_skin_changer = json.value("s_skin_changer", 0);
-				_skin_changer = json.value<std::vector<config::skin_changer>>("_skin_changer", { {} });
-
-				s_clan_tag_changer = json.value("s_clan_tag_changer", 0);
-				_clan_tag_changer = json.value<std::vector<config::clan_tag_changer>>("_clan_tag_changer", { {} });
-
-				s_chat_bot = json.value("s_chat_bot", 0);
-				_chat_bot = json.value<std::vector<config::chat_bot>>("_chat_bot", { {} });
-
-				s_misc = json.value("s_misc", 0);
-				_misc = json.value<std::vector<config::misc>>("_misc", { {} });
-
-				s_logs = json.value("s_logs", 0);
-				_logs = json.value<std::vector<config::logs>>("_logs", { {} });
-			}
-		}
-	}
-	void save() const
-	{
-		nlohmann::json json(*this);
-		std::ofstream stream(conf_name);
-		stream << json;
-	}
+	static constexpr auto file_name = "DarkToolX.json";
 	std::string export_config(const int i)
 	{
 		nlohmann::json json;

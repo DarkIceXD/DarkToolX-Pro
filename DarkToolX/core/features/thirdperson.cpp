@@ -5,13 +5,13 @@ void features::thirdperson() {
 		return;
 
 	if (csgo::local_player->health() > 0) {
-		csgo::conf->view().thirdperson.run();
+		csgo::cfg.view().thirdperson.run();
 
-		if (csgo::conf->view().thirdperson.enabled) {
+		if (csgo::cfg.view().thirdperson.enabled) {
 			if (interfaces::input->camera_in_third_person)
 				return;
 
-			float range = csgo::conf->view().range;
+			float range = csgo::cfg.view().range;
 			vec3_t angles;
 			interfaces::engine->get_view_angles(angles);
 			angles.z = 0.f;
@@ -41,7 +41,7 @@ void features::thirdperson() {
 	}
 	else
 	{
-		if (csgo::conf->view().spectator_thirdperson)
+		if (csgo::cfg.view().spectator_thirdperson)
 		{
 			auto& mode = csgo::local_player->observer_mode();
 			if (mode != 5)

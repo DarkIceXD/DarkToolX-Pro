@@ -1,8 +1,9 @@
 #include "features.hpp"
+#include "../../dependencies/utilities/json_utils.h"
 
 void features::events::update_stattrak(i_game_event* event)
 {
-	if (!csgo::conf->skin_changer().enabled)
+	if (!csgo::cfg.skin_changer().enabled)
 		return;
 
 	if (!csgo::local_player)
@@ -17,13 +18,13 @@ void features::events::update_stattrak(i_game_event* event)
 	if (!weapon || weapon->item_id_high() != -1)
 		return;
 
-	const auto skin = csgo::conf->skin_changer().get_skin(weapon->item_definition_index());
+	const auto skin = csgo::cfg.skin_changer().get_skin(weapon->item_definition_index());
 	if (!skin || !skin->count_kills)
 		return;
 
 	skin->stat_trak++;
-	if (csgo::conf->skin_changer().auto_save)
-		csgo::conf->save();
+	if (csgo::cfg.skin_changer().auto_save)
+		json_utils::save(conf::file_name, json_utils::type::JSON, csgo::cfg);
 	weapon->stat_trak() = skin->stat_trak;
 	weapon->net_post_data_update(0);
 }

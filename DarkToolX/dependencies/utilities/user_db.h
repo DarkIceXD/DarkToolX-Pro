@@ -3,10 +3,7 @@
 #include <bitset>
 
 struct user_db {
-	void load(const char* file_name);
-	void load(const std::vector<char>& buffer);
-	void load(const nlohmann::json& json);
-	void save(const char* file_name) const;
+	static constexpr auto file_name = "users";
 	struct user {
 		uint64_t uid, expire, tools;
 		std::vector<uint64_t> hwid;
@@ -30,14 +27,14 @@ struct user_db {
 		};
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(user, uid, expire, tools, hwid)
 	};
-	[[nodiscard]] constexpr uint64_t get_highest_uid() {
+	[[nodiscard]] constexpr uint64_t get_highest_uid() const {
 		uint64_t highest = 0;
 		for (const auto& user : users)
 			if (user.uid > highest)
 				highest = user.uid;
 		return highest;
 	}
-	[[nodiscard]] constexpr std::optional<user> find_user_by_hwid(const uint64_t my_hwid) {
+	[[nodiscard]] constexpr std::optional<user> find_user_by_hwid(const uint64_t my_hwid) const {
 		for (const auto& user : users)
 			for (const auto& hwid : user.hwid)
 				if (hwid == my_hwid)

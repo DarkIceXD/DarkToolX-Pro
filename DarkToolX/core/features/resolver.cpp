@@ -71,7 +71,7 @@ void features::resolver::new_tick(c_usercmd* cmd)
 		}
 		load_data(backup);
 	}
-	if (csgo::conf->misc().resolver && csgo::target.entity && csgo::want_to_shoot && !csgo::manual_shoot)
+	if (csgo::cfg.misc().resolver && csgo::target.entity && csgo::want_to_shoot && !csgo::manual_shoot)
 	{
 		data.wants_to_shoot = true;
 		data.hit_target = false;
@@ -83,7 +83,7 @@ void features::resolver::new_tick(c_usercmd* cmd)
 
 void features::resolver::run()
 {
-	if (!csgo::conf->misc().resolver)
+	if (!csgo::cfg.misc().resolver)
 		return;
 
 	for (auto i = 1; i <= interfaces::globals->max_clients; i++)

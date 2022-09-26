@@ -7,5 +7,5 @@ void features::fov(view_setup_t* view) {
 	if (csgo::local_player->is_scoped())
 		return;
 
-	view->fov += csgo::conf->view().view_fov;
+	view->fov += csgo::cfg.view().view_fov;
 }

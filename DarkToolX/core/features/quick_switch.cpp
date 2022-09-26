@@ -39,7 +39,7 @@ static weapon_t* get_weapon(const int type)
 void features::quick_switch(c_usercmd* cmd) {
 	static auto switch_phase = 0;
 
-	if (!csgo::conf->misc().quick_switch)
+	if (!csgo::cfg.misc().quick_switch)
 		return;
 
 	if (!csgo::local_player)

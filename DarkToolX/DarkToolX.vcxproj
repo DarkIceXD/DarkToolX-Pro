@@ -224,7 +224,6 @@
     <ClCompile Include="dependencies\utilities\navmesh-parser\nav_hiding_spot.cpp" />
     <ClCompile Include="dependencies\utilities\netvars\netvars.cpp" />
     <ClCompile Include="dependencies\utilities\renderer\renderer.cpp" />
-    <ClCompile Include="dependencies\utilities\user_db.cpp" />
     <ClCompile Include="dependencies\utilities\utilities.cpp" />
     <ClCompile Include="dependencies\utilities\utils.cpp" />
     <ClCompile Include="source-sdk\math\view_matrix.cpp" />
@@ -298,6 +297,7 @@
     <ClInclude Include="dependencies\utilities\csgo.hpp" />
     <ClInclude Include="dependencies\utilities\fnv.hpp" />
     <ClInclude Include="dependencies\utilities\json.hpp" />
+    <ClInclude Include="dependencies\utilities\json_utils.h" />
     <ClInclude Include="dependencies\utilities\kit_parser.h" />
     <ClInclude Include="dependencies\utilities\license.h" />
     <ClInclude Include="dependencies\utilities\navmesh-parser\micropather.h" />

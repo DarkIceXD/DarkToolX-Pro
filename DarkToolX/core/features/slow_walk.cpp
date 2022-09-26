@@ -2,7 +2,7 @@
 
 void features::slow_walk(c_usercmd* cmd)
 {
-	if (!csgo::conf->misc().slow_walk)
+	if (!csgo::cfg.misc().slow_walk)
 		return;
 
 	if (!(cmd->buttons & in_speed))

@@ -2,8 +2,8 @@
 
 void features::color_modulation::asus_walls::world(i_material* mat)
 {
-	if (!csgo::conf->view().asus_walls)
+	if (!csgo::cfg.view().asus_walls)
 		return;
 
-	mat->alpha_modulate(csgo::conf->view().asus_walls_alpha);
+	mat->alpha_modulate(csgo::cfg.view().asus_walls_alpha);
 }

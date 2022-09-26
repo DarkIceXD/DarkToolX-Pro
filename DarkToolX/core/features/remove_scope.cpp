@@ -2,7 +2,7 @@
 
 bool features::remove_scope()
 {
-	if (!csgo::conf->view().remove_scope)
+	if (!csgo::cfg.view().remove_scope)
 		return false;
 
 	if (!csgo::local_player)

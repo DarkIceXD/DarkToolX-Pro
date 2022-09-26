@@ -68,14 +68,14 @@ void features::esp::update()
 		auto& data = entities[i];
 		data.draw = false;
 
-		if (!csgo::conf->visuals().esp)
+		if (!csgo::cfg.visuals().esp)
 			continue;
 
 		auto entity = static_cast<player_t*>(interfaces::entity_list->get_client_entity(i));
 		if (!entity || !entity->is_player() || entity == csgo::local_player)
 			continue;
 
-		if (!csgo::conf->visuals().dormant_esp && entity->dormant())
+		if (!csgo::cfg.visuals().dormant_esp && entity->dormant())
 			continue;
 
 		const auto hp = entity->health();
@@ -119,10 +119,10 @@ void features::esp::draw(ImDrawList* draw_list)
 	if (!csgo::local_player)
 		return;
 
-	const auto team_color = csgo::conf->visuals().box_team.to_u32();
-	const auto enemy_color = csgo::conf->visuals().box_enemy.to_u32();
-	const auto skeleton_team_color = csgo::conf->visuals().skeleton_team.to_u32();
-	const auto skeleton_enemy_color = csgo::conf->visuals().skeleton_enemy.to_u32();
+	const auto team_color = csgo::cfg.visuals().box_team.to_u32();
+	const auto enemy_color = csgo::cfg.visuals().box_enemy.to_u32();
+	const auto skeleton_team_color = csgo::cfg.visuals().skeleton_team.to_u32();
+	const auto skeleton_enemy_color = csgo::cfg.visuals().skeleton_enemy.to_u32();
 	for (const auto& entity : entities)
 	{
 		if (!entity.draw)
@@ -171,7 +171,7 @@ void features::esp::draw(ImDrawList* draw_list)
 		}
 	}
 
-	if (csgo::conf->visuals().aimbot_spot)
+	if (csgo::cfg.visuals().aimbot_spot)
 	{
 		if (csgo::target.entity)
 		{

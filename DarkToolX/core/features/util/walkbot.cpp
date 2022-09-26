@@ -37,7 +37,7 @@ static bool valid = false;
 
 void features::util::walkbot(c_usercmd* cmd)
 {
-	if (!csgo::conf->misc().walk_bot)
+	if (!csgo::cfg.misc().walk_bot)
 	{
 		map.clear();
 		path.clear();

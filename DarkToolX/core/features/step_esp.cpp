@@ -27,7 +27,7 @@ static void draw_circle(const vec3_t& position, const config::rgb& rgb, const fl
 
 void features::step_esp::player_footstep(i_game_event* event)
 {
-	if (!csgo::conf->visuals().step_color.enabled)
+	if (!csgo::cfg.visuals().step_color.enabled)
 		return;
 
 	auto walker = reinterpret_cast<player_t*>(interfaces::entity_list->get_client_entity(interfaces::engine->get_player_for_user_id(event->get_int("userid"))));
@@ -43,6 +43,6 @@ void features::step_esp::player_footstep(i_game_event* event)
 void features::step_esp::draw()
 {
 	for (const auto& step : steps)
-		draw_circle(step, csgo::conf->visuals().step_color, csgo::conf->visuals().step_max_radius, csgo::conf->visuals().step_lifetime, csgo::conf->visuals().step_width);
+		draw_circle(step, csgo::cfg.visuals().step_color, csgo::cfg.visuals().step_max_radius, csgo::cfg.visuals().step_lifetime, csgo::cfg.visuals().step_width);
 	steps.clear();
 }

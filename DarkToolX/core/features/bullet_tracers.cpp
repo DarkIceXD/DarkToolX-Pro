@@ -41,7 +41,7 @@ void features::bullet_tracers::bullet_impact(i_game_event* event)
 		return;
 
 	const auto is_enemy = csgo::local_player->is_enemy(shooting_player);
-	const auto enabled = is_enemy ? csgo::conf->visuals().bullet_trace_enemy.enabled : (shooting_player == csgo::local_player ? csgo::conf->visuals().bullet_trace_local_player : csgo::conf->visuals().bullet_trace_team.enabled);
+	const auto enabled = is_enemy ? csgo::cfg.visuals().bullet_trace_enemy.enabled : (shooting_player == csgo::local_player ? csgo::cfg.visuals().bullet_trace_local_player : csgo::cfg.visuals().bullet_trace_team.enabled);
 	if (!enabled)
 		return;
 
@@ -51,6 +51,6 @@ void features::bullet_tracers::bullet_impact(i_game_event* event)
 void features::bullet_tracers::draw()
 {
 	for (const auto& bullet : bullets)
-		draw_trace(bullet, bullet.enemy ? csgo::conf->visuals().bullet_trace_enemy : csgo::conf->visuals().bullet_trace_team, csgo::conf->visuals().bullet_trace_lifetime);
+		draw_trace(bullet, bullet.enemy ? csgo::cfg.visuals().bullet_trace_enemy : csgo::cfg.visuals().bullet_trace_team, csgo::cfg.visuals().bullet_trace_lifetime);
 	bullets.clear();
 }

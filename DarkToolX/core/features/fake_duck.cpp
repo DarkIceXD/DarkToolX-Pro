@@ -2,9 +2,9 @@
 
 void features::fake_duck(c_usercmd* cmd, bool& send_packet)
 {
-	csgo::conf->misc().fake_duck.run();
+	csgo::cfg.misc().fake_duck.run();
 
-	if (!csgo::conf->misc().fake_duck.enabled)
+	if (!csgo::cfg.misc().fake_duck.enabled)
 		return;
 
 	if (!csgo::local_player)

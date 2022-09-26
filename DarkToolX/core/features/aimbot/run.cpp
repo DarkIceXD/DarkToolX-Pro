@@ -2,14 +2,14 @@
 
 void features::aimbot::run(c_usercmd* cmd)
 {
-	if (!csgo::conf->aimbot().mode)
+	if (!csgo::cfg.aimbot().mode)
 		return;
 
-	csgo::conf->aimbot().aim.run();
-	csgo::conf->aimbot().min_dmg_override.run();
-	csgo::conf->aimbot().hitbox_override_bind.run();
+	csgo::cfg.aimbot().aim.run();
+	csgo::cfg.aimbot().min_dmg_override.run();
+	csgo::cfg.aimbot().hitbox_override_bind.run();
 
-	if (!csgo::conf->aimbot().aim.enabled)
+	if (!csgo::cfg.aimbot().aim.enabled)
 		return;
 
 	if (!csgo::local_player)
@@ -22,7 +22,7 @@ void features::aimbot::run(c_usercmd* cmd)
 	if (!weapon)
 		return;
 
-	if (csgo::conf->aimbot().auto_cock_revolver && features::util::cock_revolver(weapon))
+	if (csgo::cfg.aimbot().auto_cock_revolver && features::util::cock_revolver(weapon))
 	{
 		cmd->buttons |= in_attack;
 		return;
@@ -32,7 +32,7 @@ void features::aimbot::run(c_usercmd* cmd)
 	if (!weapon_data)
 		return;
 
-	switch (csgo::conf->aimbot().mode)
+	switch (csgo::cfg.aimbot().mode)
 	{
 	case 1:
 		silent(cmd, weapon, weapon_data);

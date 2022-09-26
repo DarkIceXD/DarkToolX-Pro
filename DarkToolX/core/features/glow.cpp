@@ -13,13 +13,13 @@ void features::glow()
 			continue;
 		const auto class_id = entity->client_class()->class_id;
 		const auto is_enemy = csgo::local_player->is_enemy(entity);
-		const auto rgb = csgo::conf->visuals().get_rgb(class_id, is_enemy);
+		const auto rgb = csgo::cfg.visuals().get_rgb(class_id, is_enemy);
 		if (rgb && rgb->enabled)
 		{
-			if (class_id == ccsplayer && is_enemy && csgo::conf->visuals().health_based)
+			if (class_id == ccsplayer && is_enemy && csgo::cfg.visuals().health_based)
 			{
 				const auto hp = static_cast<float>(static_cast<player_t*>(entity)->health()) / entity->max_health();
-				const auto rgb_scaled = config::rgb::scale(*rgb, csgo::conf->visuals().glow.back(), hp);
+				const auto rgb_scaled = config::rgb::scale(*rgb, csgo::cfg.visuals().glow.back(), hp);
 				glow_objects[i].set(rgb_scaled.r, rgb_scaled.g, rgb_scaled.b, rgb_scaled.a);
 			}
 			else

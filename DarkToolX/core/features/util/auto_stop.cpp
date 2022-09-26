@@ -2,7 +2,7 @@
 
 void features::util::auto_stop(c_usercmd* cmd)
 {
-	if (!csgo::conf->misc().auto_stop)
+	if (!csgo::cfg.misc().auto_stop)
 		return;
 
 	if (!csgo::local_player)

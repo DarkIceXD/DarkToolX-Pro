@@ -10,7 +10,7 @@ static void set_clan_tag(const char* tag)
 void features::clan_tag_changer()
 {
 	static auto changed_clan_tag = false;
-	if (!csgo::conf->clan_tag_changer().enabled)
+	if (!csgo::cfg.clan_tag_changer().enabled)
 	{
 		if (changed_clan_tag)
 		{
@@ -20,15 +20,15 @@ void features::clan_tag_changer()
 		return;
 	}
 
-	const auto size = csgo::conf->clan_tag_changer().get_selected().tags.size();
+	const auto size = csgo::cfg.clan_tag_changer().get_selected().tags.size();
 	if (size == 0)
 		return;
 
 	static size_t index = 0;
-	const auto new_index = static_cast<size_t>(interfaces::globals->cur_time * 1000 / csgo::conf->clan_tag_changer().get_selected().delay) % size;
+	const auto new_index = static_cast<size_t>(interfaces::globals->cur_time * 1000 / csgo::cfg.clan_tag_changer().get_selected().delay) % size;
 	if (index != new_index || (size == 1 && !(interfaces::globals->tick_count % 100)))
 	{
-		set_clan_tag(csgo::conf->clan_tag_changer().get_selected().tags.at(new_index).c_str());
+		set_clan_tag(csgo::cfg.clan_tag_changer().get_selected().tags.at(new_index).c_str());
 		index = new_index;
 		changed_clan_tag = true;
 	}

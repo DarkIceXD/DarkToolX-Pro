@@ -82,7 +82,7 @@ void features::backtrack::update()
 
 		records[i].push_front(rec);
 
-		while (records[i].size() > 3 && records[i].size() > static_cast<size_t>(time_to_ticks(csgo::conf->aimbot().backtrack_time_limit / 1000.f)))
+		while (records[i].size() > 3 && records[i].size() > static_cast<size_t>(time_to_ticks(csgo::cfg.aimbot().backtrack_time_limit / 1000.f)))
 			records[i].pop_back();
 
 		if (auto invalid = std::find_if(std::cbegin(records[i]), std::cend(records[i]), [](const record& rec) { return !valid(rec.simulation_time); }); invalid != std::cend(records[i]))
@@ -92,7 +92,7 @@ void features::backtrack::update()
 
 void features::backtrack::run(c_usercmd* cmd)
 {
-	if (!csgo::conf->aimbot().backtrack)
+	if (!csgo::cfg.aimbot().backtrack)
 		return;
 
 	if (!csgo::local_player)

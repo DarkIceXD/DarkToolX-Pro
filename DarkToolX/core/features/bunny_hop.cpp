@@ -57,7 +57,7 @@ void auto_strafe(c_usercmd* cmd)
 
 void features::bunny_hop(c_usercmd* cmd)
 {
-	if (!csgo::conf->misc().bhop)
+	if (!csgo::cfg.misc().bhop)
 		return;
 
 	if (!csgo::local_player)
@@ -67,7 +67,7 @@ void features::bunny_hop(c_usercmd* cmd)
 	if (move_type == movetype_ladder || move_type == movetype_noclip || move_type == movetype_observer)
 		return;
 
-	if (csgo::conf->misc().auto_strafe)
+	if (csgo::cfg.misc().auto_strafe)
 		auto_strafe(cmd);
 
 	if (!(csgo::local_player->flags() & fl_onground))
