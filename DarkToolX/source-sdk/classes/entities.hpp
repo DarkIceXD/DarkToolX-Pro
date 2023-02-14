@@ -484,7 +484,7 @@ public:
 	NETVAR("DT_CSPlayer", "m_flFlashMaxAlpha", flash_alpha, float)
 	NETVAR("DT_CSPlayer", "m_bHasNightVision", has_night_vision, bool)
 	NETVAR("DT_CSPlayer", "m_bNightVisionOn", night_vision_on, bool)
-	NETVAR("DT_CSPlayer", "m_iHealth", health, int)
+	NETVAR("DT_BasePlayer", "m_iHealth", health, int)
 	NETVAR("DT_CSPlayer", "m_lifeState", life_state, int)
 	NETVAR("DT_CSPlayer", "m_fFlags", flags, int)
 	NETVAR("DT_BasePlayer", "m_viewPunchAngle", punch_angle, vec3_t)

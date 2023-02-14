@@ -85,7 +85,7 @@ void features::esp::update()
 		if (!bounding_box(entity, data.min, data.max))
 			continue;
 
-		data.health = static_cast<float>(hp) / entity->max_health();
+		data.health = static_cast<float>(hp) / 100.f;
 		data.armor = entity->armor() / 100.f;
 		const auto weapon = entity->active_weapon();
 		data.weapon_name = weapon ? weapon->get_weapon_name() : nullptr;

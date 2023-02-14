@@ -49,7 +49,7 @@ bool hooks::initialize() {
 	const auto reset_target = reinterpret_cast<void*>(get_virtual(interfaces::directx, 16));
 	const auto lock_cursor_target = reinterpret_cast<void*>(get_virtual(interfaces::surface, 67));
 	const auto get_color_modulation_target = static_cast<void*>(utilities::pattern_scan("materialsystem.dll", "55 8B EC 83 EC ? 56 8B F1 8A 46"));
-	const auto is_using_static_prop_debug_modes_target = static_cast<void*>(utilities::pattern_scan("engine.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? A1 ? ? ? ? 35 ? ? ? ? EB ? 8B 01 FF 50 ? 83 F8 ? 0F 85 ? ? ? ? 8B 0D"));
+	const auto is_using_static_prop_debug_modes_target = static_cast<void*>(utilities::pattern_scan("engine.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 60 F3 0F 10 05 ? ? ? ? 0F 2E 05 ? ? ? ? 8B 15 ? ? ? ? 9F F6 C4 44 7A 1A 39 15 ? ? ? ? 75 12 A1 ? ? ? ? 33 05 ? ? ? ? A9 ? ? ? ? 74 1D 8B 0D ? ? ? ? 85 C9 74 19 8B 01 68 ? ? ? ? FF 90 ? ? ? ? 8B 15 ? ? ? ? 8B 0D ? ? ? ? 81 F2 ? ? ? ? EB 0D 8B 01 FF 50 34 8B 0D ? ? ? ? 8B D0 83 FA 01 0F"));
 	const auto should_draw_fog_target = reinterpret_cast<void*>(get_virtual(interfaces::clientmode, 17));
 	const auto render_smoke_overlay_target = reinterpret_cast<void*>(get_virtual(interfaces::view_render, 41));
 	const auto should_skip_animation_frame_target = static_cast<void*>(utilities::pattern_scan("client.dll", "57 8B F9 8B 07 8B 80 ? ? ? ? FF D0 84 C0 75 02"));
@@ -285,7 +285,7 @@ void __stdcall hooks::emit_sound::hook(void* filter, int iEntIndex, int iChannel
 
 long __stdcall hooks::end_scene::hook(IDirect3DDevice9* device)
 {
-	static auto water_mark = std::format("DarkToolX Pro - beta v16.0 - UID: {}", csgo::user.user.uid);
+	static auto water_mark = std::format("DarkToolX Pro - beta v16.1 - UID: {}", csgo::user.user.uid);
 	IDirect3DStateBlock9* pixel_state = NULL;
 	device->CreateStateBlock(D3DSBT_ALL, &pixel_state);
 	pixel_state->Capture();
