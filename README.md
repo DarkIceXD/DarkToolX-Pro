@@ -26,3 +26,7 @@ or download the .zip using GitHub.
 - Once the solution is open in Visual Studio, ensure that the correct configuration "Release" and platform "x86" are selected.
 - Right-click on the project in the Solution Explorer.
 - Choose "Build" from the context menu.
+
+### Usage
+- Start the game
+- Inject the compiled DLL using a DLL Injector
