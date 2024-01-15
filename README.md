@@ -7,11 +7,11 @@ DarkToolX-Pro is a internal game cheat for CS:GO.
 
 ### Prerequisites
 - Visual Studio: DarkTool is built using Visual Studio, so make sure you have it installed on your Windows machine.
-- Windows OS: DarkTool is specifically designed for Windows operating systems.
+- Windows 10 or 11: DarkTool is specifically designed for Windows operating systems.
 
 ### Clone the Repository
 ```bash
-git clone https://github.com/your-username/DarkTool.git
+git clone https://github.com/DarkIceXD/DarkToolX-Pro.git
 ```
 
 or download the .zip using GitHub.
